@@ -1,0 +1,1230 @@
+// TODO
+// - Remember spot where player died
+// - Let enemies shoot bullets
+//   - Use "animations are fixed" to target player's position
+//   - Create container queries for all hoverable spots and check any bullet collision
+// - Re-use enemies once they have left the screen
+// - Add cooldown for player shooting so you can spam less
+// - Add enemy health based on animation paused/running
+// - Player respawn with lives
+
+@use 'sass:list';
+@use "sass:map";
+
+// ============================================
+// CONFIGURATION
+// ============================================
+
+$columns: 12;
+$hover-columns: 5;
+$rows: 5;
+$column-size: calc(100% / $columns);
+$row-size: calc(100% / $rows);
+
+$player-bullets: 10;
+$player-bullet-debug-speed: 0;
+
+$enemy-debug-speed: 11;
+$enemy-bullet-speed: 2;
+$enemy-bullet-debug-speed: 3;
+
+// ============================================
+// PATH TYPES DEFINITION
+// ============================================
+
+$path-types: (
+  row-1-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 1),
+    end: (x: 0, y: 1)
+  ),
+  row-2-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 2),
+    end: (x: 0, y: 2)
+  ),
+  row-3-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 3),
+    end: (x: 0, y: 3)
+  ),
+  row-4-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 4),
+    end: (x: 0, y: 4)
+  ),
+  row-5-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 5),
+    end: (x: 0, y: 5)
+  ),
+  row-1-2-u-turn: (
+    type: custom-path,
+    cells: (
+      (x: 13, y: 1), (x: 12, y: 1), (x: 11, y: 1), (x: 10, y: 1), (x: 9, y: 1), (x: 8, y: 1), (x: 7, y: 1), (x: 6.5, y: 1),
+      (x: 6, y: 1.5), (x: 6.5, y: 2), (x: 7, y: 2), (x: 8, y: 2), (x: 9, y: 2), (x: 10, y: 2), (x: 11, y: 2), (x: 12, y: 2), (x: 13, y: 2)
+    )
+  ),
+  diagonal-5-to-1: (
+    type: custom-path,
+    cells: (
+      (x: 13, y: 5), (x: 12, y: 5), (x: 11, y: 5), (x: 10, y: 4.5), (x: 9, y: 4), (x: 8, y: 3.5), (x: 7, y: 3),
+      (x: 6, y: 2.5), (x: 5, y: 2), (x: 4, y: 1.5), (x: 3, y: 1), (x: 2, y: 1), (x: 1, y: 1), (x: 0, y: 1)
+    )
+  )
+);
+
+// ============================================
+// ENEMY CONFIGURATION
+// ============================================
+
+$enemy-configs: (
+  1: (
+    path-type: row-3-straight,
+    enemy-type: 1,
+    speed: #{$enemy-debug-speed + 3}s,
+    delay: 0s
+  ),
+  // 2: (
+  //   path-type: row-1-straight,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 2.5}s,
+  //   delay: 1s
+  // ),
+  // 3: (
+  //   path-type: row-5-straight,
+  //   enemy-type: 1,
+  //   speed: #{$enemy-debug-speed + 3}s,
+  //   delay: 2s
+  // ),
+  // 4: (
+  //   path-type: row-2-straight,
+  //   enemy-type: 3,
+  //   speed: #{$enemy-debug-speed + 2.8}s,
+  //   delay: 1.5s
+  // ),
+  // 5: (
+  //   path-type: row-4-straight,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 3.2}s,
+  //   delay: 2.5s
+  // ),
+  // 6: (
+  //   path-type: row-1-2-u-turn,
+  //   enemy-type: 4,
+  //   speed: #{$enemy-debug-speed + 5}s,
+  //   delay: 3s
+  // ),
+  // 7: (
+  //   path-type: diagonal-5-to-1,
+  //   enemy-type: 5,
+  //   speed: #{$enemy-debug-speed + 4}s,
+  //   delay: 0.5s
+  // ),
+  // 8: (
+  //   path-type: row-3-straight,
+  //   enemy-type: 1,
+  //   speed: #{$enemy-debug-speed + 2.5}s,
+  //   delay: 4s
+  // ),
+  // 9: (
+  //   path-type: row-2-straight,
+  //   enemy-type: 3,
+  //   speed: #{$enemy-debug-speed + 3}s,
+  //   delay: 5s
+  // ),
+  // 10: (
+  //   path-type: row-5-straight,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 3.5}s,
+  //   delay: 4.5s
+  // ),
+  // 11: (
+  //   path-type: row-1-straight,
+  //   enemy-type: 1,
+  //   speed: #{$enemy-debug-speed + 2.7}s,
+  //   delay: 6s
+  // ),
+  // 12: (
+  //   path-type: row-4-straight,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 3.1}s,
+  //   delay: 3.7s
+  // ),
+  // 13: (
+  //   path-type: row-2-straight,
+  //   enemy-type: 3,
+  //   speed: #{$enemy-debug-speed + 2.9}s,
+  //   delay: 7.2s
+  // ),
+  // 14: (
+  //   path-type: row-3-straight,
+  //   enemy-type: 4,
+  //   speed: #{$enemy-debug-speed + 3.4}s,
+  //   delay: 5.8s
+  // ),
+  // 15: (
+  //   path-type: row-5-straight,
+  //   enemy-type: 5,
+  //   speed: #{$enemy-debug-speed + 4.2}s,
+  //   delay: 8s
+  // ),
+  // 16: (
+  //   path-type: row-1-2-u-turn,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 5.3}s,
+  //   delay: 6.5s
+  // ),
+  // 17: (
+  //   path-type: diagonal-5-to-1,
+  //   enemy-type: 3,
+  //   speed: #{$enemy-debug-speed + 4.5}s,
+  //   delay: 9s
+  // ),
+  // 18: (
+  //   path-type: row-2-straight,
+  //   enemy-type: 1,
+  //   speed: #{$enemy-debug-speed + 3.6}s,
+  //   delay: 7.7s
+  // ),
+  // 19: (
+  //   path-type: row-4-straight,
+  //   enemy-type: 4,
+  //   speed: #{$enemy-debug-speed + 3.9}s,
+  //   delay: 8.5s
+  // ),
+  // 20: (
+  //   path-type: row-3-straight,
+  //   enemy-type: 5,
+  //   speed: #{$enemy-debug-speed + 2.6}s,
+  //   delay: 10s
+  // ),
+  // 21: (
+  //   path-type: row-5-straight,
+  //   enemy-type: 1,
+  //   speed: #{$enemy-debug-speed + 3.2}s,
+  //   delay: 10.5s
+  // ),
+  // 22: (
+  //   path-type: row-1-straight,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 2.8}s,
+  //   delay: 11s
+  // ),
+  // 23: (
+  //   path-type: row-2-straight,
+  //   enemy-type: 3,
+  //   speed: #{$enemy-debug-speed + 3.3}s,
+  //   delay: 11.5s
+  // ),
+  // 24: (
+  //   path-type: row-4-straight,
+  //   enemy-type: 4,
+  //   speed: #{$enemy-debug-speed + 3.7}s,
+  //   delay: 12s
+  // ),
+  // 25: (
+  //   path-type: row-3-straight,
+  //   enemy-type: 5,
+  //   speed: #{$enemy-debug-speed + 2.9}s,
+  //   delay: 12.5s
+  // ),
+  // 26: (
+  //   path-type: row-1-2-u-turn,
+  //   enemy-type: 1,
+  //   speed: #{$enemy-debug-speed + 5.1}s,
+  //   delay: 13s
+  // ),
+  // 27: (
+  //   path-type: diagonal-5-to-1,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 4.7}s,
+  //   delay: 13.5s
+  // ),
+  // 28: (
+  //   path-type: row-2-straight,
+  //   enemy-type: 3,
+  //   speed: #{$enemy-debug-speed + 3.5}s,
+  //   delay: 14s
+  // ),
+  // 29: (
+  //   path-type: row-5-straight,
+  //   enemy-type: 4,
+  //   speed: #{$enemy-debug-speed + 4.1}s,
+  //   delay: 14.5s
+  // ),
+  // 30: (
+  //   path-type: row-3-straight,
+  //   enemy-type: 5,
+  //   speed: #{$enemy-debug-speed + 2.7}s,
+  //   delay: 15s
+  // ),
+);
+
+$total-enemies: list.length($enemy-configs);
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+// Get all cells an enemy will occupy during its path
+@function get-path-cells($path-name) {
+  $path-data: map.get($path-types, $path-name);
+  $path-type: map.get($path-data, 'type');
+  $cells: ();
+
+  @if $path-type == 'straight' {
+    $start: map.get($path-data, 'start');
+    $end: map.get($path-data, 'end');
+    $start-x: map.get($start, 'x');
+    $end-x: map.get($end, 'x');
+    $y: map.get($start, 'y');
+
+    // Generate all cells from start to end
+    @for $x from $start-x through $end-x {
+      $cells: list.append($cells, (x: $x, y: $y));
+    }
+  } @else if $path-type == 'custom-path' {
+    $cells: map.get($path-data, 'cells');
+  }
+
+  @return $cells;
+}
+
+// ============================================
+// CUSTOM PROPERTIES
+// ============================================
+
+@property --total-2s {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --max-2s {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@for $e from 1 through $total-enemies {
+  @property --enemy-#{$e}-is-2 {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @property --enemy-#{$e}-total-collision-value {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+}
+
+@for $b from 1 through $player-bullets {
+  @property --player-bullet-#{$b}-posX {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: -1;
+  }
+}
+
+@property --enemy-bullet-1-posY {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --enemy-bullet-1-posX {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 99;
+}
+@property --enemy-bullet-1-startX {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 7;
+}
+
+// ============================================
+// SUB-CONTAINER SETUP
+// ============================================
+
+.sub-container {
+  container-name: enemy-vs-bullet-subcontainer enemy-vs-player-subcontainer;
+
+  @for $e from 1 through $total-enemies {
+    --enemy-#{$e}-bullet-collision: 0;
+    --enemy-#{$e}-player-collision: 0;
+    --enemy-#{$e}-bullet-collision-animation: paused;
+    --enemy-#{$e}-player-collision-animation: paused;
+    --enemy-#{$e}-total-collision-value: calc(var(--enemy-#{$e}-bullet-collision) + var(--enemy-#{$e}-player-collision));
+    --enemy-#{$e}-is-2: calc(var(--enemy-#{$e}-total-collision-value) * clamp(0, 1 - abs(2 - var(--enemy-#{$e}-total-collision-value)), 1));
+  }
+
+  $animations: ();
+  $total-2s-vars: ();
+  $max-2s-vars: ();
+
+  @for $e from 1 through $total-enemies {
+    $animations: list.append($animations, enemy-#{$e}-bullet-collision-animation 0.01s forwards var(--enemy-#{$e}-bullet-collision-animation), comma);
+    $animations: list.append($animations, enemy-#{$e}-player-collision-animation 0.01s forwards var(--enemy-#{$e}-player-collision-animation), comma);
+
+    @if $e == 1 {
+      $total-2s-vars: "var(--enemy-#{$e}-is-2)";
+    } @else {
+      $total-2s-vars: $total-2s-vars + " + var(--enemy-#{$e}-is-2)";
+    }
+    $max-2s-vars: list.append($max-2s-vars, var(--enemy-#{$e}-is-2), comma);
+  }
+
+  animation: $animations;
+  --total-2s: calc(#{$total-2s-vars});
+  --max-2s: max(#{$max-2s-vars});
+}
+
+// ============================================
+// COLLISION ANIMATIONS
+// ============================================
+
+@for $e from 1 through $total-enemies {
+  @keyframes enemy-#{$e}-bullet-collision-animation {
+    to {
+      --enemy-#{$e}-bullet-collision: 1;
+    }
+  }
+
+  @keyframes enemy-#{$e}-player-collision-animation {
+    to {
+      --enemy-#{$e}-player-collision: 2;
+    }
+  }
+}
+
+// ============================================
+// SUB-CONTAINER ANIMATIONS
+// ============================================
+
+.sub-container {
+  &::after {
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    counter-reset:
+      value1 var(--enemy-1-total-collision-value)
+      value2 var(--enemy-1-is-2)
+      total2s var(--total-2s)
+      max2s var(--max-2s)
+    ;
+    content:
+      "v1: " counter(value1)
+      " - v2: " counter(value2)
+      " - t2s: " counter(total2s)
+      " - m2s: " counter(max2s)
+    ;
+  }
+
+  display: flex;
+  align-items: center;
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      transparent 0%,
+      transparent var(--column-size),
+      rgba(255, 255, 255, 0.1) var(--column-size),
+      rgba(255, 255, 255, 0.1) calc(var(--column-size) * 2)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent var(--row-size),
+      rgba(255, 255, 255, 0.1) var(--row-size),
+      rgba(255, 255, 255, 0.1) calc(var(--row-size) * 2)
+    );
+
+  .spacing {
+    width: var(--column-size);
+    height: var(--row-size);
+  }
+}
+
+// ============================================
+// CONTAINER SETUP
+// ============================================
+
+.container {
+  --columns: #{$columns};
+  --column-size: #{$column-size};
+  --rows: #{$rows};
+  --row-size: #{$row-size};
+
+  --player-posX: 2;
+  --player-posY: 3;
+  --player-bullet-speed: #{$player-bullet-debug-speed + 0.75}s;
+
+  // --enemy-bullet-1-posY: 4;
+  // --enemy-bullet-1-posX: 10
+  // --enemy-bullet-1-startX: 1;
+  // --enemy-bullet-1-startY: 1;
+  // --enemy-bullet-1-endX: 1;
+  // --enemy-bullet-1-endY: 1;
+
+  @each $e, $config in $enemy-configs {
+    --enemy-#{$e}-speed: #{map.get($config, 'speed')};
+    --enemy-#{$e}-delay: #{map.get($config, 'delay')};
+  }
+
+  container-name: enemy-vs-bullet-container enemy-vs-player-container bullet-vs-player-container;
+
+  @for $hc from 1 through $hover-columns {
+    &:has(.hover-grid .col-#{$hc}:focus) {
+      --player-posX: #{$hc};
+
+      .player {
+        left: #{($hc - 1) * $column-size};
+      }
+    }
+    &:has(.hover-grid .col-#{$hc}:hover) {
+      --player-posX: #{$hc} !important;
+
+      .player {
+        left: #{($hc - 1) * $column-size} !important;
+      }
+    }
+  }
+  @for $hr from 1 through $rows {
+    &:has(.hover-grid .row-#{$hr}:focus) {
+      --player-posY: #{$hr};
+
+      .player {
+        top: calc((var(--player-posY) - 1) * #{$row-size});
+      }
+    }
+    &:has(.hover-grid .row-#{$hr}:hover) {
+      --player-posY: #{$hr} !important;
+
+      .player {
+        top: calc((var(--player-posY) - 1) * #{$row-size}) !important;
+      }
+    }
+  }
+
+  &::after {
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    top: calc(100% + 10px);
+    counter-reset:
+      playerY var(--player-posY)
+      playerX var(--player-posX)
+    ;
+    content:
+      "plY: " counter(playerY)
+      " - plX: " counter(playerX)
+    ;
+    right: 0;
+  }
+}
+
+// ============================================
+// ENEMY ANIMATIONS & TRACKING
+// ============================================
+
+@each $e, $config in $enemy-configs {
+  $path-name: map.get($config, 'path-type');
+  $path-data: map.get($path-types, $path-name);
+  $path-type: map.get($path-data, 'type');
+  $path-cells: get-path-cells($path-name);
+
+  .container {
+    @if $path-type == 'straight' {
+      $start: map.get($path-data, 'start');
+      --enemy-#{$e}-posX: 99;
+      --enemy-#{$e}-posY: 99;
+    } @else {
+      $first-cell: list.nth($path-cells, 1);
+      --enemy-#{$e}-posX: 99;
+      --enemy-#{$e}-posY: 99;
+    }
+  }
+
+  .enemy-#{$e} {
+    @if $path-type == 'straight' {
+      animation: enemy-#{$e}-move var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards linear paused;
+      $start: map.get($path-data, 'start');
+      top: calc((#{map.get($start, 'y')} - 1) * #{$row-size});
+    } @else {
+      animation: enemy-#{$e}-move var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards linear paused;
+      $first-cell: list.nth($path-cells, 1);
+      top: calc((#{map.get($first-cell, 'y')} - 1) * #{$row-size});
+    }
+
+    &::after {
+      visibility: hidden;
+      counter-reset: posX var(--enemy-#{$e}-posX) posY var(--enemy-#{$e}-posY);
+      content: counter(posX) "/" counter(posY);
+    }
+  }
+
+  // Generate enemy tracking animation
+  @keyframes enemy-#{$e}-tracking {
+    $total-cells: list.length($path-cells);
+
+    @for $i from 1 through $total-cells {
+      $cell: list.nth($path-cells, $i);
+      $first-cell: list.nth($path-cells, 1);
+      $progress: calc(calc($i - 1) * 100 / ($total-cells - 1));
+
+      #{$progress}% {
+        --enemy-#{$e}-posX: #{map.get($cell, 'x')};
+        --enemy-#{$e}-posY: #{map.get($cell, 'y')};
+        --enemy-bullet-1-startX: #{map.get($cell, 'x')};
+        --enemy-bullet-1-startY: #{map.get($cell, 'y')};
+        --enemy-bullet-1-offsetX: #{map.get($first-cell, 'x') - map.get($cell, 'x')};
+      }
+    }
+  }
+
+  // Straight path movement
+  @if $path-type == 'straight' {
+    @keyframes enemy-#{$e}-move {
+      to {
+        left: #{'-' + $column-size};
+      }
+    }
+  } @else {
+    @keyframes enemy-#{$e}-move {
+      $total-cells: list.length($path-cells);
+
+      @for $i from 1 through $total-cells {
+        $cell: list.nth($path-cells, $i);
+        $progress: ($i - 1) * 100 / ($total-cells - 1);
+        $x: map.get($cell, 'x');
+        $y: map.get($cell, 'y');
+
+        #{$progress}% {
+          left: calc((#{$x} - 1) * #{$column-size});
+          top: calc((#{$y} - 1) * #{$row-size});
+          rotate: 0deg;
+
+          @if $path-name == 'row-1-2-u-turn' {
+            @if $i == 8 {
+              rotate: -60deg;
+            }
+            @if $i == 9 {
+              rotate: -120deg;
+            }
+            @if $i >= 10 {
+              rotate: -180deg;
+            }
+          }
+        }
+      }
+
+      100% {
+        $last-cell: list.nth($path-cells, $total-cells);
+        left: calc((#{map.get($last-cell, 'x')} - 1) * #{$column-size});
+        top: calc((#{map.get($last-cell, 'y')} - 1) * #{$row-size});
+      }
+    }
+  }
+}
+
+// ============================================
+// BULLET ANIMATIONS & TRACKING
+// ============================================
+
+@for $b from 1 through $player-bullets {
+  .container {
+    --player-bullet-#{$b}-posY: 3;
+
+    .player-bullet-#{$b} {
+      top: calc((var(--player-bullet-#{$b}-posY)) * #{$row-size} - calc($row-size / 2));
+    }
+
+    &:has(.player-bullet-input-#{$b}:checked) {
+      --player-bullet-#{$b}-animation:
+        bullet-#{$b}-x-tracking var(--player-bullet-speed) forwards steps(#{$columns + 1}),
+        bullet-#{$b}-y-tracking var(--player-bullet-speed) forwards linear;
+
+      .player-bullet-#{$b} {
+        animation: bullet-move-#{$b} var(--player-bullet-speed) forwards linear;
+      }
+    }
+  }
+
+  @keyframes bullet-#{$b}-x-tracking {
+    // Calculate percentage ranges for each column step
+    // This animation is verbose as a fix for Safari
+    $step: calc(100 / $columns);
+
+    @for $i from 0 through $columns {
+      $startPercent: $i * $step;
+      $endPercent: ($i + 1) * $step;
+
+      #{$startPercent}%,
+      #{$endPercent - 0.01}% {
+        --player-bullet-#{$b}-startX: var(--player-posX);
+        --player-bullet-#{$b}-posX: calc(#{$i} + var(--player-posX) + 1);
+      }
+    }
+
+    100% {
+      --player-bullet-#{$b}-startX: var(--player-posX);
+      --player-bullet-#{$b}-posX: calc(99 + var(--player-posX));
+    }
+  }
+  @keyframes bullet-#{$b}-y-tracking {
+    from,to {
+        --player-bullet-#{$b}-posY: var(--player-posY);
+    }
+  }
+  @keyframes bullet-move-#{$b} {
+    from {
+      opacity: 1;
+      left: calc((var(--player-bullet-#{$b}-startX)) * #{$column-size});
+    }
+    to {
+      opacity: 1;
+      left: calc(((var(--player-bullet-#{$b}-startX)) + #{$columns}) * #{$column-size});
+    }
+  }
+
+  .sub-container {
+    .player-bullet-#{$b}::after {
+      visibility: hidden;
+      counter-reset: posX-#{$b} var(--player-bullet-#{$b}-posX) posY-#{$b} var(--player-bullet-#{$b}-posY);
+      content: "#{$b}: " counter(posX-#{$b}) "/" counter(posY-#{$b});
+    }
+  }
+}
+
+// ============================================
+// COLLISION DETECTION
+// ============================================
+
+@for $b from 1 through $player-bullets {
+  @each $e, $config in $enemy-configs {
+    $path-name: map.get($config, 'path-type');
+    $path-cells: get-path-cells($path-name);
+
+    // Only check cells that are actually in this enemy's path
+    @each $cell in $path-cells {
+      $col: map.get($cell, 'x');
+      $row: map.get($cell, 'y');
+
+      // Bullet vs Enemy collision
+      @container enemy-vs-bullet-container
+        style(--player-bullet-#{$b}-posX: #{$col}) and
+        style(--enemy-#{$e}-posX: #{$col}) and
+        style(--player-bullet-#{$b}-posY: #{$row}) and
+        style(--enemy-#{$e}-posY: #{$row}) {
+        .sub-container {
+          --enemy-#{$e}-bullet-collision-animation: running !important;
+        }
+      }
+
+      // Player vs Enemy collision
+      @container enemy-vs-player-container
+        style(--player-posX: #{$col}) and
+        style(--enemy-#{$e}-posX: #{$col}) and
+        style(--player-posY: #{$row}) and
+        style(--enemy-#{$e}-posY: #{$row}) {
+        .sub-container {
+          --enemy-#{$e}-player-collision-animation: running !important;
+        }
+      }
+    }
+
+    // Collision state triggers
+    @container enemy-vs-bullet-subcontainer
+      style(--enemy-#{$e}-total-collision-value: 1) or
+      style(--enemy-#{$e}-total-collision-value: 3) {
+      .enemy-#{$e} .idle,
+      .enemy-#{$e} .collision {
+        animation-play-state: running !important;
+      }
+    }
+
+    @container enemy-vs-player-subcontainer
+      style(--enemy-#{$e}-total-collision-value: 2) and
+      style(--total-2s: 2) {
+      .enemy-#{$e} .idle,
+      .enemy-#{$e} .collision,
+      .player .idle,
+      .player .collision {
+        animation-play-state: running !important;
+      }
+    }
+  }
+}
+
+@container enemy-vs-player-subcontainer style(--max-2s: 2) {
+  * {
+    pointer-events: none !important;
+  }
+}
+
+@for $hc from 1 through $hover-columns {
+  @for $hr from 1 through $rows {
+    @container bullet-vs-player-container
+      style(--player-posX: #{$hc}) and
+      style(--player-posY: #{$hr}) and
+      style(--enemy-bullet-1-posX: #{$hc}) and
+      style(--enemy-bullet-1-posY: #{$hr}) {
+      .player .idle,
+      .player .collision {
+        animation-play-state: running !important;
+      }
+    }
+  }
+}
+
+
+
+// ============================================
+// CONTAINER MASTER ANIMATION
+// ============================================
+
+.container {
+  @for $b from 1 through $player-bullets {
+    --player-bullet-#{$b}-animation: none;
+  }
+
+  --enemy-tracking-state: paused;
+
+  $animations: ();
+  @for $b from 1 through $player-bullets {
+    $animations: list.append($animations, var(--player-bullet-#{$b}-animation), comma);
+  }
+
+  --enemy-bullet-1-animation:
+    enemy-bullet-tracking 3s 0s linear forwards,
+    enemy-bullet-tracking 3s 3s linear forwards,
+    enemy-bullet-tracking 3s 6s linear forwards,
+    enemy-bullet-tracking 3s 9s linear forwards,
+    enemy-bullet-tracking 3s 12s linear forwards
+  ;
+
+  // $enemy-bullet-repeats: 7; // adjust number of bullets as needed
+  // $enemy-bullet-interval: $enemy-bullet-speed + $enemy-bullet-debug-speed;
+
+  // $enemy-bullet-1-animations: ();
+  // @for $i from 0 through ($enemy-bullet-repeats - 1) {
+  //   $delay: $enemy-bullet-interval * $i;
+
+  //   $enemy-bullet-1-animations: list.append(
+  //     $enemy-bullet-1-animations,
+  //     enemy-bullet-tracking #{$enemy-bullet-interval}s #{$delay}s linear forwards,
+  //     comma
+  //   );
+  // }
+  // --enemy-bullet-1-animation: $enemy-bullet-1-animations;
+
+  $animations: list.append($animations, var(--enemy-bullet-1-animation), comma);
+
+  @each $e, $config in $enemy-configs {
+    $path-cells: get-path-cells(map.get($config, 'path-type'));
+    $animations: list.append($animations, enemy-#{$e}-tracking var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards steps(#{list.length($path-cells)}) var(--enemy-tracking-state), comma);
+  }
+  animation: $animations;
+
+  position: absolute;
+  inset: 0;
+}
+
+// ============================================
+// VISUAL STYLES
+// ============================================
+
+.level {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  pointer-events: none;
+}
+
+.entity {
+  position: absolute;
+  width: var(--column-size);
+  height: var(--row-size);
+  font-size: 5vw;
+
+  .idle,
+  .collision {
+    --collision: 0;
+    animation: entity-collision-animation 0.01s forwards paused;
+    container-name: entity-collision-trigger;
+
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .idle {
+    .animation {
+      opacity: 1;
+      animation: hide-idle 0.01s forwards paused;
+    }
+  }
+
+  .collision {
+    .animation {
+      opacity: 0;
+      animation: show-collision 1s forwards paused;
+    }
+  }
+}
+
+.player {
+  transition: all 0.25s ease;
+  left: calc((var(--player-posX) - 1) * #{$column-size});
+  top: calc((var(--player-posY) - 1) * #{$row-size});
+}
+
+.enemy {
+  left: 100%;
+  box-sizing: border-box;
+
+  &::after {
+    position: absolute;
+    bottom: 110%;
+    font-size: 20px;
+  }
+
+  .idle {
+    color: crimson;
+
+    .animation {
+      rotate: 180deg;
+    }
+  }
+}
+
+@container entity-collision-trigger style(--collision: 1) {
+  .animation,
+  .collision {
+    animation-play-state: running !important;
+  }
+}
+
+@keyframes entity-collision-animation {
+  to {
+    --collision: 1;
+  }
+}
+
+@keyframes hide-idle {
+  to {
+    opacity: 0;
+    scale: 0;
+  }
+}
+
+@keyframes show-collision {
+  0% {
+    opacity: 0;
+    scale: 0;
+  }
+  1% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 2;
+  }
+}
+
+// ============================================
+// HOVER GRID & BULLET INPUTS
+// ============================================
+
+.hover-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+
+  .grid-row {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+
+  label {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    margin: 0;
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  input {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  input:checked,
+  &:has(input:not(:checked)) input.player-bullet-input-1 {
+    & + label {
+      visibility: visible;
+      pointer-events: auto;
+      animation-play-state: running;
+
+      span {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: var(--column-size);
+        height: 100%;
+
+        &:hover {
+          background: crimson;
+          opacity: 0.5;
+        }
+
+        @for $hc from 1 through $hover-columns {
+          &.col-#{$hc} {
+            left: calc(#{$hc - 1} * var(--column-size));
+            height: var(--row-size);
+          }
+
+          &.col-#{$hover-columns} {
+            right: 0;
+            width: auto;
+          }
+        }
+
+        @for $hr from 1 through $rows {
+          &.row-#{$hr} {
+            top: #{($hr - 1) * $row-size};
+          }
+        }
+      }
+
+      &:hover ~ input:first-of-type {
+        @for $hc from 1 through $hover-columns {
+          --spawn-posX: #{$hc};
+          visibility: visible;
+          border: 10px solid red;
+        }
+        @for $hr from 1 through $rows {
+          --spawn-posX: #{$hr};
+        }
+      }
+    }
+  }
+
+  input:checked + label + .player-bullet {
+    animation: bullet-move var(--player-bullet-speed) forwards steps(#{$columns + 1});
+  }
+
+  .player-bullet {
+    position: absolute;
+    width: 80px;
+    height: 5px;
+    border-radius: 100%;
+    background: aqua;
+    transform: translate3d(0, -100%, 0);
+    pointer-events: none;
+    opacity: 0;
+
+    &::after {
+      position: absolute;
+      bottom: 110%;
+    }
+  }
+}
+
+body:has(#group5-input1:checked) .hover-grid input:checked + label {
+  &#group1-label2 { z-index: 1; }
+  &#group2-label2 { z-index: 2; }
+  &#group3-label2 { z-index: 3; }
+  &#group4-label2 { z-index: 4; }
+  &#group5-label2 { z-index: 5; }
+}
+
+body:has(#group5-input2:checked) .hover-grid input:checked + label {
+  &#group1-label1 { z-index: 1; }
+  &#group2-label1 { z-index: 2; }
+  &#group3-label1 { z-index: 3; }
+  &#group4-label1 { z-index: 4; }
+  &#group5-label1 { z-index: 5; }
+}
+
+@keyframes bullet-move {
+  @for $i from 0 through ($columns + 1) {
+    #{calc(($i * 100) / ($columns + 1) * 1%)} {
+      left: calc(#{$column-size * $i});
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================
+// BODY & UI CONTROLS
+// ============================================
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui;
+  background: #1a1a2a;
+  color: white;
+  overflow: hidden;
+  
+  * {
+    cursor: crosshair;
+  }
+
+  &:has(#start:checked) .container {
+    --enemy-tracking-state: running;
+
+    .enemy {
+      animation-play-state: running;
+    }
+  }
+
+  &:has(#debug:checked) {
+    padding: 4vw 5vw;
+
+    .container {
+      inset: 4vw 5vw;
+    }
+
+    .sub-container {
+      border: 2px solid white;
+    }
+
+    .container::after,
+    .sub-container::after,
+    .enemy::after,
+    .player-bullet::after,
+    .enemy-bullet::after {
+      visibility: visible !important;
+    }
+
+    .enemy {
+      border: 2px solid white;
+    }
+  }
+
+  label.start,
+  label.debug {
+    position: absolute;
+    left: 10px;
+    display: block;
+    user-select: none;
+    z-index: 999;
+
+    input {
+      margin-inline: -2px 8px;
+    }
+  }
+
+  label.start {
+    top: 10px;
+  }
+  label.debug {
+    bottom: 10px;
+  }
+}
+
+.enemy-bullet {
+  --asdf: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-offsetX));
+  // --asdf2: calc((var(--enemy-bullet-1-startX) - 0));
+  // --asdf: calc((var(--enemy-bullet-1-startX)));
+  --asdf2: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX));
+  width: 20px;
+  aspect-ratio: 1;
+  transform: translate3d(-50%, -50%, 0);
+  background: red;
+  border-radius: 100%;
+  position: absolute;
+
+  // Safari:
+  // top: calc(((var(--enemy-bullet-1-posY) + var(--enemy-bullet-1-startY)) * #{$row-size}) - #{$row-size / 2});
+  // left: calc((var(--asdf2) * #{$column-size}) - #{$column-size / 2});
+  
+  // Chrome:
+  top: calc((var(--enemy-bullet-1-posY) * #{$row-size}) - calc($row-size / 2));
+  left: calc((var(--enemy-bullet-1-posX) * #{$column-size}) - calc($column-size / 2));
+
+  // opacity: var(--enemy-bullet-1-opacity);
+
+  &::after {
+    position: absolute;
+    bottom: 110%;
+    font-size: 20px;
+    visibility: hidden;
+    // Chrome:
+    counter-reset: posX var(--enemy-bullet-1-posX) posY var(--enemy-bullet-1-startY);
+    // Safari:
+    // counter-reset: posX calc(var(--asdf2)) posY var(--enemy-bullet-1-startY);
+
+    // Old?
+    // counter-reset: posX calc(var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-offsetX)) posY var(--enemy-bullet-1-startY);
+    content: counter(posX) "/" counter(posY);
+  }
+}
+
+// Enemy bullet tracking
+// Chrome - tracks player
+@keyframes enemy-bullet-tracking {
+  from {
+    --enemy-bullet-1-startX: var(--enemy-1-posX);
+    --enemy-bullet-1-startY: var(--enemy-1-posY);
+    --enemy-bullet-1-endX: var(--player-posX);
+    --enemy-bullet-1-endY: var(--player-posY);
+    --enemy-bullet-1-posX: var(--enemy-bullet-1-startX);
+    --enemy-bullet-1-posY: var(--enemy-bullet-1-startY);
+  }
+
+  to {
+    --enemy-bullet-1-startX: var(--enemy-1-posX);
+    --enemy-bullet-1-startY: var(--enemy-1-posY);
+    --enemy-bullet-1-endX: var(--player-posX);
+    --enemy-bullet-1-endY: var(--player-posY);
+    --enemy-bullet-1-posX: var(--enemy-bullet-1-endX);
+    --enemy-bullet-1-posY: var(--enemy-bullet-1-endY);
+  }
+}
+
+// Enemy bullet tracking
+// Safari - straight path
+
+// @keyframes enemy-bullet-tracking {
+//   from {
+//     --enemy-bullet-1-posX: 0;
+//     --enemy-bullet-1-posY: 0;
+//   }
+
+//   to {
+//     --enemy-bullet-1-posX: -#{$columns};
+//     --enemy-bullet-1-posY: 0;
+//   }
+// }
+
+
+// Not used yet
+// @keyframes enemy-bullet-move {
+//   from {
+//       top: var(--enemy-bullet-1-posY:);
+//       left: var(--enemy-bullet-1-posX:);
+//   }
+//   to {
+//       top: var(--enemy-bullet-1-posY);
+//       left: var(--enemy-bullet-1-posX);
+//   }
+// }

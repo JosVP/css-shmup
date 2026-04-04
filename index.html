@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shmup — Vite + SCSS</title>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <label class="start" for="start">
+      <input type="checkbox" id="start" checked />Start level
+    </label>
+
+    <label class="debug" for="debug">
+      <input type="checkbox" id="debug" checked />Debug
+    </label>
+
+    <div class="container">
+      <div class="sub-container">
+        <section class="hover-grid">
+          <div class="grid-row">
+            <input id="group1-input1" class="player-bullet-input-1" type="radio" name="group1" />
+            <label id="group1-label1" for="group2-input1">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-1"></div>
+
+            <input id="group2-input1" class="player-bullet-input-2" type="radio" name="group2" />
+            <label id="group2-label1" for="group3-input1">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-2"></div>
+
+            <input id="group3-input1" class="player-bullet-input-3" type="radio" name="group3" />
+            <label id="group3-label1" for="group4-input1">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-3"></div>
+
+            <input id="group4-input1" class="player-bullet-input-4" type="radio" name="group4" />
+            <label id="group4-label1" for="group5-input1">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-4"></div>
+
+            <input id="group5-input1" class="player-bullet-input-5" type="radio" name="group5" />
+            <label id="group5-label1" for="group1-input2">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-5"></div>
+
+            <input id="group1-input2" class="player-bullet-input-6" type="radio" name="group1" />
+            <label id="group1-label2" for="group2-input2">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-6"></div>
+
+            <input id="group2-input2" class="player-bullet-input-7" type="radio" name="group2" />
+            <label id="group2-label2" for="group3-input2">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-7"></div>
+
+            <input id="group3-input2" class="player-bullet-input-8" type="radio" name="group3" />
+            <label id="group3-label2" for="group4-input2">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-8"></div>
+
+            <input id="group4-input2" class="player-bullet-input-9" type="radio" name="group4" />
+            <label id="group4-label2" for="group5-input2">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-9"></div>
+
+            <input id="group5-input2" class="player-bullet-input-10" type="radio" name="group5" />
+            <label id="group5-label2" for="group1-input1">
+              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+            </label>
+            <div class="player-bullet player-bullet-10"></div>
+          </div>
+        </section>
+
+        <div class="spacing"></div>
+
+        <div class="level">
+          <div class="entity player">
+            <div class="idle">
+              <div class="animation">➤</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-1">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-2">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-3">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-4">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-5">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-6">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-7">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+          <div class="entity enemy enemy-8">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-9">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-10">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-11">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-12">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-13">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-14">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-15">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-16">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-17">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-18">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-19">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-20">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-21">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-22">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-23">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-24">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-25">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-26">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-27">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-28">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-29">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="entity enemy enemy-30">
+            <div class="idle">
+              <div class="animation">✈︎</div>
+            </div>
+            <div class="collision">
+              <div class="animation">💥</div>
+            </div>
+          </div>
+
+          <div class="enemy-bullet"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
