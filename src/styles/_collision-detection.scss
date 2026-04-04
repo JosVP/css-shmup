@@ -1,0 +1,80 @@
+// ============================================
+// COLLISION DETECTION
+// ============================================
+
+@for $b from 1 through $player-bullets {
+  @each $e, $config in $enemy-configs {
+    $path-name: map.get($config, 'path-type');
+    $path-cells: get-path-cells($path-name);
+
+    // Only check cells that are actually in this enemy's path
+    @each $cell in $path-cells {
+      $col: map.get($cell, 'x');
+      $row: map.get($cell, 'y');
+
+      // Bullet vs Enemy collision
+      @container enemy-vs-bullet-container
+        style(--player-bullet-#{$b}-posX: #{$col}) and
+        style(--enemy-#{$e}-posX: #{$col}) and
+        style(--player-bullet-#{$b}-posY: #{$row}) and
+        style(--enemy-#{$e}-posY: #{$row}) {
+        .sub-container {
+          --enemy-#{$e}-bullet-collision-animation: running !important;
+        }
+      }
+
+      // Player vs Enemy collision
+      @container enemy-vs-player-container
+        style(--player-posX: #{$col}) and
+        style(--enemy-#{$e}-posX: #{$col}) and
+        style(--player-posY: #{$row}) and
+        style(--enemy-#{$e}-posY: #{$row}) {
+        .sub-container {
+          --enemy-#{$e}-player-collision-animation: running !important;
+        }
+      }
+    }
+
+    // Collision state triggers
+    @container enemy-vs-bullet-subcontainer
+      style(--enemy-#{$e}-total-collision-value: 1) or
+      style(--enemy-#{$e}-total-collision-value: 3) {
+      .enemy-#{$e} .idle,
+      .enemy-#{$e} .collision {
+        animation-play-state: running !important;
+      }
+    }
+
+    @container enemy-vs-player-subcontainer
+      style(--enemy-#{$e}-total-collision-value: 2) and
+      style(--total-2s: 2) {
+      .enemy-#{$e} .idle,
+      .enemy-#{$e} .collision,
+      .player .idle,
+      .player .collision {
+        animation-play-state: running !important;
+      }
+    }
+  }
+}
+
+@container enemy-vs-player-subcontainer style(--max-2s: 2) {
+  * {
+    pointer-events: none !important;
+  }
+}
+
+@for $hc from 1 through $hover-columns {
+  @for $hr from 1 through $rows {
+    @container bullet-vs-player-container
+      style(--player-posX: #{$hc}) and
+      style(--player-posY: #{$hr}) and
+      style(--enemy-bullet-1-posX: #{$hc}) and
+      style(--enemy-bullet-1-posY: #{$hr}) {
+      .player .idle,
+      .player .collision {
+        animation-play-state: running !important;
+      }
+    }
+  }
+}

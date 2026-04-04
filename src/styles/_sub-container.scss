@@ -1,0 +1,39 @@
+@use 'sass:list';
+@import 'enemy-configs';
+
+// ============================================
+// SUB-CONTAINER SETUP
+// ============================================
+
+.sub-container {
+  container-name: enemy-vs-bullet-subcontainer enemy-vs-player-subcontainer;
+
+  @for $e from 1 through $total-enemies {
+    --enemy-#{$e}-bullet-collision: 0;
+    --enemy-#{$e}-player-collision: 0;
+    --enemy-#{$e}-bullet-collision-animation: paused;
+    --enemy-#{$e}-player-collision-animation: paused;
+    --enemy-#{$e}-total-collision-value: calc(var(--enemy-#{$e}-bullet-collision) + var(--enemy-#{$e}-player-collision));
+    --enemy-#{$e}-is-2: calc(var(--enemy-#{$e}-total-collision-value) * clamp(0, 1 - abs(2 - var(--enemy-#{$e}-total-collision-value)), 1));
+  }
+
+  $animations: ();
+  $total-2s-vars: ();
+  $max-2s-vars: ();
+
+  @for $e from 1 through $total-enemies {
+    $animations: list.append($animations, enemy-#{$e}-bullet-collision-animation 0.01s forwards var(--enemy-#{$e}-bullet-collision-animation), comma);
+    $animations: list.append($animations, enemy-#{$e}-player-collision-animation 0.01s forwards var(--enemy-#{$e}-player-collision-animation), comma);
+
+    @if $e == 1 {
+      $total-2s-vars: "var(--enemy-#{$e}-is-2)";
+    } @else {
+      $total-2s-vars: $total-2s-vars + " + var(--enemy-#{$e}-is-2)";
+    }
+    $max-2s-vars: list.append($max-2s-vars, var(--enemy-#{$e}-is-2), comma);
+  }
+
+  animation: $animations;
+  --total-2s: calc(#{$total-2s-vars});
+  --max-2s: max(#{$max-2s-vars});
+}

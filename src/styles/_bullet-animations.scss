@@ -1,0 +1,70 @@
+@use 'sass:list';
+
+// ============================================
+// BULLET ANIMATIONS & TRACKING
+// ============================================
+
+@for $b from 1 through $player-bullets {
+  .container {
+    --player-bullet-#{$b}-posY: 3;
+
+    .player-bullet-#{$b} {
+      top: calc((var(--player-bullet-#{$b}-posY)) * #{$row-size} - calc($row-size / 2));
+    }
+
+    &:has(.player-bullet-input-#{$b}:checked) {
+      --player-bullet-#{$b}-animation:
+        bullet-#{$b}-x-tracking var(--player-bullet-speed) forwards steps(#{$columns + 1}),
+        bullet-#{$b}-y-tracking var(--player-bullet-speed) forwards linear;
+
+      .player-bullet-#{$b} {
+        animation: bullet-move-#{$b} var(--player-bullet-speed) forwards linear;
+      }
+    }
+  }
+
+  @keyframes bullet-#{$b}-x-tracking {
+    // Calculate percentage ranges for each column step
+    // This animation is verbose as a fix for Safari
+    $step: calc(100 / $columns);
+
+    @for $i from 0 through $columns {
+      $startPercent: $i * $step;
+      $endPercent: ($i + 1) * $step;
+
+      #{$startPercent}%,
+      #{$endPercent - 0.01}% {
+        --player-bullet-#{$b}-startX: var(--player-posX);
+        --player-bullet-#{$b}-posX: calc(#{$i} + var(--player-posX) + 1);
+      }
+    }
+
+    100% {
+      --player-bullet-#{$b}-startX: var(--player-posX);
+      --player-bullet-#{$b}-posX: calc(99 + var(--player-posX));
+    }
+  }
+  @keyframes bullet-#{$b}-y-tracking {
+    from,to {
+        --player-bullet-#{$b}-posY: var(--player-posY);
+    }
+  }
+  @keyframes bullet-move-#{$b} {
+    from {
+      opacity: 1;
+      left: calc((var(--player-bullet-#{$b}-startX)) * #{$column-size});
+    }
+    to {
+      opacity: 1;
+      left: calc(((var(--player-bullet-#{$b}-startX)) + #{$columns}) * #{$column-size});
+    }
+  }
+
+  .sub-container {
+    .player-bullet-#{$b}::after {
+      visibility: hidden;
+      counter-reset: posX-#{$b} var(--player-bullet-#{$b}-posX) posY-#{$b} var(--player-bullet-#{$b}-posY);
+      content: "#{$b}: " counter(posX-#{$b}) "/" counter(posY-#{$b});
+    }
+  }
+}

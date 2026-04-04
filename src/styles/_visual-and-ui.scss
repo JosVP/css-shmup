@@ -1,0 +1,394 @@
+// ============================================
+// VISUAL STYLES, HOVER GRID, BODY & UI
+// ============================================
+
+// ...existing code...
+
+.level {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  pointer-events: none;
+}
+
+.entity {
+  position: absolute;
+  width: var(--column-size);
+  height: var(--row-size);
+  font-size: 5vw;
+
+  .idle,
+  .collision {
+    --collision: 0;
+    animation: entity-collision-animation 0.01s forwards paused;
+    container-name: entity-collision-trigger;
+
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .idle {
+    .animation {
+      opacity: 1;
+      animation: hide-idle 0.01s forwards paused;
+    }
+  }
+
+  .collision {
+    .animation {
+      opacity: 0;
+      animation: show-collision 1s forwards paused;
+    }
+  }
+}
+
+.player {
+  transition: all 0.25s ease;
+  left: calc((var(--player-posX) - 1) * #{$column-size});
+  top: calc((var(--player-posY) - 1) * #{$row-size});
+}
+
+.enemy {
+  left: 100%;
+  box-sizing: border-box;
+
+  &::after {
+    position: absolute;
+    bottom: 110%;
+    font-size: 20px;
+  }
+
+  .idle {
+    color: crimson;
+
+    .animation {
+      rotate: 180deg;
+    }
+  }
+}
+
+@container entity-collision-trigger style(--collision: 1) {
+  .animation,
+  .collision {
+    animation-play-state: running !important;
+  }
+}
+
+@keyframes entity-collision-animation {
+  to {
+    --collision: 1;
+  }
+}
+
+@keyframes hide-idle {
+  to {
+    opacity: 0;
+    scale: 0;
+  }
+}
+
+@keyframes show-collision {
+  0% {
+    opacity: 0;
+    scale: 0;
+  }
+  1% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 2;
+  }
+}
+
+// ============================================
+// HOVER GRID & BULLET INPUTS
+// ============================================
+
+.hover-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+
+  .grid-row {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+
+  label {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    margin: 0;
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  input {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  input:checked,
+  &:has(input:not(:checked)) input.player-bullet-input-1 {
+    & + label {
+      visibility: visible;
+      pointer-events: auto;
+      animation-play-state: running;
+
+      span {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: var(--column-size);
+        height: 100%;
+
+        &:hover {
+          background: crimson;
+          opacity: 0.5;
+        }
+
+        @for $hc from 1 through $hover-columns {
+          &.col-#{$hc} {
+            left: calc(#{$hc - 1} * var(--column-size));
+            height: var(--row-size);
+          }
+
+          &.col-#{$hover-columns} {
+            right: 0;
+            width: auto;
+          }
+        }
+
+        @for $hr from 1 through $rows {
+          &.row-#{$hr} {
+            top: #{($hr - 1) * $row-size};
+          }
+        }
+      }
+
+      &:hover ~ input:first-of-type {
+        @for $hc from 1 through $hover-columns {
+          --spawn-posX: #{$hc};
+          visibility: visible;
+          border: 10px solid red;
+        }
+        @for $hr from 1 through $rows {
+          --spawn-posX: #{$hr};
+        }
+      }
+    }
+  }
+
+  input:checked + label + .player-bullet {
+    animation: bullet-move var(--player-bullet-speed) forwards steps(#{$columns + 1});
+  }
+
+  .player-bullet {
+    position: absolute;
+    width: 80px;
+    height: 5px;
+    border-radius: 100%;
+    background: aqua;
+    transform: translate3d(0, -100%, 0);
+    pointer-events: none;
+    opacity: 0;
+
+    &::after {
+      position: absolute;
+      bottom: 110%;
+    }
+  }
+}
+
+body:has(#group5-input1:checked) .hover-grid input:checked + label {
+  &#group1-label2 { z-index: 1; }
+  &#group2-label2 { z-index: 2; }
+  &#group3-label2 { z-index: 3; }
+  &#group4-label2 { z-index: 4; }
+  &#group5-label2 { z-index: 5; }
+}
+
+body:has(#group5-input2:checked) .hover-grid input:checked + label {
+  &#group1-label1 { z-index: 1; }
+  &#group2-label1 { z-index: 2; }
+  &#group3-label1 { z-index: 3; }
+  &#group4-label1 { z-index: 4; }
+  &#group5-label1 { z-index: 5; }
+}
+
+@keyframes bullet-move {
+  @for $i from 0 through ($columns + 1) {
+    #{calc(($i * 100) / ($columns + 1) * 1%)} {
+      left: calc(#{$column-size * $i});
+      opacity: 1;
+    }
+  }
+}
+
+// ============================================
+// BODY & UI CONTROLS
+// ============================================
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui;
+  background: #1a1a2a;
+  color: white;
+  overflow: hidden;
+  
+  * {
+    cursor: crosshair;
+  }
+
+  &:has(#start:checked) .container {
+    --enemy-tracking-state: running;
+
+    .enemy {
+      animation-play-state: running;
+    }
+  }
+
+  &:has(#debug:checked) {
+    padding: 4vw 5vw;
+
+    .container {
+      inset: 4vw 5vw;
+    }
+
+    .sub-container {
+      border: 2px solid white;
+    }
+
+    .container::after,
+    .sub-container::after,
+    .enemy::after,
+    .player-bullet::after,
+    .enemy-bullet::after {
+      visibility: visible !important;
+    }
+
+    .enemy {
+      border: 2px solid white;
+    }
+  }
+
+  label.start,
+  label.debug {
+    position: absolute;
+    left: 10px;
+    display: block;
+    user-select: none;
+    z-index: 999;
+
+    input {
+      margin-inline: -2px 8px;
+    }
+  }
+
+  label.start {
+    top: 10px;
+  }
+  label.debug {
+    bottom: 10px;
+  }
+}
+
+.enemy-bullet {
+  --asdf: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-offsetX));
+  // --asdf2: calc((var(--enemy-bullet-1-startX) - 0));
+  // --asdf: calc((var(--enemy-bullet-1-startX)));
+  --asdf2: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX));
+  width: 20px;
+  aspect-ratio: 1;
+  transform: translate3d(-50%, -50%, 0);
+  background: red;
+  border-radius: 100%;
+  position: absolute;
+
+  // Safari:
+  // top: calc(((var(--enemy-bullet-1-posY) + var(--enemy-bullet-1-startY)) * #{$row-size}) - #{$row-size / 2});
+  // left: calc((var(--asdf2) * #{$column-size}) - #{$column-size / 2});
+  
+  // Chrome:
+  top: calc((var(--enemy-bullet-1-posY) * #{$row-size}) - calc($row-size / 2));
+  left: calc((var(--enemy-bullet-1-posX) * #{$column-size}) - calc($column-size / 2));
+
+  // opacity: var(--enemy-bullet-1-opacity);
+
+  &::after {
+    position: absolute;
+    bottom: 110%;
+    font-size: 20px;
+    visibility: hidden;
+    // Chrome:
+    counter-reset: posX var(--enemy-bullet-1-posX) posY var(--enemy-bullet-1-startY);
+    // Safari:
+    // counter-reset: posX calc(var(--asdf2)) posY var(--enemy-bullet-1-startY);
+
+    // Old?
+    // counter-reset: posX calc(var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-offsetX)) posY var(--enemy-bullet-1-startY);
+    content: counter(posX) "/" counter(posY);
+  }
+}
+
+// Enemy bullet tracking
+// Chrome - tracks player
+@keyframes enemy-bullet-tracking {
+  from {
+    --enemy-bullet-1-startX: var(--enemy-1-posX);
+    --enemy-bullet-1-startY: var(--enemy-1-posY);
+    --enemy-bullet-1-endX: var(--player-posX);
+    --enemy-bullet-1-endY: var(--player-posY);
+    --enemy-bullet-1-posX: var(--enemy-bullet-1-startX);
+    --enemy-bullet-1-posY: var(--enemy-bullet-1-startY);
+  }
+
+  to {
+    --enemy-bullet-1-startX: var(--enemy-1-posX);
+    --enemy-bullet-1-startY: var(--enemy-1-posY);
+    --enemy-bullet-1-endX: var(--player-posX);
+    --enemy-bullet-1-endY: var(--player-posY);
+    --enemy-bullet-1-posX: var(--enemy-bullet-1-endX);
+    --enemy-bullet-1-posY: var(--enemy-bullet-1-endY);
+  }
+}
+
+// Enemy bullet tracking
+// Safari - straight path
+
+// @keyframes enemy-bullet-tracking {
+//   from {
+//     --enemy-bullet-1-posX: 0;
+//     --enemy-bullet-1-posY: 0;
+//   }
+//
+//   to {
+//     --enemy-bullet-1-posX: -#{$columns};
+//     --enemy-bullet-1-posY: 0;
+//   }
+// }
+
+
+// Not used yet
+// @keyframes enemy-bullet-move {
+//   from {
+//       top: var(--enemy-bullet-1-posY:);
+//       left: var(--enemy-bullet-1-posX);
+//   }
+//   to {
+//       top: var(--enemy-bullet-1-posY);
+//       left: var(--enemy-bullet-1-posX);
+//   }
+

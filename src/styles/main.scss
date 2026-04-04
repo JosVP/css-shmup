@@ -11,6 +11,21 @@
 @use 'sass:list';
 @use "sass:map";
 
+@import 'configuration';
+@import 'path-types';
+@import 'enemy-configs';
+@import 'helpers';
+@import 'custom-properties';
+@import 'sub-container';
+@import 'collision-animations';
+@import 'sub-container-animations';
+@import 'container-setup';
+@import 'enemy-animations';
+@import 'bullet-animations';
+@import 'collision-detection';
+@import 'container-master-animation';
+@import 'visual-and-ui';
+
 // ============================================
 // CONFIGURATION
 // ============================================

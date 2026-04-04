@@ -1,0 +1,32 @@
+@use 'sass:list';
+@use 'sass:map';
+@import 'path-types';
+@import 'configuration';
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+// Get all cells an enemy will occupy during its path
+@function get-path-cells($path-name) {
+  $path-data: map.get($path-types, $path-name);
+  $path-type: map.get($path-data, 'type');
+  $cells: ();
+
+  @if $path-type == 'straight' {
+    $start: map.get($path-data, 'start');
+    $end: map.get($path-data, 'end');
+    $start-x: map.get($start, 'x');
+    $end-x: map.get($end, 'x');
+    $y: map.get($start, 'y');
+
+    // Generate all cells from start to end
+    @for $x from $start-x through $end-x {
+      $cells: list.append($cells, (x: $x, y: $y));
+    }
+  } @else if $path-type == 'custom-path' {
+    $cells: map.get($path-data, 'cells');
+  }
+
+  @return $cells;
+}

@@ -1,0 +1,51 @@
+// ============================================
+// SUB-CONTAINER ANIMATIONS
+// ============================================
+
+.sub-container {
+  &::after {
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    counter-reset:
+      value1 var(--enemy-1-total-collision-value)
+      value2 var(--enemy-1-is-2)
+      total2s var(--total-2s)
+      max2s var(--max-2s)
+    ;
+    content:
+      "v1: " counter(value1)
+      " - v2: " counter(value2)
+      " - t2s: " counter(total2s)
+      " - m2s: " counter(max2s)
+    ;
+  }
+
+  display: flex;
+  align-items: center;
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      transparent 0%,
+      transparent var(--column-size),
+      rgba(255, 255, 255, 0.1) var(--column-size),
+      rgba(255, 255, 255, 0.1) calc(var(--column-size) * 2)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent var(--row-size),
+      rgba(255, 255, 255, 0.1) var(--row-size),
+      rgba(255, 255, 255, 0.1) calc(var(--row-size) * 2)
+    );
+
+  .spacing {
+    width: var(--column-size);
+    height: var(--row-size);
+  }
+}

@@ -1,0 +1,47 @@
+@import 'configuration';
+
+// ============================================
+// PATH TYPES DEFINITION
+// ============================================
+
+$path-types: (
+  row-1-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 1),
+    end: (x: 0, y: 1)
+  ),
+  row-2-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 2),
+    end: (x: 0, y: 2)
+  ),
+  row-3-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 3),
+    end: (x: 0, y: 3)
+  ),
+  row-4-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 4),
+    end: (x: 0, y: 4)
+  ),
+  row-5-straight: (
+    type: straight,
+    start: (x: $columns + 1, y: 5),
+    end: (x: 0, y: 5)
+  ),
+  row-1-2-u-turn: (
+    type: custom-path,
+    cells: (
+      (x: 13, y: 1), (x: 12, y: 1), (x: 11, y: 1), (x: 10, y: 1), (x: 9, y: 1), (x: 8, y: 1), (x: 7, y: 1), (x: 6.5, y: 1),
+      (x: 6, y: 1.5), (x: 6.5, y: 2), (x: 7, y: 2), (x: 8, y: 2), (x: 9, y: 2), (x: 10, y: 2), (x: 11, y: 2), (x: 12, y: 2), (x: 13, y: 2)
+    )
+  ),
+  diagonal-5-to-1: (
+    type: custom-path,
+    cells: (
+      (x: 13, y: 5), (x: 12, y: 5), (x: 11, y: 5), (x: 10, y: 4.5), (x: 9, y: 4), (x: 8, y: 3.5), (x: 7, y: 3),
+      (x: 6, y: 2.5), (x: 5, y: 2), (x: 4, y: 1.5), (x: 3, y: 1), (x: 2, y: 1), (x: 1, y: 1), (x: 0, y: 1)
+    )
+  )
+);

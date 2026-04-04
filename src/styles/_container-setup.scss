@@ -1,0 +1,80 @@
+@use 'sass:list';
+@use 'sass:map';
+
+// ============================================
+// CONTAINER SETUP
+// ============================================
+
+.container {
+  --columns: #{$columns};
+  --column-size: #{$column-size};
+  --rows: #{$rows};
+  --row-size: #{$row-size};
+
+  --player-posX: 2;
+  --player-posY: 3;
+  --player-bullet-speed: #{$player-bullet-debug-speed + 0.75}s;
+
+  // --enemy-bullet-1-posY: 4;
+  // --enemy-bullet-1-posX: 10
+  // --enemy-bullet-1-startX: 1;
+  // --enemy-bullet-1-startY: 1;
+  // --enemy-bullet-1-endX: 1;
+  // --enemy-bullet-1-endY: 1;
+
+  @each $e, $config in $enemy-configs {
+    --enemy-#{$e}-speed: #{map.get($config, 'speed')};
+    --enemy-#{$e}-delay: #{map.get($config, 'delay')};
+  }
+
+  container-name: enemy-vs-bullet-container enemy-vs-player-container bullet-vs-player-container;
+
+  @for $hc from 1 through $hover-columns {
+    &:has(.hover-grid .col-#{$hc}:focus) {
+      --player-posX: #{$hc};
+
+      .player {
+        left: #{($hc - 1) * $column-size};
+      }
+    }
+    &:has(.hover-grid .col-#{$hc}:hover) {
+      --player-posX: #{$hc} !important;
+
+      .player {
+        left: #{($hc - 1) * $column-size} !important;
+      }
+    }
+  }
+  @for $hr from 1 through $rows {
+    &:has(.hover-grid .row-#{$hr}:focus) {
+      --player-posY: #{$hr};
+
+      .player {
+        top: calc((var(--player-posY) - 1) * #{$row-size});
+      }
+    }
+    &:has(.hover-grid .row-#{$hr}:hover) {
+      --player-posY: #{$hr} !important;
+
+      .player {
+        top: calc((var(--player-posY) - 1) * #{$row-size}) !important;
+      }
+    }
+  }
+
+  &::after {
+    visibility: hidden;
+    display: block;
+    position: absolute;
+    top: calc(100% + 10px);
+    counter-reset:
+      playerY var(--player-posY)
+      playerX var(--player-posX)
+    ;
+    content:
+      "plY: " counter(playerY)
+      " - plX: " counter(playerX)
+    ;
+    right: 0;
+  }
+}

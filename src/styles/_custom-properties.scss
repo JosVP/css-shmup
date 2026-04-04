@@ -1,0 +1,58 @@
+@use 'sass:list';
+@use 'sass:map';
+@import 'configuration';
+@import 'enemy-configs';
+@import 'helpers';
+
+// ============================================
+// CUSTOM PROPERTIES
+// ============================================
+
+@property --total-2s {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --max-2s {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@for $e from 1 through $total-enemies {
+  @property --enemy-#{$e}-is-2 {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @property --enemy-#{$e}-total-collision-value {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+}
+
+@for $b from 1 through $player-bullets {
+  @property --player-bullet-#{$b}-posX {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: -1;
+  }
+}
+
+@property --enemy-bullet-1-posY {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --enemy-bullet-1-posX {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 99;
+}
+@property --enemy-bullet-1-startX {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 7;
+}

@@ -1,0 +1,24 @@
+@use 'sass:list';
+@import 'configuration';
+
+// ============================================
+// ENEMY CONFIGURATION
+// ============================================
+
+$enemy-configs: (
+  1: (
+    path-type: row-3-straight,
+    enemy-type: 1,
+    speed: #{$enemy-debug-speed + 3}s,
+    delay: 0s
+  ),
+  // 2: (
+  //   path-type: row-1-straight,
+  //   enemy-type: 2,
+  //   speed: #{$enemy-debug-speed + 2.5}s,
+  //   delay: 1s
+  // ),
+  // ... (rest commented out configs retained)
+);
+
+$total-enemies: list.length($enemy-configs);

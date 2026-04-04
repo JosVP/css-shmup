@@ -1,0 +1,17 @@
+// ============================================
+// COLLISION ANIMATIONS
+// ============================================
+
+@for $e from 1 through $total-enemies {
+  @keyframes enemy-#{$e}-bullet-collision-animation {
+    to {
+      --enemy-#{$e}-bullet-collision: 1;
+    }
+  }
+
+  @keyframes enemy-#{$e}-player-collision-animation {
+    to {
+      --enemy-#{$e}-player-collision: 2;
+    }
+  }
+}
