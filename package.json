@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 2900"
+    "preview": "vite preview --port 2900",
+    "concat": "node ./scripts/concat-scss.cjs"
   },
   "devDependencies": {
     "sass": "^1.99.0",
