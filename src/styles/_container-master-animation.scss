@@ -1,6 +1,3 @@
-@use 'sass:list';
-@use 'sass:map';
-
 // ============================================
 // CONTAINER MASTER ANIMATION
 // ============================================
@@ -14,7 +11,7 @@
 
   $animations: ();
   @for $b from 1 through $player-bullets {
-    $animations: list.append($animations, var(--player-bullet-#{$b}-animation), comma);
+    $animations: append($animations, var(--player-bullet-#{$b}-animation), comma);
   }
 
   --enemy-bullet-1-animation:
@@ -32,7 +29,7 @@
   // @for $i from 0 through ($enemy-bullet-repeats - 1) {
   //   $delay: $enemy-bullet-interval * $i;
 
-  //   $enemy-bullet-1-animations: list.append(
+  //   $enemy-bullet-1-animations: append(
   //     $enemy-bullet-1-animations,
   //     enemy-bullet-tracking #{$enemy-bullet-interval}s #{$delay}s linear forwards,
   //     comma
@@ -40,11 +37,11 @@
   // }
   // --enemy-bullet-1-animation: $enemy-bullet-1-animations;
 
-  $animations: list.append($animations, var(--enemy-bullet-1-animation), comma);
+  $animations: append($animations, var(--enemy-bullet-1-animation), comma);
 
   @each $e, $config in $enemy-configs {
-    $path-cells: get-path-cells(map.get($config, 'path-type'));
-    $animations: list.append($animations, enemy-#{$e}-tracking var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards steps(#{list.length($path-cells)}) var(--enemy-tracking-state), comma);
+    $path-cells: get-path-cells(map-get($config, 'path-type'));
+    $animations: append($animations, enemy-#{$e}-tracking var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards steps(#{length($path-cells)}) var(--enemy-tracking-state), comma);
   }
   animation: $animations;
 

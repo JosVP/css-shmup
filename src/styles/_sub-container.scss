@@ -1,4 +1,3 @@
-@use 'sass:list';
 @import 'enemy-configs';
 
 // ============================================
@@ -22,15 +21,15 @@
   $max-2s-vars: ();
 
   @for $e from 1 through $total-enemies {
-    $animations: list.append($animations, enemy-#{$e}-bullet-collision-animation 0.01s forwards var(--enemy-#{$e}-bullet-collision-animation), comma);
-    $animations: list.append($animations, enemy-#{$e}-player-collision-animation 0.01s forwards var(--enemy-#{$e}-player-collision-animation), comma);
+    $animations: append($animations, enemy-#{$e}-bullet-collision-animation 0.01s forwards var(--enemy-#{$e}-bullet-collision-animation), comma);
+    $animations: append($animations, enemy-#{$e}-player-collision-animation 0.01s forwards var(--enemy-#{$e}-player-collision-animation), comma);
 
     @if $e == 1 {
       $total-2s-vars: "var(--enemy-#{$e}-is-2)";
     } @else {
       $total-2s-vars: $total-2s-vars + " + var(--enemy-#{$e}-is-2)";
     }
-    $max-2s-vars: list.append($max-2s-vars, var(--enemy-#{$e}-is-2), comma);
+    $max-2s-vars: append($max-2s-vars, var(--enemy-#{$e}-is-2), comma);
   }
 
   animation: $animations;

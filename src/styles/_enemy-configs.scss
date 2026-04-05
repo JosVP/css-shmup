@@ -1,6 +1,3 @@
-@use 'sass:list';
-@import 'configuration';
-
 // ============================================
 // ENEMY CONFIGURATION
 // ============================================
@@ -188,4 +185,4 @@ $enemy-configs: (
   // ),
 );
 
-$total-enemies: list.length($enemy-configs);
+$total-enemies: length($enemy-configs);

@@ -8,4 +8,21 @@ export default defineConfig({
   build: {
     minify: false,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler",
+        silenceDeprecations: ["slash-div", "import", "global-builtin"],
+      },
+    },
+  },
+  plugins: [
+    {
+      name: "force-full-reload",
+      handleHotUpdate({ server }) {
+        server.ws.send({ type: "full-reload" });
+        return [];
+      },
+    },
+  ],
 });

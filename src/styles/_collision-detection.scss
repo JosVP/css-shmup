@@ -4,13 +4,13 @@
 
 @for $b from 1 through $player-bullets {
   @each $e, $config in $enemy-configs {
-    $path-name: map.get($config, 'path-type');
+    $path-name: map-get($config, 'path-type');
     $path-cells: get-path-cells($path-name);
 
     // Only check cells that are actually in this enemy's path
     @each $cell in $path-cells {
-      $col: map.get($cell, 'x');
-      $row: map.get($cell, 'y');
+      $col: map-get($cell, 'x');
+      $row: map-get($cell, 'y');
 
       // Bullet vs Enemy collision
       @container enemy-vs-bullet-container

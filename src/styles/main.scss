@@ -8,9 +8,6 @@
 // - Add enemy health based on animation paused/running
 // - Player respawn with lives
 
-@use 'sass:list';
-@use "sass:map";
-
 @import 'configuration';
 @import 'path-types';
 @import 'enemy-configs';

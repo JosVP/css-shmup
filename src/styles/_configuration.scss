@@ -5,8 +5,8 @@
 $columns: 12;
 $hover-columns: 5;
 $rows: 5;
-$column-size: calc(100% / $columns);
-$row-size: calc(100% / $rows);
+$column-size: 100% / $columns;
+$row-size: 100% / $rows;
 
 $player-bullets: 10;
 $player-bullet-debug-speed: 0;

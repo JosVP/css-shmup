@@ -227,7 +227,7 @@ body:has(#group5-input2:checked) .hover-grid input:checked + label {
 
 @keyframes bullet-move {
   @for $i from 0 through ($columns + 1) {
-    #{calc(($i * 100) / ($columns + 1) * 1%)} {
+    #{($i * 100) / ($columns + 1)}% {
       left: calc(#{$column-size * $i});
       opacity: 1;
     }
@@ -320,8 +320,8 @@ body {
   // left: calc((var(--asdf2) * #{$column-size}) - #{$column-size / 2});
   
   // Chrome:
-  top: calc((var(--enemy-bullet-1-posY) * #{$row-size}) - calc($row-size / 2));
-  left: calc((var(--enemy-bullet-1-posX) * #{$column-size}) - calc($column-size / 2));
+  top: calc((var(--enemy-bullet-1-posY) * #{$row-size}) - #{$row-size / 2});
+  left: calc((var(--enemy-bullet-1-posX) * #{$column-size}) - #{$column-size / 2});
 
   // opacity: var(--enemy-bullet-1-opacity);
 
@@ -382,8 +382,8 @@ body {
 // Not used yet
 // @keyframes enemy-bullet-move {
 //   from {
-//       top: var(--enemy-bullet-1-posY);
-//       left: var(--enemy-bullet-1-posX);
+//       top: var(--enemy-bullet-1-posY:);
+//       left: var(--enemy-bullet-1-posX:);
 //   }
 //   to {
 //       top: var(--enemy-bullet-1-posY);

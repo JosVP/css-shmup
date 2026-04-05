@@ -1,23 +1,20 @@
-@use 'sass:list';
-@use 'sass:map';
-
 // ============================================
 // ENEMY ANIMATIONS & TRACKING
 // ============================================
 
 @each $e, $config in $enemy-configs {
-  $path-name: map.get($config, 'path-type');
-  $path-data: map.get($path-types, $path-name);
-  $path-type: map.get($path-data, 'type');
+  $path-name: map-get($config, 'path-type');
+  $path-data: map-get($path-types, $path-name);
+  $path-type: map-get($path-data, 'type');
   $path-cells: get-path-cells($path-name);
 
   .container {
     @if $path-type == 'straight' {
-      $start: map.get($path-data, 'start');
+      $start: map-get($path-data, 'start');
       --enemy-#{$e}-posX: 99;
       --enemy-#{$e}-posY: 99;
     } @else {
-      $first-cell: list.nth($path-cells, 1);
+      $first-cell: nth($path-cells, 1);
       --enemy-#{$e}-posX: 99;
       --enemy-#{$e}-posY: 99;
     }
@@ -26,12 +23,12 @@
   .enemy-#{$e} {
     @if $path-type == 'straight' {
       animation: enemy-#{$e}-move var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards linear paused;
-      $start: map.get($path-data, 'start');
-      top: calc((#{map.get($start, 'y')} - 1) * #{$row-size});
+      $start: map-get($path-data, 'start');
+      top: calc((#{map-get($start, 'y')} - 1) * #{$row-size});
     } @else {
       animation: enemy-#{$e}-move var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards linear paused;
-      $first-cell: list.nth($path-cells, 1);
-      top: calc((#{map.get($first-cell, 'y')} - 1) * #{$row-size});
+      $first-cell: nth($path-cells, 1);
+      top: calc((#{map-get($first-cell, 'y')} - 1) * #{$row-size});
     }
 
     &::after {
@@ -43,19 +40,19 @@
 
   // Generate enemy tracking animation
   @keyframes enemy-#{$e}-tracking {
-    $total-cells: list.length($path-cells);
+    $total-cells: length($path-cells);
 
     @for $i from 1 through $total-cells {
-      $cell: list.nth($path-cells, $i);
-      $first-cell: list.nth($path-cells, 1);
-      $progress: calc(calc($i - 1) * 100 / ($total-cells - 1));
+      $cell: nth($path-cells, $i);
+      $first-cell: nth($path-cells, 1);
+      $progress: ($i - 1) * 100 / ($total-cells - 1);
 
       #{$progress}% {
-        --enemy-#{$e}-posX: #{map.get($cell, 'x')};
-        --enemy-#{$e}-posY: #{map.get($cell, 'y')};
-        --enemy-bullet-1-startX: #{map.get($cell, 'x')};
-        --enemy-bullet-1-startY: #{map.get($cell, 'y')};
-        --enemy-bullet-1-offsetX: #{map.get($first-cell, 'x') - map.get($cell, 'x')};
+        --enemy-#{$e}-posX: #{map-get($cell, 'x')};
+        --enemy-#{$e}-posY: #{map-get($cell, 'y')};
+        --enemy-bullet-1-startX: #{map-get($cell, 'x')};
+        --enemy-bullet-1-startY: #{map-get($cell, 'y')};
+        --enemy-bullet-1-offsetX: #{map-get($first-cell, 'x') - map-get($cell, 'x')};
       }
     }
   }
@@ -69,13 +66,13 @@
     }
   } @else {
     @keyframes enemy-#{$e}-move {
-      $total-cells: list.length($path-cells);
+      $total-cells: length($path-cells);
 
       @for $i from 1 through $total-cells {
-        $cell: list.nth($path-cells, $i);
+        $cell: nth($path-cells, $i);
         $progress: ($i - 1) * 100 / ($total-cells - 1);
-        $x: map.get($cell, 'x');
-        $y: map.get($cell, 'y');
+        $x: map-get($cell, 'x');
+        $y: map-get($cell, 'y');
 
         #{$progress}% {
           left: calc((#{$x} - 1) * #{$column-size});
@@ -97,9 +94,9 @@
       }
 
       100% {
-        $last-cell: list.nth($path-cells, $total-cells);
-        left: calc((#{map.get($last-cell, 'x')} - 1) * #{$column-size});
-        top: calc((#{map.get($last-cell, 'y')} - 1) * #{$row-size});
+        $last-cell: nth($path-cells, $total-cells);
+        left: calc((#{map-get($last-cell, 'x')} - 1) * #{$column-size});
+        top: calc((#{map-get($last-cell, 'y')} - 1) * #{$row-size});
       }
     }
   }

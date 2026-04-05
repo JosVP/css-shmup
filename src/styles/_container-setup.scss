@@ -1,6 +1,3 @@
-@use 'sass:list';
-@use 'sass:map';
-
 // ============================================
 // CONTAINER SETUP
 // ============================================
@@ -23,8 +20,8 @@
   // --enemy-bullet-1-endY: 1;
 
   @each $e, $config in $enemy-configs {
-    --enemy-#{$e}-speed: #{map.get($config, 'speed')};
-    --enemy-#{$e}-delay: #{map.get($config, 'delay')};
+    --enemy-#{$e}-speed: #{map-get($config, 'speed')};
+    --enemy-#{$e}-delay: #{map-get($config, 'delay')};
   }
 
   container-name: enemy-vs-bullet-container enemy-vs-player-container bullet-vs-player-container;
