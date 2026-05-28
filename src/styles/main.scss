@@ -8,17 +8,22 @@
 // - Add enemy health based on animation paused/running
 // - Player respawn with lives
 
-@import 'configuration';
-@import 'path-types';
-@import 'enemy-configs';
-@import 'helpers';
-@import 'custom-properties';
-@import 'sub-container';
-@import 'collision-animations';
-@import 'sub-container-animations';
-@import 'container-setup';
-@import 'enemy-animations';
-@import 'bullet-animations';
-@import 'collision-detection';
-@import 'container-master-animation';
-@import 'visual-and-ui';
+@import 'config/configuration';
+@import 'config/helpers';
+
+@import 'config/custom-properties';
+@import 'config/path-types';
+@import 'config/enemy-configs';
+
+@import 'containers/main-container';
+@import 'containers/sub-container';
+
+@import 'entities/collision-detection';
+@import 'entities/entity-logic';
+
+@import 'entities/enemy-logic';
+@import 'entities/enemy-bullet-logic';
+
+@import 'entities/player-bullet-logic';
+
+@import 'ui/ui-logic';

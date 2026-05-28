@@ -1,6 +1,22 @@
 // ============================================
-// BULLET ANIMATIONS & TRACKING
+// PLAYER BULLET ANIMATIONS & TRACKING
 // ============================================
+
+.player-bullet {
+  position: absolute;
+  width: 80px;
+  height: 5px;
+  border-radius: 100%;
+  background: aqua;
+  transform: translate3d(0, -100%, 0);
+  pointer-events: none;
+  opacity: 0;
+
+  &::after {
+    position: absolute;
+    bottom: 110%;
+  }
+}
 
 @for $b from 1 through $player-bullets {
   .container {

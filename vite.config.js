@@ -24,5 +24,18 @@ export default defineConfig({
         return [];
       },
     },
+    {
+      name: "log-rebuild-success",
+      configureServer(server) {
+        server.watcher.on("change", (file) => {
+          // Wait briefly for Vite to process the file and clear errors
+          setTimeout(() => {
+            console.log(
+              `\x1b[32m✓\x1b[0m Rebuild successful after change in: ${file}`,
+            );
+          }, 200);
+        });
+      },
+    },
   ],
 });

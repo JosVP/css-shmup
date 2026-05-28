@@ -1,0 +1,91 @@
+// ============================================
+// ENEMY BULLET LOGIC
+// ============================================
+
+.enemy-bullet {
+  --asdf: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-offsetX));
+  // --asdf2: calc((var(--enemy-bullet-1-startX) - 0));
+  // --asdf: calc((var(--enemy-bullet-1-startX)));
+  --asdf2: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX));
+  width: 20px;
+  aspect-ratio: 1;
+  transform: translate3d(-50%, -50%, 0);
+  background: red;
+  border-radius: 100%;
+  position: absolute;
+
+  // Safari:
+  // top: calc(((var(--enemy-bullet-1-posY) + var(--enemy-bullet-1-startY)) * #{$row-size}) - #{$row-size / 2});
+  // left: calc((var(--asdf2) * #{$column-size}) - #{$column-size / 2});
+  
+  // Chrome:
+  top: calc((var(--enemy-bullet-1-posY) * #{$row-size}) - #{$row-size / 2});
+  left: calc((var(--enemy-bullet-1-posX) * #{$column-size}) - #{$column-size / 2});
+
+  // opacity: var(--enemy-bullet-1-opacity);
+
+  &::after {
+    position: absolute;
+    bottom: 110%;
+    font-size: 20px;
+    visibility: hidden;
+    // Chrome:
+    counter-reset: posX var(--enemy-bullet-1-posX) posY var(--enemy-bullet-1-startY);
+    // Safari:
+    // counter-reset: posX calc(var(--asdf2)) posY var(--enemy-bullet-1-startY);
+
+    // Old?
+    // counter-reset: posX calc(var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-offsetX)) posY var(--enemy-bullet-1-startY);
+    content: counter(posX) "/" counter(posY);
+  }
+}
+
+// Enemy bullet tracking
+// Chrome - tracks player
+@keyframes enemy-bullet-tracking {
+  from {
+    --enemy-bullet-1-startX: var(--enemy-1-posX);
+    --enemy-bullet-1-startY: var(--enemy-1-posY);
+    --enemy-bullet-1-endX: var(--player-posX);
+    --enemy-bullet-1-endY: var(--player-posY);
+    --enemy-bullet-1-posX: var(--enemy-bullet-1-startX);
+    --enemy-bullet-1-posY: var(--enemy-bullet-1-startY);
+  }
+
+  to {
+    --enemy-bullet-1-startX: var(--enemy-1-posX);
+    --enemy-bullet-1-startY: var(--enemy-1-posY);
+    --enemy-bullet-1-endX: var(--player-posX);
+    --enemy-bullet-1-endY: var(--player-posY);
+    --enemy-bullet-1-posX: var(--enemy-bullet-1-endX);
+    --enemy-bullet-1-posY: var(--enemy-bullet-1-endY);
+  }
+}
+
+// Enemy bullet tracking
+// Safari - straight path
+
+// @keyframes enemy-bullet-tracking {
+//   from {
+//     --enemy-bullet-1-posX: 0;
+//     --enemy-bullet-1-posY: 0;
+//   }
+
+//   to {
+//     --enemy-bullet-1-posX: -#{$columns};
+//     --enemy-bullet-1-posY: 0;
+//   }
+// }
+
+
+// Not used yet
+// @keyframes enemy-bullet-move {
+//   from {
+//       top: var(--enemy-bullet-1-posY:);
+//       left: var(--enemy-bullet-1-posX:);
+//   }
+//   to {
+//       top: var(--enemy-bullet-1-posY);
+//       left: var(--enemy-bullet-1-posX);
+//   }
+// }

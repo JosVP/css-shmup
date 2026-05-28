@@ -1,4 +1,4 @@
-# Shmup — Vite + SCSS
+# Shmup
 
 This is a minimal Vite project for a plain HTML site that compiles SCSS and provides hot-reload on save.
 

@@ -1,0 +1,170 @@
+// ============================================
+// LEVEL
+// ============================================
+
+.level {
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  pointer-events: none;
+}
+
+// ============================================
+// HOVER GRID & BULLET INPUTS
+// ============================================
+
+.hover-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+
+  .grid-row {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+
+  label {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    margin: 0;
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  input {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+  }
+
+  input:checked,
+  &:has(input:not(:checked)) input.player-bullet-input-1 {
+    & + label {
+      visibility: visible;
+      pointer-events: auto;
+      animation-play-state: running;
+
+      span {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: var(--column-size);
+        height: 100%;
+
+        &:hover {
+          background: crimson;
+          opacity: 0.5;
+        }
+
+        @for $hc from 1 through $hover-columns {
+          &.col-#{$hc} {
+            left: calc(#{$hc - 1} * var(--column-size));
+            height: var(--row-size);
+          }
+
+          &.col-#{$hover-columns} {
+            right: 0;
+            width: auto;
+          }
+        }
+
+        @for $hr from 1 through $rows {
+          &.row-#{$hr} {
+            top: #{($hr - 1) * $row-size};
+          }
+        }
+      }
+    }
+  }
+}
+
+body:has(#group5-input1:checked) .hover-grid input:checked + label {
+  &#group1-label2 { z-index: 1; }
+  &#group2-label2 { z-index: 2; }
+  &#group3-label2 { z-index: 3; }
+  &#group4-label2 { z-index: 4; }
+  &#group5-label2 { z-index: 5; }
+}
+
+body:has(#group5-input2:checked) .hover-grid input:checked + label {
+  &#group1-label1 { z-index: 1; }
+  &#group2-label1 { z-index: 2; }
+  &#group3-label1 { z-index: 3; }
+  &#group4-label1 { z-index: 4; }
+  &#group5-label1 { z-index: 5; }
+}
+
+// ============================================
+// BODY & UI CONTROLS
+// ============================================
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui;
+  background: #1a1a2a;
+  color: white;
+  overflow: hidden;
+  
+  * {
+    cursor: crosshair;
+  }
+
+  &:has(#start:checked) .container {
+    --enemy-tracking-state: running;
+
+    .enemy {
+      animation-play-state: running;
+    }
+  }
+
+  &:has(#debug:checked) {
+    padding: 4vw 5vw;
+
+    .container {
+      inset: 4vw 5vw;
+    }
+
+    .sub-container {
+      border: 2px solid white;
+    }
+
+    .container::after,
+    .sub-container::after,
+    .enemy::after,
+    .player-bullet::after,
+    .enemy-bullet::after {
+      visibility: visible !important;
+    }
+
+    .enemy {
+      border: 2px solid white;
+    }
+  }
+
+  label.start,
+  label.debug {
+    position: absolute;
+    left: 10px;
+    display: block;
+    user-select: none;
+    z-index: 999;
+
+    input {
+      margin-inline: -2px 8px;
+    }
+  }
+
+  label.start {
+    top: 10px;
+  }
+  label.debug {
+    bottom: 10px;
+  }
+}

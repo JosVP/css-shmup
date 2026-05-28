@@ -1,25 +1,28 @@
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 (async () => {
   try {
-    const projectRoot = path.resolve(__dirname, '..');
-    const stylesDir = path.join(projectRoot, 'src', 'styles');
-    const entry = path.join(stylesDir, 'main.scss');
-    const outDir = path.join(projectRoot, 'dist');
-    const outFile = path.join(outDir, 'concat.scss');
+    const projectRoot = path.resolve(__dirname, "..");
+    const stylesDir = path.join(projectRoot, "src", "styles");
+    const entry = path.join(stylesDir, "main.scss");
+    const outDir = path.join(projectRoot, "dist");
+    const outFile = path.join(outDir, "concat.scss");
 
     await fs.mkdir(outDir, { recursive: true });
 
-    const main = await fs.readFile(entry, 'utf8');
+    const main = await fs.readFile(entry, "utf8");
     const lines = main.split(/\r?\n/);
 
     // Collect top comments (before first @use/@import), ordered @use lines from main, and ordered imports
     // capture @use with module and optional alias; capture @import target
-    const useRe = /^\s*@use\s+(['"])([^'"\s]+)\1(?:\s+as\s+([A-Za-z0-9_-]+))?\s*;?\s*$/;
+    const useRe =
+      /^\s*@use\s+(['"])([^'"\s]+)\1(?:\s+as\s+([A-Za-z0-9_-]+))?\s*;?\s*$/;
     const importRe = /^\s*@import\s+['"]([^'"\s]+)['"]\s*;?\s*$/;
 
-    let firstSpecial = lines.findIndex(l => useRe.test(l) || importRe.test(l));
+    let firstSpecial = lines.findIndex(
+      (l) => useRe.test(l) || importRe.test(l),
+    );
     if (firstSpecial === -1) firstSpecial = 0;
 
     const topComments = lines.slice(0, firstSpecial);
@@ -38,12 +41,14 @@ const path = require('path');
         if (!useSet.has(moduleName)) {
           useSet.add(moduleName);
           // standardize to single quotes and include alias if present
-          const useLine = alias ? `@use '${moduleName}' as ${alias};` : `@use '${moduleName}';`;
+          const useLine = alias
+            ? `@use '${moduleName}' as ${alias};`
+            : `@use '${moduleName}';`;
           useOrder.push(useLine);
         }
       } else if (importMatch) {
         imports.push(importMatch[1]);
-      } else if (line.trim() === '') {
+      } else if (line.trim() === "") {
         // skip
       } else {
         // other lines after imports — keep as top comments
@@ -58,12 +63,17 @@ const path = require('path');
       let resolved = null;
 
       const candidates = [
-        path.join(stylesDir, imp + '.scss'),
-        path.join(stylesDir, '_' + imp + '.scss'),
-        path.join(stylesDir, imp, 'index.scss'),
-        path.join(stylesDir, imp, '_index.scss'),
+        path.join(stylesDir, imp + ".scss"),
+        path.join(
+          stylesDir,
+          path.dirname(imp),
+          "_" + path.basename(imp) + ".scss",
+        ),
+        path.join(stylesDir, imp, "index.scss"),
+        path.join(stylesDir, imp, "_index.scss"),
       ];
 
+      // Try to resolve as a file first
       for (const c of candidates) {
         try {
           const stat = await fs.stat(c);
@@ -76,14 +86,57 @@ const path = require('path');
         }
       }
 
+      // If not found, try as a directory (import all .scss files in that dir)
       if (!resolved) {
-        console.warn(`Warning: could not find import "${imp}" in ${stylesDir} (skipping)`);
+        const dirPath = path.join(stylesDir, imp);
+        try {
+          const stat = await fs.stat(dirPath);
+          if (stat.isDirectory()) {
+            const files = await fs.readdir(dirPath);
+            for (const file of files) {
+              if (file.endsWith(".scss")) {
+                const filePath = path.join(dirPath, file);
+                const raw = await fs.readFile(filePath, "utf8");
+                // Strip any @use / @import lines from inlined files, but keep unique @use lines
+                const parts = raw.split(/\r?\n/);
+                const cleaned = [];
+                for (const pl of parts) {
+                  const um = useRe.exec(pl);
+                  const im = importRe.exec(pl);
+                  if (um) {
+                    const moduleName = um[2];
+                    const alias = um[3];
+                    if (!useSet.has(moduleName)) {
+                      useSet.add(moduleName);
+                      const useLine = alias
+                        ? `@use '${moduleName}' as ${alias};`
+                        : `@use '${moduleName}';`;
+                      useOrder.push(useLine);
+                    }
+                    continue;
+                  }
+                  if (im) continue;
+                  cleaned.push(pl);
+                }
+                fileContents.push(cleaned.join("\n").trim());
+              }
+            }
+            continue; // skip to next import
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      if (!resolved) {
+        console.warn(
+          `Warning: could not find import "${imp}" in ${stylesDir} (skipping)`,
+        );
         continue;
       }
 
-      const raw = await fs.readFile(resolved, 'utf8');
-
-      // Strip any @use / @import lines from inlined files, but keep unique @use lines
+      const raw = await fs.readFile(resolved, "utf8");
+      // ...existing code for cleaning and pushing fileContents...
       const parts = raw.split(/\r?\n/);
       const cleaned = [];
       for (const pl of parts) {
@@ -94,42 +147,40 @@ const path = require('path');
           const alias = um[3];
           if (!useSet.has(moduleName)) {
             useSet.add(moduleName);
-            const useLine = alias ? `@use '${moduleName}' as ${alias};` : `@use '${moduleName}';`;
+            const useLine = alias
+              ? `@use '${moduleName}' as ${alias};`
+              : `@use '${moduleName}';`;
             useOrder.push(useLine);
           }
-          continue; // don't include this line in the file body
-        }
-        if (im) {
-          // skip imports from inlined files
           continue;
         }
+        if (im) continue;
         cleaned.push(pl);
       }
-
-      fileContents.push(cleaned.join('\n').trim());
+      fileContents.push(cleaned.join("\n").trim());
     }
 
-    let out = '';
+    let out = "";
 
     // Keep top comments (TODO etc.)
     if (topComments.length) {
-      out += topComments.join('\n') + '\n\n';
+      out += topComments.join("\n") + "\n\n";
     }
 
     // Write unique @use lines once
     if (useOrder.length) {
-      out += useOrder.join('\n') + '\n\n';
+      out += useOrder.join("\n") + "\n\n";
     }
 
     // Append concatenated file bodies
     if (fileContents.length) {
-      out += fileContents.filter(Boolean).join('\n\n') + '\n';
+      out += fileContents.filter(Boolean).join("\n\n") + "\n";
     }
 
-    await fs.writeFile(outFile, out, 'utf8');
+    await fs.writeFile(outFile, out, "utf8");
     console.log(`Wrote concatenated SCSS to ${outFile}`);
   } catch (err) {
-    console.error('Error during concat:', err);
+    console.error("Error during concat:", err);
     process.exitCode = 1;
   }
 })();

@@ -1,0 +1,97 @@
+// ============================================
+// ENTITY BASICS & LOGIC
+// ============================================
+
+.entity {
+  position: absolute;
+  width: var(--column-size);
+  height: var(--row-size);
+  font-size: 5vw;
+
+  .idle,
+  .collision {
+    --collision: 0;
+    animation: entity-collision-animation 0.01s forwards paused;
+    container-name: entity-collision-trigger;
+
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .idle {
+    .animation {
+      opacity: 1;
+      animation: hide-idle 0.01s forwards paused;
+    }
+  }
+
+  .collision {
+    .animation {
+      opacity: 0;
+      animation: show-collision 1s forwards paused;
+    }
+  }
+}
+
+.player {
+  transition: all 0.25s ease;
+  left: calc((var(--player-posX) - 1) * #{$column-size});
+  top: calc((var(--player-posY) - 1) * #{$row-size});
+}
+
+.enemy {
+  left: 100%;
+  box-sizing: border-box;
+
+  &::after {
+    position: absolute;
+    bottom: 110%;
+    font-size: 20px;
+  }
+
+  .idle {
+    color: crimson;
+
+    .animation {
+      rotate: 180deg;
+    }
+  }
+}
+
+@container entity-collision-trigger style(--collision: 1) {
+  .animation,
+  .collision {
+    animation-play-state: running !important;
+  }
+}
+
+@keyframes entity-collision-animation {
+  to {
+    --collision: 1;
+  }
+}
+
+@keyframes hide-idle {
+  to {
+    opacity: 0;
+    scale: 0;
+  }
+}
+
+@keyframes show-collision {
+  0% {
+    opacity: 0;
+    scale: 0;
+  }
+  1% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 2;
+  }
+}
