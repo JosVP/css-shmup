@@ -50,9 +50,6 @@
       #{$progress}% {
         --enemy-#{$e}-posX: #{map-get($cell, 'x')};
         --enemy-#{$e}-posY: #{map-get($cell, 'y')};
-        --enemy-bullet-1-startX: #{map-get($cell, 'x')};
-        --enemy-bullet-1-startY: #{map-get($cell, 'y')};
-        --enemy-bullet-1-offsetX: #{map-get($first-cell, 'x') - map-get($cell, 'x')};
       }
     }
   }

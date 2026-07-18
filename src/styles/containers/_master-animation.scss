@@ -1,0 +1,54 @@
+// ============================================
+// CONTAINER MASTER ANIMATION
+// ============================================
+
+.container {
+  @for $b from 1 through $player-bullets {
+    --player-bullet-#{$b}-animation: none;
+  }
+
+  --enemy-tracking-state: paused;
+
+  $animations: ();
+  @for $b from 1 through $player-bullets {
+    $animations: append($animations, var(--player-bullet-#{$b}-animation), comma);
+  }
+
+  $enemy-bullet-1-animations: ();
+  @for $shot from 1 through $enemy-bullet-shots {
+    $delay: $enemy-bullet-flight-duration * ($shot - 1);
+    $enemy-bullet-1-animations: append(
+      $enemy-bullet-1-animations,
+      enemy-bullet-tracking $enemy-bullet-flight-duration #{$delay} linear forwards,
+      comma
+    );
+  }
+
+  --enemy-bullet-1-animation: #{$enemy-bullet-1-animations};
+
+  @supports (-webkit-appearance: none) and (hanging-punctuation: first) {
+    $enemy-bullet-1-safari-animations: $enemy-bullet-1-animations;
+
+    @for $shot from 1 through $enemy-bullet-shots {
+      $delay: $enemy-bullet-flight-duration * ($shot - 1);
+      $enemy-bullet-1-safari-animations: append(
+        $enemy-bullet-1-safari-animations,
+        enemy-bullet-1-launch-freeze 0.01s #{$delay} forwards,
+        comma
+      );
+    }
+
+    --enemy-bullet-1-animation: #{$enemy-bullet-1-safari-animations};
+  }
+
+  $animations: append($animations, var(--enemy-bullet-1-animation), comma);
+
+  @each $e, $config in $enemy-configs {
+    $path-cells: get-path-cells(map-get($config, 'path-type'));
+    $animations: append($animations, enemy-#{$e}-tracking var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards steps(#{length($path-cells)}) var(--enemy-tracking-state), comma);
+  }
+  animation: $animations;
+
+  position: absolute;
+  inset: 0;
+}

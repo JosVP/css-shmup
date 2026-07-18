@@ -1,22 +1,4 @@
 // ============================================
-// COLLISION ANIMATIONS
-// ============================================
-
-@for $e from 1 through $total-enemies {
-  @keyframes enemy-#{$e}-bullet-collision-animation {
-    to {
-      --enemy-#{$e}-bullet-collision: 1;
-    }
-  }
-
-  @keyframes enemy-#{$e}-player-collision-animation {
-    to {
-      --enemy-#{$e}-player-collision: 2;
-    }
-  }
-}
-
-// ============================================
 // COLLISION DETECTION
 // ============================================
 
@@ -82,13 +64,34 @@
   }
 }
 
+@for $shot from 1 through $enemy-bullet-shots {
+  @container enemy-bullet-launch-subcontainer
+    style(--enemy-bullet-1-shot-#{$shot}-launch-trigger: 1) and
+    style(--enemy-1-total-collision-value: 0) {
+    .level {
+      --enemy-bullet-1-shot-#{$shot}-alive-when-1-state: running !important;
+    }
+  }
+
+  @each $dead-value in 1, 2, 3 {
+    @container enemy-bullet-launch-subcontainer
+      style(--enemy-bullet-1-shot-#{$shot}-launch-trigger: 1) and
+      style(--enemy-1-total-collision-value: #{$dead-value}) {
+      .level {
+        --enemy-bullet-1-shot-#{$shot}-alive-when-0-state: running !important;
+      }
+    }
+  }
+}
+
 @for $hc from 1 through $hover-columns {
   @for $hr from 1 through $rows {
-    @container bullet-vs-player-container
+    @container bullet-vs-player-subcontainer
       style(--player-posX: #{$hc}) and
       style(--player-posY: #{$hr}) and
       style(--enemy-bullet-1-posX: #{$hc}) and
-      style(--enemy-bullet-1-posY: #{$hr}) {
+      style(--enemy-bullet-1-posY: #{$hr}) and
+      style(--enemy-bullet-1-current-alive-at-launch: 1) {
       .player .idle,
       .player .collision {
         animation-play-state: running !important;

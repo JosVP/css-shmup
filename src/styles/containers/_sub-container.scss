@@ -3,7 +3,7 @@
 // ============================================
 
 .sub-container {
-  container-name: enemy-vs-bullet-subcontainer enemy-vs-player-subcontainer;
+  container-name: enemy-vs-bullet-subcontainer enemy-vs-player-subcontainer enemy-bullet-launch-subcontainer;
 
   @for $e from 1 through $total-enemies {
     --enemy-#{$e}-bullet-collision: 0;
@@ -17,6 +17,11 @@
   $animations: ();
   $total-2s-vars: ();
   $max-2s-vars: ();
+
+  @for $shot from 1 through $enemy-bullet-shots {
+    $delay: $enemy-bullet-flight-duration * ($shot - 1);
+    $animations: append($animations, enemy-bullet-1-shot-#{$shot}-launch-trigger 0.01s #{$delay} linear, comma);
+  }
 
   @for $e from 1 through $total-enemies {
     $animations: append($animations, enemy-#{$e}-bullet-collision-animation 0.01s forwards var(--enemy-#{$e}-bullet-collision-animation), comma);
@@ -35,6 +40,63 @@
   --max-2s: max(#{$max-2s-vars});
 }
 
+// ============================================
+// COLLISION ANIMATIONS
+// ============================================
+
+@for $e from 1 through $total-enemies {
+  @keyframes enemy-#{$e}-bullet-collision-animation {
+    to {
+      --enemy-#{$e}-bullet-collision: 1;
+    }
+  }
+
+  @keyframes enemy-#{$e}-player-collision-animation {
+    to {
+      --enemy-#{$e}-player-collision: 2;
+    }
+  }
+}
+
+@for $shot from 1 through $enemy-bullet-shots {
+  @keyframes enemy-bullet-1-shot-#{$shot}-launch-trigger {
+    from,
+    99.9% {
+      --enemy-bullet-1-shot-#{$shot}-launch-trigger: 1;
+    }
+
+    to {
+      --enemy-bullet-1-shot-#{$shot}-launch-trigger: 0;
+    }
+  }
+
+  @keyframes enemy-bullet-1-shot-#{$shot}-alive-when-1 {
+    to {
+      --enemy-bullet-1-shot-#{$shot}-alive-at-launch: 1;
+    }
+  }
+
+  @keyframes enemy-bullet-1-shot-#{$shot}-alive-when-0 {
+    to {
+      --enemy-bullet-1-shot-#{$shot}-alive-at-launch: 0;
+    }
+  }
+
+  @keyframes enemy-bullet-1-shot-#{$shot}-current-alive {
+    from,
+    99.9% {
+      --enemy-bullet-1-current-alive-at-launch: var(--enemy-bullet-1-shot-#{$shot}-alive-at-launch);
+    }
+
+    to {
+      --enemy-bullet-1-current-alive-at-launch: 0;
+    }
+  }
+}
+
+// ============================================
+// SUB-CONTAINER ANIMATIONS
+// ============================================
 
 .sub-container {
   &::after {
@@ -48,12 +110,22 @@
       value2 var(--enemy-1-is-2)
       total2s var(--total-2s)
       max2s var(--max-2s)
+      vsx var(--enemy-bullet-1-visualStartX)
+      vex var(--enemy-bullet-1-visualEndX)
+      bsx var(--enemy-bullet-1-startX)
+      bpx var(--enemy-bullet-1-posX)
+      ba var(--enemy-bullet-1-current-alive-at-launch)
     ;
     content:
       "v1: " counter(value1)
       " - v2: " counter(value2)
       " - t2s: " counter(total2s)
       " - m2s: " counter(max2s)
+      " - vsx: " counter(vsx)
+      " - vex: " counter(vex)
+      " - bsx: " counter(bsx)
+      " - bpx: " counter(bpx)
+      " - ba: " counter(ba)
     ;
   }
 
@@ -83,4 +155,3 @@
     height: var(--row-size);
   }
 }
-

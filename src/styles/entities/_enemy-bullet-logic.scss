@@ -3,39 +3,33 @@
 // ============================================
 
 .enemy-bullet {
-  --asdf: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-offsetX));
-  // --asdf2: calc((var(--enemy-bullet-1-startX) - 0));
-  // --asdf: calc((var(--enemy-bullet-1-startX)));
-  --asdf2: calc(var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-posX));
   width: 20px;
   aspect-ratio: 1;
   transform: translate3d(-50%, -50%, 0);
   background: red;
   border-radius: 100%;
   position: absolute;
+  opacity: 0;
 
-  // Safari:
-  // top: calc(((var(--enemy-bullet-1-posY) + var(--enemy-bullet-1-startY)) * #{$row-size}) - #{$row-size / 2});
-  // left: calc((var(--asdf2) * #{$column-size}) - #{$column-size / 2});
-  
-  // Chrome:
-  top: calc((var(--enemy-bullet-1-posY) * #{$row-size}) - #{$row-size / 2});
-  left: calc((var(--enemy-bullet-1-posX) * #{$column-size}) - #{$column-size / 2});
+  $animations: ();
 
-  // opacity: var(--enemy-bullet-1-opacity);
+  @for $shot from 1 through $enemy-bullet-shots {
+    $delay: $enemy-bullet-flight-duration * ($shot - 1);
+    $animations: append(
+      $animations,
+      enemy-bullet-1-move $enemy-bullet-flight-duration #{$delay} linear forwards,
+      comma
+    );
+  }
+
+  animation: $animations;
 
   &::after {
     position: absolute;
     bottom: 110%;
     font-size: 20px;
     visibility: hidden;
-    // Chrome:
     counter-reset: posX var(--enemy-bullet-1-posX) posY var(--enemy-bullet-1-startY);
-    // Safari:
-    // counter-reset: posX calc(var(--asdf2)) posY var(--enemy-bullet-1-startY);
-
-    // Old?
-    // counter-reset: posX calc(var(--enemy-bullet-1-posX) + var(--enemy-bullet-1-startX) + var(--enemy-bullet-1-offsetX)) posY var(--enemy-bullet-1-startY);
     content: counter(posX) "/" counter(posY);
   }
 }
@@ -48,44 +42,128 @@
     --enemy-bullet-1-startY: var(--enemy-1-posY);
     --enemy-bullet-1-endX: var(--player-posX);
     --enemy-bullet-1-endY: var(--player-posY);
+
+    // enemy → player difference
+    --enemy-bullet-1-diffX: calc(var(--enemy-bullet-1-startX) - var(--enemy-bullet-1-endX));
+    --enemy-bullet-1-diffY: calc(var(--enemy-bullet-1-startY) - var(--enemy-bullet-1-endY));
+
+    // cap 2×diff so a far-apart shot doesn't travel wildly further than a close one
+    --enemy-bullet-1-diffXCapped: calc(sign(var(--enemy-bullet-1-diffX)) * min(abs(var(--enemy-bullet-1-diffX) * 2), #{$columns}));
+    --enemy-bullet-1-diffYCapped: calc(sign(var(--enemy-bullet-1-diffY)) * min(abs(var(--enemy-bullet-1-diffY) * 2), #{$rows}));
+
+    // mirror the enemy's position across the player, +1 cell of overshoot in the same direction
+    --enemy-bullet-1-rawEndX: calc(var(--enemy-bullet-1-startX) - (var(--enemy-bullet-1-diffXCapped) + sign(var(--enemy-bullet-1-diffX))));
+    --enemy-bullet-1-rawEndY: calc(var(--enemy-bullet-1-startY) - (var(--enemy-bullet-1-diffYCapped) + sign(var(--enemy-bullet-1-diffY))));
+
+    // how far that raw mirror point already travels, vs. your 12-cell target
+    --enemy-bullet-1-traveledX: calc(abs(var(--enemy-bullet-1-rawEndX) - var(--enemy-bullet-1-startX)));
+    --enemy-bullet-1-traveledY: calc(abs(var(--enemy-bullet-1-rawEndY) - var(--enemy-bullet-1-startY)));
+    --enemy-bullet-1-remaining: max(0, calc(#{$columns} - (var(--enemy-bullet-1-traveledX) + var(--enemy-bullet-1-traveledY))));
+
+    // split the remaining distance 2:1 across X:Y (matches your 12-col : 5-row ratio)
+    --enemy-bullet-1-extraY: calc(var(--enemy-bullet-1-remaining) / 3);
+    --enemy-bullet-1-extraX: calc(var(--enemy-bullet-1-remaining) - var(--enemy-bullet-1-extraY));
+
     --enemy-bullet-1-posX: var(--enemy-bullet-1-startX);
     --enemy-bullet-1-posY: var(--enemy-bullet-1-startY);
+
+    // frozen once per shot, for the visual animation only
+    --enemy-bullet-1-visualStartX: var(--enemy-bullet-1-startX);
+    --enemy-bullet-1-visualStartY: var(--enemy-bullet-1-startY);
+    --enemy-bullet-1-visualEndX: calc(var(--enemy-bullet-1-rawEndX) - (var(--enemy-bullet-1-extraX) * sign(var(--enemy-bullet-1-diffX))));
+    --enemy-bullet-1-visualEndY: calc(var(--enemy-bullet-1-rawEndY) - (var(--enemy-bullet-1-extraY) * sign(var(--enemy-bullet-1-diffY))));
   }
 
-  to {
+  99.9% {
     --enemy-bullet-1-startX: var(--enemy-1-posX);
     --enemy-bullet-1-startY: var(--enemy-1-posY);
     --enemy-bullet-1-endX: var(--player-posX);
     --enemy-bullet-1-endY: var(--player-posY);
-    --enemy-bullet-1-posX: var(--enemy-bullet-1-endX);
-    --enemy-bullet-1-posY: var(--enemy-bullet-1-endY);
+
+    // enemy → player difference, per axis
+    --enemy-bullet-1-diffX: calc(var(--enemy-bullet-1-startX) - var(--enemy-bullet-1-endX));
+    --enemy-bullet-1-diffY: calc(var(--enemy-bullet-1-startY) - var(--enemy-bullet-1-endY));
+
+    // cap 2×diff so a far-apart shot doesn't travel wildly further than a close one
+    --enemy-bullet-1-diffXCapped: calc(sign(var(--enemy-bullet-1-diffX)) * min(abs(var(--enemy-bullet-1-diffX) * 2), #{$columns}));
+    --enemy-bullet-1-diffYCapped: calc(sign(var(--enemy-bullet-1-diffY)) * min(abs(var(--enemy-bullet-1-diffY) * 2), #{$rows}));
+
+    // mirror the enemy's position across the player, +1 cell of overshoot in the same direction
+    --enemy-bullet-1-rawEndX: calc(var(--enemy-bullet-1-startX) - (var(--enemy-bullet-1-diffXCapped) + sign(var(--enemy-bullet-1-diffX))));
+    --enemy-bullet-1-rawEndY: calc(var(--enemy-bullet-1-startY) - (var(--enemy-bullet-1-diffYCapped) + sign(var(--enemy-bullet-1-diffY))));
+
+    // how far that raw mirror point already travels, vs. your 12-cell target
+    --enemy-bullet-1-traveledX: calc(abs(var(--enemy-bullet-1-rawEndX) - var(--enemy-bullet-1-startX)));
+    --enemy-bullet-1-traveledY: calc(abs(var(--enemy-bullet-1-rawEndY) - var(--enemy-bullet-1-startY)));
+    --enemy-bullet-1-remaining: max(0, calc(#{$columns} - (var(--enemy-bullet-1-traveledX) + var(--enemy-bullet-1-traveledY))));
+
+    // split the remaining distance 2:1 across X:Y (matches your 12-col : 5-row ratio)
+    --enemy-bullet-1-extraY: calc(var(--enemy-bullet-1-remaining) / 3);
+    --enemy-bullet-1-extraX: calc(var(--enemy-bullet-1-remaining) - var(--enemy-bullet-1-extraY));
+
+    --enemy-bullet-1-posX: calc(var(--enemy-bullet-1-rawEndX) - (var(--enemy-bullet-1-extraX) * sign(var(--enemy-bullet-1-diffX))));
+    --enemy-bullet-1-posY: calc(var(--enemy-bullet-1-rawEndY) - (var(--enemy-bullet-1-extraY) * sign(var(--enemy-bullet-1-diffY))));
+
+    --enemy-bullet-1-visualStartX: var(--enemy-bullet-1-startX);
+    --enemy-bullet-1-visualStartY: var(--enemy-bullet-1-startY);
+    --enemy-bullet-1-visualEndX: calc(var(--enemy-bullet-1-rawEndX) - (var(--enemy-bullet-1-extraX) * sign(var(--enemy-bullet-1-diffX))));
+    --enemy-bullet-1-visualEndY: calc(var(--enemy-bullet-1-rawEndY) - (var(--enemy-bullet-1-extraY) * sign(var(--enemy-bullet-1-diffY))));
+}
+
+  to {
+    --enemy-bullet-1-posX: -99;
+    --enemy-bullet-1-posY: -99;
   }
 }
 
 // Enemy bullet tracking
-// Safari - straight path
+// Safari - straight path (fires from the enemy's current cell, no live target-tracking)
+@supports (-webkit-appearance: none) and (hanging-punctuation: first) {
+  @keyframes enemy-bullet-1-launch-freeze {
+    to {
+      --enemy-bullet-1-startX: var(--enemy-1-posX);
+      --enemy-bullet-1-startY: var(--enemy-1-posY);
+      --enemy-bullet-1-visualStartX: var(--enemy-1-posX);
+      --enemy-bullet-1-visualStartY: var(--enemy-1-posY);
+      --enemy-bullet-1-visualEndX: calc(var(--enemy-1-posX) - #{$columns});
+      --enemy-bullet-1-visualEndY: var(--enemy-1-posY);
+    }
+  }
 
-// @keyframes enemy-bullet-tracking {
-//   from {
-//     --enemy-bullet-1-posX: 0;
-//     --enemy-bullet-1-posY: 0;
-//   }
+  @keyframes enemy-bullet-tracking {
+    $step: 100 / $columns;
 
-//   to {
-//     --enemy-bullet-1-posX: -#{$columns};
-//     --enemy-bullet-1-posY: 0;
-//   }
-// }
+    @for $i from 0 through $columns {
+      $startPercent: $i * $step;
+      $endPercent: ($i + 1) * $step;
 
+      #{$startPercent}%, #{$endPercent - 0.01}% {
+        --enemy-bullet-1-posX: calc(var(--enemy-bullet-1-startX) - #{$i});
+        --enemy-bullet-1-posY: var(--enemy-bullet-1-startY);
+      }
+    }
 
-// Not used yet
-// @keyframes enemy-bullet-move {
-//   from {
-//       top: var(--enemy-bullet-1-posY:);
-//       left: var(--enemy-bullet-1-posX:);
-//   }
-//   to {
-//       top: var(--enemy-bullet-1-posY);
-//       left: var(--enemy-bullet-1-posX);
-//   }
-// }
+    100% {
+      --enemy-bullet-1-posX: calc(var(--enemy-bullet-1-startX) - #{$columns});
+      --enemy-bullet-1-posY: var(--enemy-bullet-1-startY);
+    }
+  }
+}
+
+// Smooth visual slide, decoupled from the discrete posX/posY used for collision.
+// Shared by both browsers — each variant above sets visualStartX/Y and visualEndX/Y for it to read.
+@keyframes enemy-bullet-1-move {
+  from {
+    opacity: var(--enemy-bullet-1-current-alive-at-launch, 0);
+    top: calc((var(--enemy-bullet-1-visualStartY) * #{$row-size}) - #{$row-size / 2});
+    left: calc((var(--enemy-bullet-1-visualStartX) * #{$column-size}) - #{$column-size / 2});
+  }
+  99.9% {
+    opacity: var(--enemy-bullet-1-current-alive-at-launch, 0);
+    top: calc((var(--enemy-bullet-1-visualEndY) * #{$row-size}) - #{$row-size / 2});
+    left: calc((var(--enemy-bullet-1-visualEndX) * #{$column-size}) - #{$column-size / 2});
+  }
+  to {
+    opacity: 0;
+  }
+}

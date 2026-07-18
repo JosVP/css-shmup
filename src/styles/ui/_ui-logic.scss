@@ -1,15 +1,4 @@
 // ============================================
-// LEVEL
-// ============================================
-
-.level {
-  position: absolute;
-  inset: 0;
-  z-index: 110;
-  pointer-events: none;
-}
-
-// ============================================
 // HOVER GRID & BULLET INPUTS
 // ============================================
 
@@ -80,6 +69,37 @@
           }
         }
       }
+
+      &:hover ~ input:first-of-type {
+        @for $hc from 1 through $hover-columns {
+          --spawn-posX: #{$hc};
+          visibility: visible;
+          border: 10px solid red;
+        }
+        @for $hr from 1 through $rows {
+          --spawn-posX: #{$hr};
+        }
+      }
+    }
+  }
+
+  input:checked + label + .player-bullet {
+    animation: bullet-move var(--player-bullet-speed) forwards steps(#{$columns + 1});
+  }
+
+  .player-bullet {
+    position: absolute;
+    width: 80px;
+    height: 5px;
+    border-radius: 100%;
+    background: aqua;
+    transform: translate3d(0, -100%, 0);
+    pointer-events: none;
+    opacity: 0;
+
+    &::after {
+      position: absolute;
+      bottom: 110%;
     }
   }
 }
@@ -98,6 +118,15 @@ body:has(#group5-input2:checked) .hover-grid input:checked + label {
   &#group3-label1 { z-index: 3; }
   &#group4-label1 { z-index: 4; }
   &#group5-label1 { z-index: 5; }
+}
+
+@keyframes bullet-move {
+  @for $i from 0 through ($columns + 1) {
+    #{($i * 100) / ($columns + 1)}% {
+      left: calc(#{$column-size * $i});
+      opacity: 1;
+    }
+  }
 }
 
 // ============================================

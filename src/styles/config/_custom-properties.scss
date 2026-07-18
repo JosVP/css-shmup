@@ -1,7 +1,3 @@
-@import 'configuration';
-@import 'enemy-configs';
-@import 'helpers';
-
 // ============================================
 // CUSTOM PROPERTIES
 // ============================================
@@ -42,15 +38,29 @@
 @property --enemy-bullet-1-posY {
   syntax: "<integer>";
   inherits: true;
-  initial-value: 0;
+  initial-value: 99;
 }
 @property --enemy-bullet-1-posX {
   syntax: "<integer>";
   inherits: true;
   initial-value: 99;
 }
-@property --enemy-bullet-1-startX {
+@property --enemy-bullet-1-current-alive-at-launch {
   syntax: "<integer>";
   inherits: true;
-  initial-value: 7;
+  initial-value: 0;
+}
+
+@for $shot from 1 through $enemy-bullet-shots {
+  @property --enemy-bullet-1-shot-#{$shot}-launch-trigger {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @property --enemy-bullet-1-shot-#{$shot}-alive-at-launch {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
 }

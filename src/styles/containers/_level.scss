@@ -1,0 +1,38 @@
+// ============================================
+// LEVEL
+// ============================================
+
+.level {
+  container-name: bullet-vs-player-subcontainer;
+  position: absolute;
+  inset: 0;
+  z-index: 110;
+  pointer-events: none;
+
+  $animations: ();
+
+  @for $shot from 1 through $enemy-bullet-shots {
+    $delay: $enemy-bullet-flight-duration * ($shot - 1);
+
+    --enemy-bullet-1-shot-#{$shot}-alive-when-1-state: paused;
+    --enemy-bullet-1-shot-#{$shot}-alive-when-0-state: paused;
+
+    $animations: append(
+      $animations,
+      enemy-bullet-1-shot-#{$shot}-alive-when-1 0.01s forwards var(--enemy-bullet-1-shot-#{$shot}-alive-when-1-state),
+      comma
+    );
+    $animations: append(
+      $animations,
+      enemy-bullet-1-shot-#{$shot}-alive-when-0 0.01s forwards var(--enemy-bullet-1-shot-#{$shot}-alive-when-0-state),
+      comma
+    );
+    $animations: append(
+      $animations,
+      enemy-bullet-1-shot-#{$shot}-current-alive $enemy-bullet-flight-duration #{$delay} linear forwards,
+      comma
+    );
+  }
+
+  animation: $animations;
+}
