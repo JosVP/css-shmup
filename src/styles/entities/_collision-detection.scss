@@ -29,8 +29,20 @@
         style(--enemy-#{$e}-posX: #{$col}) and
         style(--player-posY: #{$row}) and
         style(--enemy-#{$e}-posY: #{$row}) {
-        .sub-container {
-          --enemy-#{$e}-player-collision-animation: running !important;
+        @container enemy-vs-bullet-subcontainer
+          style(--enemy-#{$e}-total-collision-value: 0) {
+          .player-state {
+            animation-play-state: running !important;
+          }
+
+          @container player-state style(--player-alive: 1) {
+            .enemy-#{$e} .idle,
+            .enemy-#{$e} .collision,
+            .player .idle,
+            .player .collision {
+              animation-play-state: running !important;
+            }
+          }
         }
       }
     }
@@ -45,22 +57,6 @@
       }
     }
 
-    @container enemy-vs-player-subcontainer
-      style(--enemy-#{$e}-total-collision-value: 2) and
-      style(--total-2s: 2) {
-      .enemy-#{$e} .idle,
-      .enemy-#{$e} .collision,
-      .player .idle,
-      .player .collision {
-        animation-play-state: running !important;
-      }
-    }
-  }
-}
-
-@container enemy-vs-player-subcontainer style(--max-2s: 2) {
-  * {
-    pointer-events: none !important;
   }
 }
 
@@ -73,13 +69,11 @@
     }
   }
 
-  @each $dead-value in 1, 2, 3 {
-    @container enemy-bullet-launch-subcontainer
-      style(--enemy-bullet-1-shot-#{$shot}-launch-trigger: 1) and
-      style(--enemy-1-total-collision-value: #{$dead-value}) {
-      .level {
-        --enemy-bullet-1-shot-#{$shot}-alive-when-0-state: running !important;
-      }
+  @container enemy-bullet-launch-subcontainer
+    style(--enemy-bullet-1-shot-#{$shot}-launch-trigger: 1) and
+    style(--enemy-1-total-collision-value: 1) {
+    .level {
+      --enemy-bullet-1-shot-#{$shot}-alive-when-0-state: running !important;
     }
   }
 }
@@ -94,6 +88,10 @@
       style(--enemy-bullet-1-current-alive-at-launch: 1) {
       .player .idle,
       .player .collision {
+        animation-play-state: running !important;
+      }
+
+      .player-state {
         animation-play-state: running !important;
       }
     }

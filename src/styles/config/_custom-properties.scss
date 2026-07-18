@@ -2,24 +2,13 @@
 // CUSTOM PROPERTIES
 // ============================================
 
-@property --total-2s {
+@property --player-alive {
   syntax: "<integer>";
   inherits: true;
-  initial-value: 0;
-}
-@property --max-2s {
-  syntax: "<integer>";
-  inherits: true;
-  initial-value: 0;
+  initial-value: 1;
 }
 
 @for $e from 1 through $total-enemies {
-  @property --enemy-#{$e}-is-2 {
-    syntax: "<integer>";
-    inherits: true;
-    initial-value: 0;
-  }
-
   @property --enemy-#{$e}-total-collision-value {
     syntax: "<integer>";
     inherits: true;

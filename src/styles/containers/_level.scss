@@ -36,3 +36,32 @@
 
   animation: $animations;
 }
+
+.player-state {
+  --player-alive: 1;
+  container-name: player-state;
+  position: absolute;
+  inset: 0;
+  animation: player-destroyed-state 0.02s forwards paused;
+}
+
+@container player-state style(--player-alive: 0) {
+  .player::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: auto;
+  }
+}
+
+@keyframes player-destroyed-state {
+  from,
+  99.9% {
+    --player-alive: 1;
+  }
+
+  to {
+    --player-alive: 0;
+  }
+}
