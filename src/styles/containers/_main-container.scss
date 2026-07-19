@@ -68,3 +68,9 @@
     right: 0;
   }
 }
+
+// Once the full-screen dead-player layover owns the hover,
+// this removes the player from any collision detection.
+body:has(.player:hover) .container:has(.player:hover) {
+  --player-posX: -99 !important;
+}

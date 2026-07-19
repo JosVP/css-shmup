@@ -3,6 +3,8 @@
 // ============================================
 
 .level {
+  --enemy-bullet-safari-debug: 0;
+  --enemy-bullet-default-collision-enabled: 1;
   container-name: bullet-vs-player-subcontainer;
   position: absolute;
   inset: 0;
@@ -39,19 +41,90 @@
 
 .player-state {
   --player-alive: 1;
-  container-name: player-state;
+  --player-destroyed-state: paused;
+  --enemy-bullet-safari-current-alive: 0;
+  container-name: player-state player-death-position;
   position: absolute;
   inset: 0;
-  animation: player-destroyed-state 0.02s forwards paused;
+
+  &::after {
+    visibility: hidden;
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 999;
+    padding: 6px 8px;
+    color: white;
+    background: rgba(0, 0, 0, 0.85);
+    font: 12px/1.4 monospace;
+    white-space: pre;
+    counter-reset:
+      safari var(--enemy-bullet-safari-debug, -9)
+      enemyX var(--enemy-1-posX, -9)
+      enemyY var(--enemy-1-posY, -9)
+      playerX var(--player-posX, -9)
+      playerY var(--player-posY, -9)
+      bulletStartX var(--enemy-bullet-1-startX, -9)
+      bulletStartY var(--enemy-bullet-1-startY, -9)
+      bulletOffsetX var(--enemy-bullet-1-offsetX, -9)
+      bulletShot var(--enemy-bullet-1-current-shot, -9)
+      bulletX var(--enemy-bullet-1-posX, -9)
+      bulletY var(--enemy-bullet-1-posY, -9)
+      bulletAlive var(--enemy-bullet-1-current-alive-at-launch, -9)
+      bulletSafariAlive var(--enemy-bullet-safari-current-alive, -9)
+      shot1Alive var(--enemy-bullet-1-shot-1-alive-at-launch, -9)
+      shot2Alive var(--enemy-bullet-1-shot-2-alive-at-launch, -9)
+      shot3Alive var(--enemy-bullet-1-shot-3-alive-at-launch, -9)
+      shot4Alive var(--enemy-bullet-1-shot-4-alive-at-launch, -9)
+      shot5Alive var(--enemy-bullet-1-shot-5-alive-at-launch, -9)
+      enemyCollision var(--enemy-1-total-collision-value, -9);
+    content:
+      "Safari: " counter(safari)
+      " | enemy: " counter(enemyX) "/" counter(enemyY)
+      " | player: " counter(playerX) "/" counter(playerY)
+      "\A bullet start: " counter(bulletStartX) "/" counter(bulletStartY)
+      " | shot/offset: " counter(bulletShot) "/" counter(bulletOffsetX)
+      " | collision pos: " counter(bulletX) "/" counter(bulletY)
+      " | visible Safari/legacy: " counter(bulletSafariAlive) "/" counter(bulletAlive)
+      "\A shot alive latches: " counter(shot1Alive) "," counter(shot2Alive) "," counter(shot3Alive) "," counter(shot4Alive) "," counter(shot5Alive)
+      " | enemy collision: " counter(enemyCollision);
+  }
+
+  $animations: (
+    player-destroyed-state 0.02s forwards var(--player-destroyed-state)
+  );
+
+  @for $col from 1 through $hover-columns {
+    @for $row from 1 through $rows {
+      --player-death-at-#{$col}-#{$row}: 0;
+      --player-death-at-#{$col}-#{$row}-state: paused;
+      $animations: append(
+        $animations,
+        player-death-at-#{$col}-#{$row} 0.01s forwards var(--player-death-at-#{$col}-#{$row}-state),
+        comma
+      );
+    }
+  }
+
+  animation: $animations;
 }
 
-@container player-state style(--player-alive: 0) {
-  .player::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    pointer-events: auto;
+@for $col from 1 through $hover-columns {
+  @for $row from 1 through $rows {
+    @keyframes player-death-at-#{$col}-#{$row} {
+      to {
+        --player-death-at-#{$col}-#{$row}: 1;
+      }
+    }
+
+    @container player-death-position
+      style(--player-death-at-#{$col}-#{$row}: 1) {
+      .player {
+        left: #{($col - 1) * $column-size} !important;
+        top: #{($row - 1) * $row-size} !important;
+        transition: none;
+      }
+    }
   }
 }
 

@@ -78,30 +78,6 @@
 // ============================================
 
 .sub-container {
-  &::after {
-    visibility: hidden;
-    display: block;
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    counter-reset:
-      value1 var(--enemy-1-total-collision-value)
-      vsx var(--enemy-bullet-1-visualStartX)
-      vex var(--enemy-bullet-1-visualEndX)
-      bsx var(--enemy-bullet-1-startX)
-      bpx var(--enemy-bullet-1-posX)
-      ba var(--enemy-bullet-1-current-alive-at-launch)
-    ;
-    content:
-      "v1: " counter(value1)
-      " - vsx: " counter(vsx)
-      " - vex: " counter(vex)
-      " - bsx: " counter(bsx)
-      " - bpx: " counter(bpx)
-      " - ba: " counter(ba)
-    ;
-  }
-
   display: flex;
   align-items: center;
   position: absolute;

@@ -37,9 +37,25 @@
 }
 
 .player {
+  --player-controls-lock-state: paused;
   transition: all 0.25s ease;
   left: calc((var(--player-posX) - 1) * #{$column-size});
   top: calc((var(--player-posY) - 1) * #{$row-size});
+  animation: player-controls-lock 0.01s forwards var(--player-controls-lock-state);
+
+  &::before {
+    pointer-events: inherit;
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9001;
+  }
+}
+
+@keyframes player-controls-lock {
+  to {
+    pointer-events: auto;
+  }
 }
 
 .enemy {

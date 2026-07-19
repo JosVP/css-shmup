@@ -26,21 +26,6 @@
 
   --enemy-bullet-1-animation: #{$enemy-bullet-1-animations};
 
-  @supports (-webkit-appearance: none) and (hanging-punctuation: first) {
-    $enemy-bullet-1-safari-animations: $enemy-bullet-1-animations;
-
-    @for $shot from 1 through $enemy-bullet-shots {
-      $delay: $enemy-bullet-flight-duration * ($shot - 1);
-      $enemy-bullet-1-safari-animations: append(
-        $enemy-bullet-1-safari-animations,
-        enemy-bullet-1-launch-freeze 0.01s #{$delay} forwards,
-        comma
-      );
-    }
-
-    --enemy-bullet-1-animation: #{$enemy-bullet-1-safari-animations};
-  }
-
   $animations: append($animations, var(--enemy-bullet-1-animation), comma);
 
   @each $e, $config in $enemy-configs {

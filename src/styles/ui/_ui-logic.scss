@@ -165,7 +165,7 @@ body {
     }
 
     .container::after,
-    .sub-container::after,
+    .player-state::after,
     .enemy::after,
     .player-bullet::after,
     .enemy-bullet::after {
@@ -191,7 +191,8 @@ body {
   }
 
   label.start {
-    top: 10px;
+    bottom: 10px;
+    left: 100px;
   }
   label.debug {
     bottom: 10px;
