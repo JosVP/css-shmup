@@ -11,8 +11,7 @@ $row-size: 100% / $rows;
 $player-bullets: 10;
 $player-bullet-debug-speed: 0;
 
-$enemy-speed-delay: 6;
-$enemy-bullet-speed: 2;
-$enemy-bullet-debug-delay: 1;
+$enemy-speed: 7;
+$enemy-bullet-speed: 3;
 $enemy-bullet-shots: 3;
-$enemy-bullet-flight-duration: ($enemy-bullet-speed + $enemy-bullet-debug-delay) * 1s;
+$enemy-bullet-flight-duration: $enemy-bullet-speed * 1s;

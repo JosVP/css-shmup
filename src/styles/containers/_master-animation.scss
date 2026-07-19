@@ -14,19 +14,22 @@
     $animations: append($animations, var(--player-bullet-#{$b}-animation), comma);
   }
 
-  $enemy-bullet-1-animations: ();
-  @for $shot from 1 through $enemy-bullet-shots {
-    $delay: $enemy-bullet-flight-duration * ($shot - 1);
-    $enemy-bullet-1-animations: append(
-      $enemy-bullet-1-animations,
-      enemy-bullet-tracking $enemy-bullet-flight-duration #{$delay} linear forwards,
-      comma
-    );
+  @for $e from 1 through length($enemy-configs) {
+    $enemy-bullet-animations: ();
+    $enemy-delay: map-get(map-get($enemy-configs, $e), 'delay');
+
+    @for $shot from 1 through $enemy-bullet-shots {
+      $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
+      $enemy-bullet-animations: append(
+        $enemy-bullet-animations,
+        enemy-bullet-#{$e}-tracking $enemy-bullet-flight-duration #{$delay} linear forwards,
+        comma
+      );
+    }
+
+    --enemy-bullet-#{$e}-animation: #{$enemy-bullet-animations};
+    $animations: append($animations, var(--enemy-bullet-#{$e}-animation), comma);
   }
-
-  --enemy-bullet-1-animation: #{$enemy-bullet-1-animations};
-
-  $animations: append($animations, var(--enemy-bullet-1-animation), comma);
 
   @each $e, $config in $enemy-configs {
     $path-cells: get-path-cells(map-get($config, 'path-type'));

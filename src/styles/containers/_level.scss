@@ -13,27 +13,31 @@
 
   $animations: ();
 
-  @for $shot from 1 through $enemy-bullet-shots {
-    $delay: $enemy-bullet-flight-duration * ($shot - 1);
+  @for $e from 1 through length($enemy-configs) {
+    $enemy-delay: map-get(map-get($enemy-configs, $e), 'delay');
 
-    --enemy-bullet-1-shot-#{$shot}-alive-when-1-state: paused;
-    --enemy-bullet-1-shot-#{$shot}-alive-when-0-state: paused;
+    @for $shot from 1 through $enemy-bullet-shots {
+      $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
 
-    $animations: append(
-      $animations,
-      enemy-bullet-1-shot-#{$shot}-alive-when-1 0.01s forwards var(--enemy-bullet-1-shot-#{$shot}-alive-when-1-state),
-      comma
-    );
-    $animations: append(
-      $animations,
-      enemy-bullet-1-shot-#{$shot}-alive-when-0 0.01s forwards var(--enemy-bullet-1-shot-#{$shot}-alive-when-0-state),
-      comma
-    );
-    $animations: append(
-      $animations,
-      enemy-bullet-1-shot-#{$shot}-current-alive $enemy-bullet-flight-duration #{$delay} linear forwards,
-      comma
-    );
+      --enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1-state: paused;
+      --enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0-state: paused;
+
+      $animations: append(
+        $animations,
+        enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1 0.01s forwards var(--enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1-state),
+        comma
+      );
+      $animations: append(
+        $animations,
+        enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0 0.01s forwards var(--enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0-state),
+        comma
+      );
+      $animations: append(
+        $animations,
+        enemy-bullet-#{$e}-shot-#{$shot}-current-alive $enemy-bullet-flight-duration #{$delay} linear forwards,
+        comma
+      );
+    }
   }
 
   animation: $animations;
@@ -42,12 +46,56 @@
 .player-state {
   --player-alive: 1;
   --player-destroyed-state: paused;
-  --enemy-bullet-safari-current-alive: 0;
+  @for $e from 1 through length($enemy-configs) {
+    --enemy-bullet-#{$e}-safari-current-alive: 0;
+  }
   container-name: player-state player-death-position;
   position: absolute;
   inset: 0;
 
   &::after {
+    $debug-counters:
+      safari var(--enemy-bullet-safari-debug, -9)
+      playerX var(--player-posX, -9)
+      playerY var(--player-posY, -9);
+    $debug-content:
+      "Safari: " counter(safari)
+      " | player: " counter(playerX) "/" counter(playerY);
+
+    @for $e from 1 through 1 {
+      $debug-counters: append($debug-counters, enemy#{$e}X var(--enemy-#{$e}-posX, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}Y var(--enemy-#{$e}-posY, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletStartX var(--enemy-bullet-#{$e}-startX, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletStartY var(--enemy-bullet-#{$e}-startY, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletOffsetX var(--enemy-bullet-#{$e}-offsetX, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletShot var(--enemy-bullet-#{$e}-current-shot, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletX var(--enemy-bullet-#{$e}-posX, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletY var(--enemy-bullet-#{$e}-posY, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletAlive var(--enemy-bullet-#{$e}-current-alive-at-launch, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}BulletSafariAlive var(--enemy-bullet-#{$e}-safari-current-alive, -9), space);
+      $debug-counters: append($debug-counters, enemy#{$e}Collision var(--enemy-#{$e}-total-collision-value, -9), space);
+
+      $debug-content: append($debug-content, "\A enemy #{$e}: ", space);
+      $debug-content: append($debug-content, counter(enemy#{$e}X) "/" counter(enemy#{$e}Y), space);
+      $debug-content: append($debug-content, " | bullet start: ", space);
+      $debug-content: append($debug-content, counter(enemy#{$e}BulletStartX) "/" counter(enemy#{$e}BulletStartY), space);
+      $debug-content: append($debug-content, " | shot/offset: ", space);
+      $debug-content: append($debug-content, counter(enemy#{$e}BulletShot) "/" counter(enemy#{$e}BulletOffsetX), space);
+      $debug-content: append($debug-content, " | collision pos: ", space);
+      $debug-content: append($debug-content, counter(enemy#{$e}BulletX) "/" counter(enemy#{$e}BulletY), space);
+      $debug-content: append($debug-content, " | visible Safari/legacy: ", space);
+      $debug-content: append($debug-content, counter(enemy#{$e}BulletSafariAlive) "/" counter(enemy#{$e}BulletAlive), space);
+
+      @for $shot from 1 through $enemy-bullet-shots {
+        $debug-counters: append($debug-counters, enemy#{$e}Shot#{$shot}Alive var(--enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch, -9), space);
+        $debug-content: append($debug-content, " | shot #{$shot}: ", space);
+        $debug-content: append($debug-content, counter(enemy#{$e}Shot#{$shot}Alive), space);
+      }
+
+      $debug-content: append($debug-content, " | enemy collision: ", space);
+      $debug-content: append($debug-content, counter(enemy#{$e}Collision), space);
+    }
+
     visibility: hidden;
     position: fixed;
     top: 8px;
@@ -58,36 +106,8 @@
     background: rgba(0, 0, 0, 0.85);
     font: 12px/1.4 monospace;
     white-space: pre;
-    counter-reset:
-      safari var(--enemy-bullet-safari-debug, -9)
-      enemyX var(--enemy-1-posX, -9)
-      enemyY var(--enemy-1-posY, -9)
-      playerX var(--player-posX, -9)
-      playerY var(--player-posY, -9)
-      bulletStartX var(--enemy-bullet-1-startX, -9)
-      bulletStartY var(--enemy-bullet-1-startY, -9)
-      bulletOffsetX var(--enemy-bullet-1-offsetX, -9)
-      bulletShot var(--enemy-bullet-1-current-shot, -9)
-      bulletX var(--enemy-bullet-1-posX, -9)
-      bulletY var(--enemy-bullet-1-posY, -9)
-      bulletAlive var(--enemy-bullet-1-current-alive-at-launch, -9)
-      bulletSafariAlive var(--enemy-bullet-safari-current-alive, -9)
-      shot1Alive var(--enemy-bullet-1-shot-1-alive-at-launch, -9)
-      shot2Alive var(--enemy-bullet-1-shot-2-alive-at-launch, -9)
-      shot3Alive var(--enemy-bullet-1-shot-3-alive-at-launch, -9)
-      shot4Alive var(--enemy-bullet-1-shot-4-alive-at-launch, -9)
-      shot5Alive var(--enemy-bullet-1-shot-5-alive-at-launch, -9)
-      enemyCollision var(--enemy-1-total-collision-value, -9);
-    content:
-      "Safari: " counter(safari)
-      " | enemy: " counter(enemyX) "/" counter(enemyY)
-      " | player: " counter(playerX) "/" counter(playerY)
-      "\A bullet start: " counter(bulletStartX) "/" counter(bulletStartY)
-      " | shot/offset: " counter(bulletShot) "/" counter(bulletOffsetX)
-      " | collision pos: " counter(bulletX) "/" counter(bulletY)
-      " | visible Safari/legacy: " counter(bulletSafariAlive) "/" counter(bulletAlive)
-      "\A shot alive latches: " counter(shot1Alive) "," counter(shot2Alive) "," counter(shot3Alive) "," counter(shot4Alive) "," counter(shot5Alive)
-      " | enemy collision: " counter(enemyCollision);
+    counter-reset: $debug-counters;
+    content: $debug-content;
   }
 
   $animations: (

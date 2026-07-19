@@ -8,7 +8,7 @@
   initial-value: 1;
 }
 
-@for $e from 1 through $total-enemies {
+@for $e from 1 through length($enemy-configs) {
   @property --enemy-#{$e}-total-collision-value {
     syntax: "<integer>";
     inherits: true;
@@ -24,62 +24,64 @@
   }
 }
 
-@property --enemy-bullet-1-posY {
-  syntax: "<integer>";
-  inherits: true;
-  initial-value: 99;
-}
-@property --enemy-bullet-1-posX {
-  syntax: "<integer>";
-  inherits: true;
-  initial-value: 99;
-}
-
-// Safari's horizontal fallback keeps the launch cell separate from its
-// literal travel offset. Keeping these typed makes the regular calc() that
-// combines them usable for style-query collision detection.
-@supports (-webkit-appearance: none) and (hanging-punctuation: first) {
-  @property --enemy-bullet-1-startX {
+@for $e from 1 through length($enemy-configs) {
+  @property --enemy-bullet-#{$e}-posY {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 99;
+  }
+  @property --enemy-bullet-#{$e}-posX {
     syntax: "<integer>";
     inherits: true;
     initial-value: 99;
   }
 
-  @property --enemy-bullet-1-startY {
-    syntax: "<integer>";
-    inherits: true;
-    initial-value: 99;
+  // Safari's horizontal fallback keeps the launch cell separate from its
+  // literal travel offset. Keeping these typed makes the regular calc() that
+  // combines them usable for style-query collision detection.
+  @supports (-webkit-appearance: none) and (hanging-punctuation: first) {
+    @property --enemy-bullet-#{$e}-startX {
+      syntax: "<integer>";
+      inherits: true;
+      initial-value: 99;
+    }
+
+    @property --enemy-bullet-#{$e}-startY {
+      syntax: "<integer>";
+      inherits: true;
+      initial-value: 99;
+    }
+
+    @property --enemy-bullet-#{$e}-offsetX {
+      syntax: "<integer>";
+      inherits: true;
+      initial-value: -99;
+    }
+
+    @property --enemy-bullet-#{$e}-current-shot {
+      syntax: "<integer>";
+      inherits: true;
+      initial-value: 0;
+    }
   }
 
-  @property --enemy-bullet-1-offsetX {
-    syntax: "<integer>";
-    inherits: true;
-    initial-value: -99;
-  }
-
-  @property --enemy-bullet-1-current-shot {
+  @property --enemy-bullet-#{$e}-current-alive-at-launch {
     syntax: "<integer>";
     inherits: true;
     initial-value: 0;
   }
-}
 
-@property --enemy-bullet-1-current-alive-at-launch {
-  syntax: "<integer>";
-  inherits: true;
-  initial-value: 0;
-}
+  @for $shot from 1 through $enemy-bullet-shots {
+    @property --enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger {
+      syntax: "<integer>";
+      inherits: true;
+      initial-value: 0;
+    }
 
-@for $shot from 1 through $enemy-bullet-shots {
-  @property --enemy-bullet-1-shot-#{$shot}-launch-trigger {
-    syntax: "<integer>";
-    inherits: true;
-    initial-value: 0;
-  }
-
-  @property --enemy-bullet-1-shot-#{$shot}-alive-at-launch {
-    syntax: "<integer>";
-    inherits: true;
-    initial-value: 0;
+    @property --enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch {
+      syntax: "<integer>";
+      inherits: true;
+      initial-value: 0;
+    }
   }
 }

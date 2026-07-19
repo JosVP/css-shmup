@@ -4,185 +4,153 @@
 
 $enemy-configs: (
   1: (
-    path-type: row-5-straight,
-    enemy-type: 1,
-    speed: ($enemy-speed-delay + 3) * 1s,
+    path-type: row-3-straight,
+    speed: $enemy-speed * 1s,
     delay: 0s
   ),
-  // 2: (
-  //   path-type: row-1-straight,
-  //   enemy-type: 2,
-  //   speed: #{$enemy-speed-delay + 2.5}s,
-  //   delay: 1s
-  // ),
-  // 3: (
-  //   path-type: row-5-straight,
-  //   enemy-type: 1,
-  //   speed: #{$enemy-speed-delay + 3}s,
-  //   delay: 2s
-  // ),
-  // 4: (
-  //   path-type: row-2-straight,
-  //   enemy-type: 3,
-  //   speed: #{$enemy-speed-delay + 2.8}s,
-  //   delay: 1.5s
-  // ),
-  // 5: (
-  //   path-type: row-4-straight,
-  //   enemy-type: 2,
-  //   speed: #{$enemy-speed-delay + 3.2}s,
-  //   delay: 2.5s
-  // ),
+  2: (
+    path-type: row-1-straight,
+    speed: $enemy-speed * 1s,
+    delay: 2s
+  ),
+  3: (
+    path-type: row-1-2-u-turn,
+    speed: $enemy-speed * 1s,
+    delay: 4s
+  ),
+  4: (
+    path-type: row-2-straight,
+    speed: $enemy-speed * 1s,
+    delay: 6s
+  ),
+  5: (
+    path-type: row-4-straight,
+    speed: $enemy-speed * 1s,
+    delay: 8s
+  ),
   // 6: (
   //   path-type: row-1-2-u-turn,
-  //   enemy-type: 4,
-  //   speed: #{$enemy-speed-delay + 5}s,
-  //   delay: 3s
+  //   speed: $enemy-speed * 1s,
+  //   delay: 13s
   // ),
   // 7: (
   //   path-type: diagonal-5-to-1,
-  //   enemy-type: 5,
-  //   speed: #{$enemy-speed-delay + 4}s,
-  //   delay: 0.5s
+  //   speed: $enemy-speed * 1s,
+  //   delay: 10.5s
   // ),
   // 8: (
   //   path-type: row-3-straight,
-  //   enemy-type: 1,
-  //   speed: #{$enemy-speed-delay + 2.5}s,
-  //   delay: 4s
+  //   speed: $enemy-speed * 1s,
+  //   delay: 14s
   // ),
   // 9: (
   //   path-type: row-2-straight,
-  //   enemy-type: 3,
-  //   speed: #{$enemy-speed-delay + 3}s,
-  //   delay: 5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 15s
   // ),
   // 10: (
   //   path-type: row-5-straight,
-  //   enemy-type: 2,
-  //   speed: #{$enemy-speed-delay + 3.5}s,
-  //   delay: 4.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 14.5s
   // ),
   // 11: (
   //   path-type: row-1-straight,
-  //   enemy-type: 1,
-  //   speed: #{$enemy-speed-delay + 2.7}s,
-  //   delay: 6s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 16s
   // ),
   // 12: (
   //   path-type: row-4-straight,
-  //   enemy-type: 2,
-  //   speed: #{$enemy-speed-delay + 3.1}s,
-  //   delay: 3.7s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 13.7s
   // ),
   // 13: (
   //   path-type: row-2-straight,
-  //   enemy-type: 3,
-  //   speed: #{$enemy-speed-delay + 2.9}s,
-  //   delay: 7.2s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 17.2s
   // ),
   // 14: (
   //   path-type: row-3-straight,
-  //   enemy-type: 4,
-  //   speed: #{$enemy-speed-delay + 3.4}s,
-  //   delay: 5.8s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 15.8s
   // ),
   // 15: (
   //   path-type: row-5-straight,
-  //   enemy-type: 5,
-  //   speed: #{$enemy-speed-delay + 4.2}s,
-  //   delay: 8s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 18s
   // ),
   // 16: (
   //   path-type: row-1-2-u-turn,
-  //   enemy-type: 2,
-  //   speed: #{$enemy-speed-delay + 5.3}s,
-  //   delay: 6.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 16.5s
   // ),
   // 17: (
   //   path-type: diagonal-5-to-1,
-  //   enemy-type: 3,
-  //   speed: #{$enemy-speed-delay + 4.5}s,
-  //   delay: 9s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 19s
   // ),
   // 18: (
   //   path-type: row-2-straight,
-  //   enemy-type: 1,
-  //   speed: #{$enemy-speed-delay + 3.6}s,
-  //   delay: 7.7s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 17.7s
   // ),
   // 19: (
   //   path-type: row-4-straight,
-  //   enemy-type: 4,
-  //   speed: #{$enemy-speed-delay + 3.9}s,
-  //   delay: 8.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 18.5s
   // ),
   // 20: (
   //   path-type: row-3-straight,
-  //   enemy-type: 5,
-  //   speed: #{$enemy-speed-delay + 2.6}s,
-  //   delay: 10s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 110s
   // ),
   // 21: (
   //   path-type: row-5-straight,
-  //   enemy-type: 1,
-  //   speed: #{$enemy-speed-delay + 3.2}s,
-  //   delay: 10.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 110.5s
   // ),
   // 22: (
   //   path-type: row-1-straight,
-  //   enemy-type: 2,
-  //   speed: #{$enemy-speed-delay + 2.8}s,
-  //   delay: 11s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 111s
   // ),
   // 23: (
   //   path-type: row-2-straight,
-  //   enemy-type: 3,
-  //   speed: #{$enemy-speed-delay + 3.3}s,
-  //   delay: 11.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 111.5s
   // ),
   // 24: (
   //   path-type: row-4-straight,
-  //   enemy-type: 4,
-  //   speed: #{$enemy-speed-delay + 3.7}s,
-  //   delay: 12s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 112s
   // ),
   // 25: (
   //   path-type: row-3-straight,
-  //   enemy-type: 5,
-  //   speed: #{$enemy-speed-delay + 2.9}s,
-  //   delay: 12.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 112.5s
   // ),
   // 26: (
   //   path-type: row-1-2-u-turn,
-  //   enemy-type: 1,
-  //   speed: #{$enemy-speed-delay + 5.1}s,
-  //   delay: 13s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 113s
   // ),
   // 27: (
   //   path-type: diagonal-5-to-1,
-  //   enemy-type: 2,
-  //   speed: #{$enemy-speed-delay + 4.7}s,
-  //   delay: 13.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 113.5s
   // ),
   // 28: (
   //   path-type: row-2-straight,
-  //   enemy-type: 3,
-  //   speed: #{$enemy-speed-delay + 3.5}s,
-  //   delay: 14s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 114s
   // ),
   // 29: (
   //   path-type: row-5-straight,
-  //   enemy-type: 4,
-  //   speed: #{$enemy-speed-delay + 4.1}s,
-  //   delay: 14.5s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 114.5s
   // ),
   // 30: (
   //   path-type: row-3-straight,
-  //   enemy-type: 5,
-  //   speed: #{$enemy-speed-delay + 2.7}s,
-  //   delay: 15s
+  //   sped: ($enemy-speed * 1s,
+  //   delay: 115s
   // ),
 );
-
-$total-enemies: length($enemy-configs);
