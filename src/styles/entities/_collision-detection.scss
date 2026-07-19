@@ -2,66 +2,87 @@
 // COLLISION DETECTION
 // ============================================
 
-@for $b from 1 through $player-bullets {
-  @each $e, $config in $enemy-configs {
-    $path-name: map-get($config, 'path-type');
-    $path-cells: get-path-cells($path-name);
+@each $e, $config in $enemy-configs {
+  $path-name: map-get($config, 'path-type');
+  $path-cells: get-path-collision-cells($path-name);
 
-    // Only check cells that are actually in this enemy's path
-    @each $cell in $path-cells {
-      $col: map-get($cell, 'x');
-      $row: map-get($cell, 'y');
+  // Generate one query per enemy/path cell. Its OR group accepts any player
+  // bullet slot, avoiding a complete copy of the query for every bullet.
+  @each $cell in $path-cells {
+    $col: map-get($cell, 'x');
+    $row: map-get($cell, 'y');
+    $player-bullet-at-cell: null;
 
-      // Bullet vs Enemy collision
-      @container enemy-vs-bullet-container
-        style(--player-bullet-#{$b}-posX: #{$col}) and
-        style(--enemy-#{$e}-posX: #{$col}) and
-        style(--player-bullet-#{$b}-posY: #{$row}) and
-        style(--enemy-#{$e}-posY: #{$row}) {
-        .sub-container {
-          --enemy-#{$e}-bullet-collision-animation: running !important;
-        }
+    @for $b from 1 through $player-bullets {
+      $bullet-condition: unquote("(style(--player-bullet-#{$b}-posX: #{$col}) and style(--player-bullet-#{$b}-posY: #{$row}))");
+
+      @if $b == 1 {
+        $player-bullet-at-cell: $bullet-condition;
+      } @else {
+        $player-bullet-at-cell: unquote("#{$player-bullet-at-cell} or #{$bullet-condition}");
       }
+    }
 
-      // Player vs Enemy collision
-      @container enemy-vs-player-container
-        style(--player-posX: #{$col}) and
-        style(--enemy-#{$e}-posX: #{$col}) and
-        style(--player-posY: #{$row}) and
-        style(--enemy-#{$e}-posY: #{$row}) {
-        @container enemy-vs-bullet-subcontainer
-          style(--enemy-#{$e}-total-collision-value: 0) {
-          .player-state {
-            --player-destroyed-state: running !important;
-            --player-death-at-#{$col}-#{$row}-state: running !important;
-          }
+    // Bullet vs Enemy collision
+    @container enemy-vs-bullet-container
+      style(--enemy-#{$e}-posX: #{$col}) and
+      style(--enemy-#{$e}-posY: #{$row}) and
+      (#{$player-bullet-at-cell}) {
+      .sub-container {
+        --enemy-#{$e}-bullet-collision-animation: running !important;
+      }
+    }
+  }
+}
 
-          .player {
-            --player-controls-lock-state: running !important;
-          }
+// These checks do not depend on a player bullet, so generate them once per
+// enemy/path cell rather than once for every player bullet slot.
+@each $e, $config in $enemy-configs {
+  $path-name: map-get($config, 'path-type');
+  $path-cells: get-path-collision-cells($path-name, $hover-columns);
 
-          @container player-state style(--player-alive: 1) {
-            .enemy-#{$e} .idle,
-            .enemy-#{$e} .collision,
-            .player .idle,
-            .player .collision {
-              animation-play-state: running !important;
-            }
+  @each $cell in $path-cells {
+    $col: map-get($cell, 'x');
+    $row: map-get($cell, 'y');
+
+    // Player vs Enemy collision
+    @container enemy-vs-player-container
+      style(--player-alive: 1) and
+      style(--player-posX: #{$col}) and
+      style(--enemy-#{$e}-posX: #{$col}) and
+      style(--player-posY: #{$row}) and
+      style(--enemy-#{$e}-posY: #{$row}) {
+      @container enemy-vs-bullet-subcontainer
+        style(--enemy-#{$e}-total-collision-value: 0) {
+        .player-state {
+          --player-destroyed-state: running !important;
+          --player-death-at-#{$col}-#{$row}-state: running !important;
+        }
+
+        .player {
+          --player-controls-lock-state: running !important;
+        }
+
+        @container player-state style(--player-alive: 1) {
+          .enemy-#{$e} .idle,
+          .enemy-#{$e} .collision,
+          .player .idle,
+          .player .collision {
+            animation-play-state: running !important;
           }
         }
       }
     }
+  }
 
-    // Collision state triggers
-    @container enemy-vs-bullet-subcontainer
-      style(--enemy-#{$e}-total-collision-value: 1) or
-      style(--enemy-#{$e}-total-collision-value: 3) {
-      .enemy-#{$e} .idle,
-      .enemy-#{$e} .collision {
-        animation-play-state: running !important;
-      }
+  // Collision state trigger
+  @container enemy-vs-bullet-subcontainer
+    style(--enemy-#{$e}-total-collision-value: 1) or
+    style(--enemy-#{$e}-total-collision-value: 3) {
+    .enemy-#{$e} .idle,
+    .enemy-#{$e} .collision {
+      animation-play-state: running !important;
     }
-
   }
 }
 
@@ -111,6 +132,7 @@
   @for $hc from 1 through $hover-columns {
     @for $hr from 1 through $rows {
       @container bullet-vs-player-subcontainer
+        style(--player-alive: 1) and
         style(--player-posX: #{$hc}) and
         style(--player-posY: #{$hr}) and
         style(--enemy-bullet-#{$e}-posX: #{$hc}) and
@@ -143,6 +165,7 @@
       @for $hc from 1 through $hover-columns {
         @for $hr from 1 through $rows {
           @container bullet-vs-player-subcontainer
+            style(--player-alive: 1) and
             style(--player-posX: #{$hc}) and
             style(--player-posY: #{$hr}) and
             style(--enemy-bullet-#{$e}-posX: #{$hc}) and

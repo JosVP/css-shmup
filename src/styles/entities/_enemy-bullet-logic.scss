@@ -58,8 +58,8 @@
       --enemy-bullet-#{$e}-startX: var(--enemy-#{$e}-posX);
       --enemy-bullet-#{$e}-startY: var(--enemy-#{$e}-posY);
 
-      --enemy-bullet-#{$e}-diffX: calc(var(--enemy-bullet-#{$e}-startX) - var(--player-posX));
-      --enemy-bullet-#{$e}-diffY: calc(var(--enemy-bullet-#{$e}-startY) - var(--player-posY));
+      --enemy-bullet-#{$e}-diffX: calc(var(--enemy-bullet-#{$e}-startX) - var(--enemy-bullet-targetX));
+      --enemy-bullet-#{$e}-diffY: calc(var(--enemy-bullet-#{$e}-startY) - var(--enemy-bullet-targetY));
       --enemy-bullet-#{$e}-vector-distance: max(hypot(var(--enemy-bullet-#{$e}-diffX), var(--enemy-bullet-#{$e}-diffY)), 1);
 
       // A fixed vector length gives every shot the same speed and two extra cells

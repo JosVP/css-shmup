@@ -25,3 +25,27 @@
 
   @return $cells;
 }
+
+// Return only unique, integer cells inside the collision area. Visual-only
+// fractional turn points and offscreen path endpoints can never match the
+// game's registered integer collision coordinates.
+@function get-path-collision-cells($path-name, $max-x: $columns) {
+  $path-cells: get-path-cells($path-name);
+  $collision-cells: ();
+
+  @each $cell in $path-cells {
+    $x: map-get($cell, 'x');
+    $y: map-get($cell, 'y');
+    $collision-cell: (x: $x, y: $y);
+
+    @if $x == round($x) and
+        $y == round($y) and
+        $x >= 1 and $x <= $max-x and
+        $y >= 1 and $y <= $rows and
+        index($collision-cells, $collision-cell) == null {
+      $collision-cells: append($collision-cells, $collision-cell);
+    }
+  }
+
+  @return $collision-cells;
+}

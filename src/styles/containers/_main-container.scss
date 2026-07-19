@@ -10,6 +10,8 @@
 
   --player-posX: 2;
   --player-posY: 3;
+  --enemy-bullet-targetX: var(--player-posX);
+  --enemy-bullet-targetY: var(--player-posY);
   --player-bullet-speed: #{$player-bullet-debug-speed + 0.75}s;
 
   @each $e, $config in $enemy-configs {
@@ -69,8 +71,10 @@
   }
 }
 
-// Once the full-screen dead-player layover owns the hover,
-// this removes the player from any collision detection.
+// Once the full-screen dead-player layover owns the hover, disable new player
+// collisions without changing player-posX. Bullets already in flight still
+// need their launch position after the player dies.
 body:has(.player:hover) .container:has(.player:hover) {
-  --player-posX: -99 !important;
+  --player-alive: 0 !important;
+  --enemy-bullet-targetX: -99;
 }
