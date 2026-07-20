@@ -1,0 +1,433 @@
+// ============================================
+// FIXED-COLUMN BOSS, TURRETS, HP, AND BULLETS
+// ============================================
+
+$boss-delay: map-get($boss-config, 'delay');
+$boss-duration: map-get($boss-config, 'duration');
+$boss-column: map-get($boss-config, 'column');
+$boss-hp: map-get($boss-config, 'hp');
+$boss-damage: map-get($boss-config, 'damage-per-hit');
+$boss-path-cells: get-path-cells(map-get($boss-config, 'path-type'));
+$boss-hit-count: $boss-hp / $boss-damage;
+$boss-hp-duration: (($player-bullet-debug-speed + 0.75) * 1s * $boss-hit-count / $columns * 0.9);
+
+.boss-hp-driver {
+  container-name: boss-hp-state;
+  position: absolute;
+  inset: 0;
+
+  @for $turret from 1 through $boss-turrets {
+    --boss-turret-#{$turret}-hp: #{$boss-hp};
+    --boss-turret-#{$turret}-alive: 1;
+    --boss-turret-#{$turret}-hp-state: paused;
+  }
+}
+
+.boss-bullet-state {
+  container-name: boss-bullet-state;
+  position: absolute;
+  inset: 0;
+}
+
+.boss-visual {
+  position: absolute;
+  left: calc((#{$boss-column} - 1) * #{$column-size});
+  width: $column-size;
+  height: $row-size * $boss-turrets;
+  opacity: 0;
+  z-index: 2;
+  animation: boss-move $boss-duration $boss-delay linear infinite var(--enemy-tracking-state);
+
+  .boss-body {
+    position: absolute;
+    inset: -10% 0;
+    border-radius: 45% 0 0 45%;
+    background: crimson;
+  }
+
+  .boss-turret {
+    position: absolute;
+    left: -35%;
+    width: 70%;
+    aspect-ratio: 1;
+    translate: 0 -50%;
+    border: 3px solid white;
+    border-radius: 50% 0 0 50%;
+    background: crimson;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 42%;
+      right: 70%;
+      width: 60%;
+      height: 15%;
+      border-radius: 100% 0 0 100%;
+      background: white;
+    }
+  }
+
+  @for $turret from 1 through $boss-turrets {
+    .boss-turret-#{$turret} {
+      top: calc((#{$turret} - 0.5) * 100% / #{$boss-turrets});
+      opacity: var(--boss-turret-#{$turret}-alive);
+    }
+  }
+
+  &::after {
+    content:
+      "T1 " counter(bossHp1)
+      " | T2 " counter(bossHp2)
+      " | T3 " counter(bossHp3);
+    counter-reset:
+      bossHp1 var(--boss-turret-1-hp)
+      bossHp2 var(--boss-turret-2-hp)
+      bossHp3 var(--boss-turret-3-hp);
+    position: absolute;
+    visibility: hidden;
+    right: 0;
+    bottom: 100%;
+    width: max-content;
+    padding: 4px 8px;
+    color: white;
+    background: rgba(0, 0, 0, 0.75);
+    font: 14px/1.2 monospace;
+  }
+}
+
+.boss-bullet {
+  position: absolute;
+  width: 24px;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: #ffb000;
+  box-shadow: 0 0 14px #ff4d00;
+  opacity: 0;
+  z-index: 1;
+}
+
+@keyframes boss-tracking {
+  $total-cells: length($boss-path-cells);
+
+  from, to { --boss-active: 1; }
+
+  @for $i from 1 through $total-cells {
+    $cell: nth($boss-path-cells, $i);
+    $progress: ($i - 1) * 100 / ($total-cells - 1);
+
+    #{$progress}% { --boss-posY: #{map-get($cell, 'y')}; }
+  }
+}
+
+@keyframes boss-move {
+  $total-cells: length($boss-path-cells);
+
+  @for $i from 1 through $total-cells {
+    $cell: nth($boss-path-cells, $i);
+    $progress: ($i - 1) * 100 / ($total-cells - 1);
+
+    #{$progress}% {
+      opacity: 1;
+      top: calc((#{map-get($cell, 'y')} - 2) * #{$row-size});
+    }
+  }
+}
+
+@for $turret from 1 through $boss-turrets {
+  @keyframes boss-turret-#{$turret}-hp-depletion {
+    from {
+      --boss-turret-#{$turret}-hp: #{$boss-hp};
+      --boss-turret-#{$turret}-alive: 1;
+    }
+
+    99.9% { --boss-turret-#{$turret}-alive: 1; }
+
+    to {
+      --boss-turret-#{$turret}-hp: 0;
+      --boss-turret-#{$turret}-alive: 0;
+    }
+  }
+}
+
+// Each turret owns two alternating slots. This lets turret 1 fire every 2.9s
+// without replacing its previous three-second bullet during the 0.1s overlap.
+$boss-shot-count: map-get($boss-config, 'shot-count');
+$boss-shots-per-turret: $boss-shot-count / $boss-turrets;
+$boss-turret-shots: map-get($boss-config, 'turret-shots');
+$boss-shot-schedule: ();
+$boss-visual-animations: ();
+$boss-tracking-animations: ();
+$boss-safari-visual-animations: ();
+$boss-safari-tracking-animations: ();
+$boss-hp-animations: ();
+$boss-launch-animations: ();
+$boss-latch-animations: ();
+
+@for $slot from 1 through $boss-bullet-slots {
+  $boss-visual-animations: map-merge($boss-visual-animations, ($slot: ()));
+  $boss-tracking-animations: map-merge($boss-tracking-animations, ($slot: ()));
+  $boss-safari-visual-animations: map-merge($boss-safari-visual-animations, ($slot: ()));
+  $boss-safari-tracking-animations: map-merge($boss-safari-tracking-animations, ($slot: ()));
+}
+
+@for $turret from 1 through $boss-turrets {
+  $boss-hp-animations: append(
+    $boss-hp-animations,
+    boss-turret-#{$turret}-hp-depletion $boss-hp-duration forwards steps(#{$boss-hit-count}, end) var(--boss-turret-#{$turret}-hp-state),
+    comma
+  );
+
+  $turret-config: map-get($boss-turret-shots, $turret);
+  $initial-delay: map-get($turret-config, 'delay');
+  $interval: map-get($turret-config, 'interval');
+
+  @for $turret-shot from 1 through $boss-shots-per-turret {
+    $shot: (($turret - 1) * $boss-shots-per-turret) + $turret-shot;
+    $slot-in-turret: (($turret-shot - 1) % $boss-bullet-slots-per-turret) + 1;
+    $slot: (($turret - 1) * $boss-bullet-slots-per-turret) + $slot-in-turret;
+    $shot-offset: $initial-delay + (($turret-shot - 1) * $interval);
+    $shot-delay: $boss-delay + $shot-offset;
+    $cycle-seconds: ($shot-offset / 1s) % ($boss-duration / 1s);
+    $path-seconds: ($boss-duration / 1s) / (length($boss-path-cells) - 1);
+    $path-index: floor($cycle-seconds / $path-seconds) + 1;
+    $segment-start: ($path-index - 1) * $path-seconds;
+    $segment-progress: ($cycle-seconds - $segment-start) / $path-seconds;
+    $from-center: map-get(nth($boss-path-cells, $path-index), 'y');
+    $to-center: map-get(nth($boss-path-cells, $path-index + 1), 'y');
+    $visual-center-row: $from-center + (($to-center - $from-center) * $segment-progress);
+    $visual-shot-row: $visual-center-row + $turret - 2;
+    $shot-row: round($visual-shot-row);
+
+    $boss-shot-schedule: append($boss-shot-schedule, (
+      id: $shot,
+      turret: $turret,
+      slot: $slot,
+      delay: $shot-delay
+    ), comma);
+
+    $visual-list: map-get($boss-visual-animations, $slot);
+    $tracking-list: map-get($boss-tracking-animations, $slot);
+    $safari-visual-list: map-get($boss-safari-visual-animations, $slot);
+    $safari-tracking-list: map-get($boss-safari-tracking-animations, $slot);
+
+    $visual-list: append($visual-list, boss-shot-#{$shot}-move $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
+    $tracking-list: append($tracking-list, boss-shot-#{$shot}-tracking $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
+    $safari-visual-list: append($safari-visual-list, boss-shot-#{$shot}-move-safari $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
+    $safari-tracking-list: append($safari-tracking-list, boss-shot-#{$shot}-tracking-safari $enemy-bullet-flight-duration $shot-delay steps(#{$columns + 2}) forwards var(--enemy-tracking-state), comma);
+
+    $boss-visual-animations: map-merge($boss-visual-animations, ($slot: $visual-list));
+    $boss-tracking-animations: map-merge($boss-tracking-animations, ($slot: $tracking-list));
+    $boss-safari-visual-animations: map-merge($boss-safari-visual-animations, ($slot: $safari-visual-list));
+    $boss-safari-tracking-animations: map-merge($boss-safari-tracking-animations, ($slot: $safari-tracking-list));
+
+    $boss-launch-animations: append(
+      $boss-launch-animations,
+      // Capture the turret state just before the movement animation samples
+      // its first frame, avoiding a same-frame container-query race.
+      boss-shot-#{$shot}-launch-trigger 0.05s ($shot-delay - 0.05s) linear,
+      comma
+    );
+    $boss-latch-animations: append(
+      $boss-latch-animations,
+      boss-shot-#{$shot}-alive 0.01s forwards var(--boss-shot-#{$shot}-alive-state),
+      comma
+    );
+
+    @keyframes boss-shot-#{$shot}-launch-trigger {
+      from, 99.9% { --boss-shot-#{$shot}-launch-trigger: 1; }
+      to { --boss-shot-#{$shot}-launch-trigger: 0; }
+    }
+
+    @keyframes boss-shot-#{$shot}-alive {
+      to { --boss-shot-#{$shot}-alive-at-launch: 1; }
+    }
+
+    // Chrome: logical integer positions drive collision while a separate
+    // fractional vector starts exactly at the smoothly moving turret.
+    @keyframes boss-shot-#{$shot}-tracking {
+      from, 99.9% {
+        --boss-bullet-#{$slot}-current-alive: var(--boss-shot-#{$shot}-alive-at-launch);
+        --boss-bullet-#{$slot}-startX: #{$boss-column};
+        --boss-bullet-#{$slot}-startY: #{$shot-row};
+        --boss-bullet-#{$slot}-diffX: calc(var(--boss-bullet-#{$slot}-startX) - var(--enemy-bullet-targetX));
+        --boss-bullet-#{$slot}-diffY: calc((var(--boss-bullet-#{$slot}-startY) - var(--enemy-bullet-targetY)) * var(--player-alive));
+        --boss-bullet-#{$slot}-distance: max(hypot(var(--boss-bullet-#{$slot}-diffX), var(--boss-bullet-#{$slot}-diffY)), 1);
+        --boss-bullet-#{$slot}-scale: calc(#{$columns + 2} / var(--boss-bullet-#{$slot}-distance));
+        --boss-bullet-#{$slot}-endX: calc(var(--boss-bullet-#{$slot}-startX) - (var(--boss-bullet-#{$slot}-diffX) * var(--boss-bullet-#{$slot}-scale)));
+        --boss-bullet-#{$slot}-endY: calc(var(--boss-bullet-#{$slot}-startY) - (var(--boss-bullet-#{$slot}-diffY) * var(--boss-bullet-#{$slot}-scale)));
+
+        --boss-bullet-#{$slot}-visual-startY: #{$visual-shot-row};
+        --boss-bullet-#{$slot}-visual-diffY: calc((var(--boss-bullet-#{$slot}-visual-startY) - var(--enemy-bullet-targetY)) * var(--player-alive));
+        --boss-bullet-#{$slot}-visual-distance: max(hypot(var(--boss-bullet-#{$slot}-diffX), var(--boss-bullet-#{$slot}-visual-diffY)), 1);
+        --boss-bullet-#{$slot}-visual-scale: calc(#{$columns + 2} / var(--boss-bullet-#{$slot}-visual-distance));
+        --boss-bullet-#{$slot}-visual-endX: calc(var(--boss-bullet-#{$slot}-startX) - (var(--boss-bullet-#{$slot}-diffX) * var(--boss-bullet-#{$slot}-visual-scale)));
+        --boss-bullet-#{$slot}-visual-endY: calc(var(--boss-bullet-#{$slot}-visual-startY) - (var(--boss-bullet-#{$slot}-visual-diffY) * var(--boss-bullet-#{$slot}-visual-scale)));
+      }
+
+      from {
+        --boss-bullet-#{$slot}-posX: var(--boss-bullet-#{$slot}-startX);
+        --boss-bullet-#{$slot}-posY: var(--boss-bullet-#{$slot}-startY);
+      }
+
+      99.9% {
+        --boss-bullet-#{$slot}-posX: var(--boss-bullet-#{$slot}-endX);
+        --boss-bullet-#{$slot}-posY: var(--boss-bullet-#{$slot}-endY);
+      }
+
+      to {
+        --boss-bullet-#{$slot}-current-alive: 0;
+        --boss-bullet-#{$slot}-posX: -99;
+        --boss-bullet-#{$slot}-posY: -99;
+      }
+    }
+
+    @keyframes boss-shot-#{$shot}-move {
+      from {
+        opacity: var(--boss-bullet-#{$slot}-current-alive);
+        left: calc((#{$boss-column} - 0.5) * #{$column-size});
+        top: calc((var(--boss-bullet-#{$slot}-visual-startY) - 0.5) * #{$row-size});
+      }
+
+      99.9% {
+        opacity: var(--boss-bullet-#{$slot}-current-alive);
+        left: calc((var(--boss-bullet-#{$slot}-visual-endX) - 0.5) * #{$column-size});
+        top: calc((var(--boss-bullet-#{$slot}-visual-endY) - 0.5) * #{$row-size});
+      }
+
+      to { opacity: 0; }
+    }
+
+    // Safari retains horizontal bullets, but their visual origin uses the
+    // same interpolated turret row as the smooth boss animation.
+    @keyframes boss-shot-#{$shot}-tracking-safari {
+      from, 99.9% { --boss-bullet-#{$slot}-current-alive: var(--boss-shot-#{$shot}-alive-at-launch); }
+
+      from {
+        --boss-bullet-#{$slot}-posX: #{$boss-column};
+        --boss-bullet-#{$slot}-posY: #{$shot-row};
+      }
+
+      99.9% {
+        --boss-bullet-#{$slot}-posX: -2;
+        --boss-bullet-#{$slot}-posY: #{$shot-row};
+      }
+
+      to {
+        --boss-bullet-#{$slot}-current-alive: 0;
+        --boss-bullet-#{$slot}-posX: -99;
+        --boss-bullet-#{$slot}-posY: -99;
+      }
+    }
+
+    @keyframes boss-shot-#{$shot}-move-safari {
+      from {
+        opacity: var(--boss-bullet-#{$slot}-current-alive);
+        left: calc((#{$boss-column} - 0.5) * #{$column-size});
+        top: calc((#{$visual-shot-row} - 0.5) * #{$row-size});
+      }
+
+      99.9% {
+        opacity: var(--boss-bullet-#{$slot}-current-alive);
+        left: calc(-2.5 * #{$column-size});
+        top: calc((#{$visual-shot-row} - 0.5) * #{$row-size});
+      }
+
+      to { opacity: 0; }
+    }
+  }
+}
+
+// Snapshot each turret's alive state at launch. Once latched, an in-flight
+// bullet is independent of later turret or boss destruction.
+@each $shot in $boss-shot-schedule {
+  $shot-id: map-get($shot, 'id');
+  $turret: map-get($shot, 'turret');
+
+  @container boss-hp-state
+    style(--boss-shot-#{$shot-id}-launch-trigger: 1) and
+    style(--boss-turret-#{$turret}-alive: 1) {
+    .boss-bullet-state {
+      --boss-shot-#{$shot-id}-alive-state: running !important;
+    }
+  }
+}
+
+@for $slot from 1 through $boss-bullet-slots {
+  .boss-bullet-#{$slot} {
+    animation: map-get($boss-visual-animations, $slot);
+  }
+}
+
+.boss-hp-driver {
+  animation: $boss-hp-animations, $boss-launch-animations;
+}
+
+.boss-bullet-state {
+  $bullet-state-animations: $boss-latch-animations;
+
+  @each $slot, $animations in $boss-tracking-animations {
+    @each $tracking-animation in $animations {
+      $bullet-state-animations: append($bullet-state-animations, $tracking-animation, comma);
+    }
+  }
+
+  @each $shot in $boss-shot-schedule {
+    --boss-shot-#{map-get($shot, 'id')}-alive-state: paused;
+  }
+
+  animation: $bullet-state-animations;
+}
+
+@supports (-webkit-appearance: none) and (hanging-punctuation: first) {
+  @for $slot from 1 through $boss-bullet-slots {
+    .boss-bullet-#{$slot} {
+      animation: map-get($boss-safari-visual-animations, $slot);
+    }
+  }
+
+  .boss-bullet-state {
+    $bullet-state-animations: $boss-latch-animations;
+
+    @each $slot, $animations in $boss-safari-tracking-animations {
+      @each $tracking-animation in $animations {
+        $bullet-state-animations: append($bullet-state-animations, $tracking-animation, comma);
+      }
+    }
+
+    animation: $bullet-state-animations;
+  }
+}
+
+@for $turret from 1 through $boss-turrets {
+  @container boss-hp-state style(--boss-turret-#{$turret}-alive: 0) {
+    .boss-turret-#{$turret} {
+      opacity: 0 !important;
+    }
+  }
+}
+
+@container boss-hp-state
+  style(--boss-turret-1-alive: 0) and
+  style(--boss-turret-2-alive: 0) and
+  style(--boss-turret-3-alive: 0) {
+  .boss-body {
+    opacity: 0;
+    scale: 0;
+  }
+
+  .boss-visual::before {
+    content: "\1F4A5";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 8vw;
+    animation: boss-destroyed 1s forwards;
+  }
+}
+
+@keyframes boss-destroyed {
+  from { opacity: 1; scale: 0.5; }
+  to { opacity: 0; scale: 2; }
+}

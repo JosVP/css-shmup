@@ -14,6 +14,72 @@
     inherits: true;
     initial-value: 0;
   }
+
+  @property --enemy-#{$e}-active-flyby {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+}
+
+@property --boss-active {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --boss-posY {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 99;
+}
+
+@for $turret from 1 through $boss-turrets {
+  @property --boss-turret-#{$turret}-hp {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 100;
+  }
+
+  @property --boss-turret-#{$turret}-alive {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 1;
+  }
+}
+
+@for $slot from 1 through $boss-bullet-slots {
+  @property --boss-bullet-#{$slot}-posX {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 99;
+  }
+
+  @property --boss-bullet-#{$slot}-posY {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 99;
+  }
+
+  @property --boss-bullet-#{$slot}-current-alive {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+}
+
+@for $shot from 1 through map-get($boss-config, 'shot-count') {
+  @property --boss-shot-#{$shot}-alive-at-launch {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @property --boss-shot-#{$shot}-launch-trigger {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
 }
 
 @for $b from 1 through $player-bullets {
@@ -24,7 +90,7 @@
   }
 }
 
-@for $e from 1 through length($enemy-configs) {
+@each $e, $config in $enemy-configs {
   @property --enemy-bullet-#{$e}-posY {
     syntax: "<integer>";
     inherits: true;
@@ -71,14 +137,16 @@
     initial-value: 0;
   }
 
-  @for $shot from 1 through $enemy-bullet-shots {
-    @property --enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger {
+  @each $shot in get-enemy-shot-schedule($config) {
+    $shot-id: map-get($shot, 'id');
+
+    @property --enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger {
       syntax: "<integer>";
       inherits: true;
       initial-value: 0;
     }
 
-    @property --enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch {
+    @property --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch {
       syntax: "<integer>";
       inherits: true;
       initial-value: 0;

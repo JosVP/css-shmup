@@ -5,71 +5,75 @@
 .sub-container {
   container-name: enemy-vs-bullet-subcontainer enemy-bullet-launch-subcontainer;
 
-  @for $e from 1 through length($enemy-configs) {
-    --enemy-#{$e}-bullet-collision: 0;
-    --enemy-#{$e}-bullet-collision-animation: paused;
-    --enemy-#{$e}-total-collision-value: var(--enemy-#{$e}-bullet-collision);
+  @each $e, $config in $enemy-configs {
+    --enemy-#{$e}-current-hit-state: paused;
+    --enemy-#{$e}-total-collision-value: 0;
+
+    @each $flyby-id, $flyby in get-enemy-flybys($config) {
+      --enemy-#{$e}-flyby-#{$flyby-id}-collision: 0;
+      --enemy-#{$e}-flyby-#{$flyby-id}-hit-state: paused;
+    }
   }
 
   $animations: ();
 
-  @for $e from 1 through length($enemy-configs) {
-    $enemy-delay: map-get(map-get($enemy-configs, $e), 'delay');
-
-    @for $shot from 1 through $enemy-bullet-shots {
-      $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
-      $animations: append($animations, enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger 0.01s #{$delay} linear, comma);
+  @each $e, $config in $enemy-configs {
+    @each $shot in get-enemy-shot-schedule($config) {
+      $shot-id: map-get($shot, 'id');
+      $delay: map-get($shot, 'delay');
+      $launch-delay: max($delay - 0.05s, 0s);
+      $animations: append($animations, enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger 0.05s #{$launch-delay} linear, comma);
     }
   }
 
-  @for $e from 1 through length($enemy-configs) {
-    $animations: append($animations, enemy-#{$e}-bullet-collision-animation 0.01s forwards var(--enemy-#{$e}-bullet-collision-animation), comma);
+  @each $e, $config in $enemy-configs {
+    @each $flyby-id, $flyby in get-enemy-flybys($config) {
+      $animations: append(
+        $animations,
+        enemy-#{$e}-flyby-#{$flyby-id}-hit 0.01s forwards var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
+        comma
+      );
+    }
   }
 
   animation: $animations;
 }
 
 // ============================================
-// COLLISION ANIMATIONS
+// SHOT LATCH ANIMATIONS
 // ============================================
 
-@for $e from 1 through length($enemy-configs) {
-  @keyframes enemy-#{$e}-bullet-collision-animation {
-    to {
-      --enemy-#{$e}-bullet-collision: 1;
-    }
-  }
-}
+@each $e, $config in $enemy-configs {
+  @each $shot in get-enemy-shot-schedule($config) {
+    $shot-id: map-get($shot, 'id');
 
-@for $e from 1 through length($enemy-configs) {
-  @for $shot from 1 through $enemy-bullet-shots {
-    @keyframes enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger {
+    @keyframes enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger {
       from,
       99.9% {
-        --enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger: 1;
+        --enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger: 1;
       }
 
       to {
-        --enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger: 0;
+        --enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger: 0;
       }
     }
 
-    @keyframes enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1 {
+    @keyframes enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-1 {
       to {
-        --enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch: 1;
+        --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch: 1;
       }
     }
 
-    @keyframes enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0 {
+    @keyframes enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-0 {
       to {
-        --enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch: 0;
+        --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch: 0;
       }
     }
 
-    @keyframes enemy-bullet-#{$e}-shot-#{$shot}-current-alive {
+    @keyframes enemy-bullet-#{$e}-shot-#{$shot-id}-current-alive {
       from,
       99.9% {
-        --enemy-bullet-#{$e}-current-alive-at-launch: var(--enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch);
+        --enemy-bullet-#{$e}-current-alive-at-launch: var(--enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch);
       }
 
       to {

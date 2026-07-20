@@ -1,156 +1,86 @@
 // ============================================
-// ENEMY CONFIGURATION
+// REUSABLE ENEMY ACTOR SCHEDULES
 // ============================================
+// `delay` is an absolute level time. Shot times are relative to that flyby.
+// An actor can be reused once its previous flyby and bullets have left the field.
+
+$default-enemy-shots: (0s, 3s, 6s);
 
 $enemy-configs: (
   1: (
-    path-type: row-3-straight,
-    speed: $enemy-speed * 1s,
-    delay: 0s
+    flybys: (
+      1: (path-type: row-3-straight, speed: 7s, delay: 0s, shots: $default-enemy-shots),
+      2: (path-type: row-5-straight, speed: 7s, delay: 22s, shots: $default-enemy-shots)
+    )
   ),
   2: (
-    path-type: row-1-straight,
-    speed: $enemy-speed * 1s,
-    delay: 2s
+    flybys: (
+      1: (path-type: row-1-straight, speed: 7s, delay: 2s, shots: $default-enemy-shots),
+      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 24s, shots: $default-enemy-shots)
+    )
   ),
   3: (
-    path-type: row-1-2-u-turn,
-    speed: $enemy-speed * 1s,
-    delay: 4s
+    flybys: (
+      1: (path-type: row-1-2-u-turn, speed: 7s, delay: 4s, shots: $default-enemy-shots),
+      2: (path-type: row-4-straight, speed: 7s, delay: 26s, shots: $default-enemy-shots)
+    )
   ),
   4: (
-    path-type: row-2-straight,
-    speed: $enemy-speed * 1s,
-    delay: 6s
+    flybys: (
+      1: (path-type: row-2-straight, speed: 7s, delay: 6s, shots: $default-enemy-shots),
+      2: (path-type: diagonal-5-to-1, speed: 7s, delay: 28s, shots: $default-enemy-shots)
+    )
   ),
   5: (
-    path-type: row-4-straight,
-    speed: $enemy-speed * 1s,
-    delay: 8s
+    flybys: (
+      1: (path-type: row-4-straight, speed: 7s, delay: 8s, shots: $default-enemy-shots),
+      2: (path-type: row-2-straight, speed: 7s, delay: 30s, shots: $default-enemy-shots)
+    )
   ),
-  // 6: (
-  //   path-type: row-1-2-u-turn,
-  //   speed: $enemy-speed * 1s,
-  //   delay: 13s
-  // ),
-  // 7: (
-  //   path-type: diagonal-5-to-1,
-  //   speed: $enemy-speed * 1s,
-  //   delay: 10.5s
-  // ),
-  // 8: (
-  //   path-type: row-3-straight,
-  //   speed: $enemy-speed * 1s,
-  //   delay: 14s
-  // ),
-  // 9: (
-  //   path-type: row-2-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 15s
-  // ),
-  // 10: (
-  //   path-type: row-5-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 14.5s
-  // ),
-  // 11: (
-  //   path-type: row-1-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 16s
-  // ),
-  // 12: (
-  //   path-type: row-4-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 13.7s
-  // ),
-  // 13: (
-  //   path-type: row-2-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 17.2s
-  // ),
-  // 14: (
-  //   path-type: row-3-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 15.8s
-  // ),
-  // 15: (
-  //   path-type: row-5-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 18s
-  // ),
-  // 16: (
-  //   path-type: row-1-2-u-turn,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 16.5s
-  // ),
-  // 17: (
-  //   path-type: diagonal-5-to-1,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 19s
-  // ),
-  // 18: (
-  //   path-type: row-2-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 17.7s
-  // ),
-  // 19: (
-  //   path-type: row-4-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 18.5s
-  // ),
-  // 20: (
-  //   path-type: row-3-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 110s
-  // ),
-  // 21: (
-  //   path-type: row-5-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 110.5s
-  // ),
-  // 22: (
-  //   path-type: row-1-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 111s
-  // ),
-  // 23: (
-  //   path-type: row-2-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 111.5s
-  // ),
-  // 24: (
-  //   path-type: row-4-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 112s
-  // ),
-  // 25: (
-  //   path-type: row-3-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 112.5s
-  // ),
-  // 26: (
-  //   path-type: row-1-2-u-turn,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 113s
-  // ),
-  // 27: (
-  //   path-type: diagonal-5-to-1,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 113.5s
-  // ),
-  // 28: (
-  //   path-type: row-2-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 114s
-  // ),
-  // 29: (
-  //   path-type: row-5-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 114.5s
-  // ),
-  // 30: (
-  //   path-type: row-3-straight,
-  //   sped: ($enemy-speed * 1s,
-  //   delay: 115s
-  // ),
+  6: (
+    flybys: (
+      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 12s, shots: $default-enemy-shots),
+      2: (path-type: row-1-straight, speed: 7s, delay: 32s, shots: $default-enemy-shots)
+    )
+  ),
+  7: (
+    flybys: (
+      1: (path-type: row-5-straight, speed: 7s, delay: 14s, shots: $default-enemy-shots),
+      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 34s, shots: $default-enemy-shots)
+    )
+  ),
+  8: (
+    flybys: (
+      1: (path-type: row-1-2-u-turn, speed: 7s, delay: 16s, shots: $default-enemy-shots),
+      2: (path-type: row-5-straight, speed: 7s, delay: 36s, shots: $default-enemy-shots)
+    )
+  ),
+  9: (
+    flybys: (
+      1: (path-type: row-3-straight, speed: 7s, delay: 18s, shots: $default-enemy-shots),
+      2: (path-type: diagonal-5-to-1, speed: 7s, delay: 38s, shots: $default-enemy-shots)
+    )
+  ),
+  10: (
+    flybys: (
+      1: (path-type: row-1-straight, speed: 7s, delay: 20s, shots: $default-enemy-shots),
+      2: (path-type: row-3-retreat, speed: 7s, delay: 40s, shots: $default-enemy-shots)
+    )
+  )
+);
+
+// The boss occupies the final twelve seconds of the one-minute level.
+$boss-config: (
+  delay: 48s,
+  duration: 12s,
+  column: 12,
+  hp: 100,
+  damage-per-hit: 10,
+  path-type: boss-column-bob,
+  shot-count: 30,
+  turret-shots: (
+    1: (delay: 1s, interval: 2.9s),
+    2: (delay: 0s, interval: 3s),
+    3: (delay: 2s, interval: 3.1s)
+  )
 );

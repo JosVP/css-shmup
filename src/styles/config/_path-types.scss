@@ -35,6 +35,22 @@ $path-types: (
       (x: 6, y: 1.5), (x: 6.5, y: 2), (x: 7, y: 2), (x: 8, y: 2), (x: 9, y: 2), (x: 10, y: 2), (x: 11, y: 2), (x: 12, y: 2), (x: 13, y: 2)
     )
   ),
+  row-3-retreat: (
+    type: custom-path,
+    cells: (
+      (x: 13, y: 3), (x: 12, y: 3), (x: 11, y: 3), (x: 10, y: 3),
+      (x: 9, y: 3), (x: 8, y: 3), (x: 7, y: 3), (x: 6, y: 3),
+      (x: 7, y: 3), (x: 8, y: 3), (x: 9, y: 3), (x: 10, y: 3),
+      (x: 11, y: 3), (x: 12, y: 3), (x: 13, y: 3)
+    )
+  ),
+  boss-column-bob: (
+    type: custom-path,
+    cells: (
+      (x: 12, y: 3), (x: 12, y: 2), (x: 12, y: 3),
+      (x: 12, y: 4), (x: 12, y: 3)
+    )
+  ),
   diagonal-5-to-1: (
     type: custom-path,
     cells: (

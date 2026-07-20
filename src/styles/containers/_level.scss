@@ -13,28 +13,27 @@
 
   $animations: ();
 
-  @for $e from 1 through length($enemy-configs) {
-    $enemy-delay: map-get(map-get($enemy-configs, $e), 'delay');
+  @each $e, $config in $enemy-configs {
+    @each $shot in get-enemy-shot-schedule($config) {
+      $shot-id: map-get($shot, 'id');
+      $delay: map-get($shot, 'delay');
 
-    @for $shot from 1 through $enemy-bullet-shots {
-      $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
-
-      --enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1-state: paused;
-      --enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0-state: paused;
+      --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-1-state: paused;
+      --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-0-state: paused;
 
       $animations: append(
         $animations,
-        enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1 0.01s forwards var(--enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1-state),
+        enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-1 0.01s forwards var(--enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-1-state),
         comma
       );
       $animations: append(
         $animations,
-        enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0 0.01s forwards var(--enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0-state),
+        enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-0 0.01s forwards var(--enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-0-state),
         comma
       );
       $animations: append(
         $animations,
-        enemy-bullet-#{$e}-shot-#{$shot}-current-alive $enemy-bullet-flight-duration #{$delay} linear forwards,
+        enemy-bullet-#{$e}-shot-#{$shot-id}-current-alive $enemy-bullet-flight-duration #{$delay} linear forwards,
         comma
       );
     }
@@ -57,10 +56,23 @@
     $debug-counters:
       safari var(--enemy-bullet-safari-debug, -9)
       playerX var(--player-posX, -9)
-      playerY var(--player-posY, -9);
+      playerY var(--player-posY, -9)
+      playerBullet1X var(--player-bullet-1-posX, -9)
+      playerBullet1Y var(--player-bullet-1-posY, -9)
+      enemyTargetX var(--enemy-bullet-targetX, -9)
+      enemyTargetY var(--enemy-bullet-targetY, -9)
+      bossActive var(--boss-active, -9)
+      bossY var(--boss-posY, -9)
+      bossHp1 var(--boss-turret-1-hp, -9)
+      bossHp2 var(--boss-turret-2-hp, -9)
+      bossHp3 var(--boss-turret-3-hp, -9);
     $debug-content:
       "Safari: " counter(safari)
-      " | player: " counter(playerX) "/" counter(playerY);
+      " | player: " counter(playerX) "/" counter(playerY)
+      " | bullet 1: " counter(playerBullet1X) "/" counter(playerBullet1Y)
+      " | enemy target: " counter(enemyTargetX) "/" counter(enemyTargetY)
+      " | boss active/Y: " counter(bossActive) "/" counter(bossY)
+      " | turret HP: " counter(bossHp1) "/" counter(bossHp2) "/" counter(bossHp3);
 
     @for $e from 1 through 1 {
       $debug-counters: append($debug-counters, enemy#{$e}X var(--enemy-#{$e}-posX, -9), space);
@@ -86,10 +98,11 @@
       $debug-content: append($debug-content, " | visible Safari/legacy: ", space);
       $debug-content: append($debug-content, counter(enemy#{$e}BulletSafariAlive) "/" counter(enemy#{$e}BulletAlive), space);
 
-      @for $shot from 1 through $enemy-bullet-shots {
-        $debug-counters: append($debug-counters, enemy#{$e}Shot#{$shot}Alive var(--enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch, -9), space);
-        $debug-content: append($debug-content, " | shot #{$shot}: ", space);
-        $debug-content: append($debug-content, counter(enemy#{$e}Shot#{$shot}Alive), space);
+      @each $shot in get-enemy-shot-schedule(map-get($enemy-configs, $e)) {
+        $shot-id: map-get($shot, 'id');
+        $debug-counters: append($debug-counters, enemy#{$e}Shot#{$shot-id}Alive var(--enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch, -9), space);
+        $debug-content: append($debug-content, " | shot #{$shot-id}: ", space);
+        $debug-content: append($debug-content, counter(enemy#{$e}Shot#{$shot-id}Alive), space);
       }
 
       $debug-content: append($debug-content, " | enemy collision: ", space);

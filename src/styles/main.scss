@@ -1,11 +1,5 @@
 // TODO
-// - Remember spot where player died
-// - Let enemies shoot bullets
-//   - Use "animations are fixed" to target player's position
-//   - Create container queries for all hoverable spots and check any bullet collision
-// - Re-use enemies once they have left the screen
 // - Add cooldown for player shooting so you can spam less
-// - Add enemy health based on animation paused/running
 // - Player respawn with lives
 
 @import 'config/configuration';
@@ -17,6 +11,7 @@
 @import 'containers/main-container';
 @import 'entities/enemy-logic';
 @import 'entities/player-bullet-logic';
+@import 'entities/boss-logic';
 @import 'entities/collision-detection';
 @import 'containers/master-animation';
 @import 'containers/level';

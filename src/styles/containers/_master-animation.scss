@@ -8,18 +8,20 @@
   }
 
   --enemy-tracking-state: paused;
+  --player-death-latch-state: paused;
+  --boss-active: 0;
+  --boss-posY: 99;
 
   $animations: ();
   @for $b from 1 through $player-bullets {
     $animations: append($animations, var(--player-bullet-#{$b}-animation), comma);
   }
 
-  @for $e from 1 through length($enemy-configs) {
+  @each $e, $config in $enemy-configs {
     $enemy-bullet-animations: ();
-    $enemy-delay: map-get(map-get($enemy-configs, $e), 'delay');
 
-    @for $shot from 1 through $enemy-bullet-shots {
-      $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
+    @each $shot in get-enemy-shot-schedule($config) {
+      $delay: map-get($shot, 'delay');
       $enemy-bullet-animations: append(
         $enemy-bullet-animations,
         enemy-bullet-#{$e}-tracking $enemy-bullet-flight-duration #{$delay} linear forwards,
@@ -32,9 +34,27 @@
   }
 
   @each $e, $config in $enemy-configs {
-    $path-cells: get-path-cells(map-get($config, 'path-type'));
-    $animations: append($animations, enemy-#{$e}-tracking var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards steps(#{length($path-cells)}) var(--enemy-tracking-state), comma);
+    @each $flyby-id, $flyby in get-enemy-flybys($config) {
+      $path-cells: get-path-cells(map-get($flyby, 'path-type'));
+      $animations: append(
+        $animations,
+        enemy-#{$e}-flyby-#{$flyby-id}-tracking map-get($flyby, 'speed') map-get($flyby, 'delay') forwards steps(#{length($path-cells)}) var(--enemy-tracking-state),
+        comma
+      );
+    }
   }
+
+  $animations: append(
+    $animations,
+    boss-tracking $boss-duration $boss-delay infinite steps(1, end) var(--enemy-tracking-state),
+    comma
+  );
+
+  $animations: append(
+    $animations,
+    player-death-latch 0.01s forwards var(--player-death-latch-state),
+    comma
+  );
   animation: $animations;
 
   position: absolute;

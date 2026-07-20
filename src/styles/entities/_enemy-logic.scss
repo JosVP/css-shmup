@@ -1,100 +1,117 @@
 // ============================================
-// ENEMY ANIMATIONS & TRACKING
+// REUSABLE ENEMY ACTOR ANIMATIONS
 // ============================================
 
 @each $e, $config in $enemy-configs {
-  $path-name: map-get($config, 'path-type');
-  $path-data: map-get($path-types, $path-name);
-  $path-type: map-get($path-data, 'type');
-  $path-cells: get-path-cells($path-name);
+  $flybys: get-enemy-flybys($config);
+  $move-animations: ();
 
   .container {
-    @if $path-type == 'straight' {
-      $start: map-get($path-data, 'start');
-      --enemy-#{$e}-posX: 99;
-      --enemy-#{$e}-posY: 99;
-    } @else {
-      $first-cell: nth($path-cells, 1);
-      --enemy-#{$e}-posX: 99;
-      --enemy-#{$e}-posY: 99;
+    --enemy-#{$e}-posX: 99;
+    --enemy-#{$e}-posY: 99;
+    --enemy-#{$e}-active-flyby: 0;
+  }
+
+  @each $flyby-id, $flyby in $flybys {
+    $path-name: map-get($flyby, 'path-type');
+    $path-cells: get-path-cells($path-name);
+    $duration: map-get($flyby, 'speed');
+    $delay: map-get($flyby, 'delay');
+    $move-animations: append(
+      $move-animations,
+      enemy-#{$e}-flyby-#{$flyby-id}-move $duration $delay linear forwards var(--enemy-tracking-state),
+      comma
+    );
+
+    // Discrete collision coordinates and the per-flyby animation identities.
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-tracking {
+      $total-cells: length($path-cells);
+
+      @for $i from 1 through $total-cells {
+        $cell: nth($path-cells, $i);
+        $progress: ($i - 1) * 99.9 / ($total-cells - 1);
+
+        #{$progress}% {
+          --enemy-#{$e}-active-flyby: #{$flyby-id};
+          --enemy-#{$e}-posX: #{map-get($cell, 'x')};
+          --enemy-#{$e}-posY: #{map-get($cell, 'y')};
+        }
+      }
+
+      to {
+        --enemy-#{$e}-active-flyby: 0;
+        --enemy-#{$e}-posX: 99;
+        --enemy-#{$e}-posY: 99;
+      }
+    }
+
+    // Smooth visual path. Visibility is controlled solely by active-flyby;
+    // completed, filled movement animations must not retain opacity: 0 and
+    // compete with a later reuse of this actor.
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-move {
+      $total-cells: length($path-cells);
+
+      @for $i from 1 through $total-cells {
+        $cell: nth($path-cells, $i);
+        $progress: ($i - 1) * 99.9 / ($total-cells - 1);
+
+        #{$progress}% {
+          left: calc((#{map-get($cell, 'x')} - 1) * #{$column-size});
+          top: calc((#{map-get($cell, 'y')} - 1) * #{$row-size});
+          rotate: 0deg;
+
+          @if $path-name == 'row-1-2-u-turn' {
+            @if $i == 8 { rotate: -60deg; }
+            @if $i == 9 { rotate: -120deg; }
+            @if $i >= 10 { rotate: -180deg; }
+          }
+        }
+      }
+    }
+
+    // Unique names make completed collision/explosion animations fresh again
+    // when this actor is reused by a later flyby.
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-hit {
+      from { --enemy-#{$e}-flyby-#{$flyby-id}-collision: 0; }
+      to { --enemy-#{$e}-flyby-#{$flyby-id}-collision: 1; }
+    }
+
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-collision-trigger {
+      to { --collision: 1; }
+    }
+
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-hide {
+      to { opacity: 0; scale: 0; }
+    }
+
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-show {
+      0% { opacity: 0; scale: 0; }
+      1% { opacity: 1; scale: 1; }
+      100% { opacity: 0; scale: 2; }
     }
   }
 
   .enemy-#{$e} {
-    @if $path-type == 'straight' {
-      animation: enemy-#{$e}-move var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards linear paused;
-      $start: map-get($path-data, 'start');
-      top: calc((#{map-get($start, 'y')} - 1) * #{$row-size});
-    } @else {
-      animation: enemy-#{$e}-move var(--enemy-#{$e}-speed) var(--enemy-#{$e}-delay) forwards linear paused;
-      $first-cell: nth($path-cells, 1);
-      top: calc((#{map-get($first-cell, 'y')} - 1) * #{$row-size});
+    opacity: 0;
+    animation: $move-animations;
+
+    .idle,
+    .collision {
+      animation-name: var(--enemy-#{$e}-collision-trigger-animation, entity-collision-animation);
+    }
+
+    .idle .animation {
+      animation-name: var(--enemy-#{$e}-hide-animation, hide-idle);
+    }
+
+    .collision .animation {
+      animation-name: var(--enemy-#{$e}-show-animation, show-collision);
     }
 
     &::after {
       visibility: hidden;
       counter-reset: posX var(--enemy-#{$e}-posX) posY var(--enemy-#{$e}-posY);
       content: counter(posX) "/" counter(posY);
-    }
-  }
-
-  // Generate enemy tracking animation
-  @keyframes enemy-#{$e}-tracking {
-    $total-cells: length($path-cells);
-
-    @for $i from 1 through $total-cells {
-      $cell: nth($path-cells, $i);
-      $first-cell: nth($path-cells, 1);
-      $progress: ($i - 1) * 100 / ($total-cells - 1);
-
-      #{$progress}% {
-        --enemy-#{$e}-posX: #{map-get($cell, 'x')};
-        --enemy-#{$e}-posY: #{map-get($cell, 'y')};
-      }
-    }
-  }
-
-  // Straight path movement
-  @if $path-type == 'straight' {
-    @keyframes enemy-#{$e}-move {
-      to {
-        left: #{'-' + $column-size};
-      }
-    }
-  } @else {
-    @keyframes enemy-#{$e}-move {
-      $total-cells: length($path-cells);
-
-      @for $i from 1 through $total-cells {
-        $cell: nth($path-cells, $i);
-        $progress: ($i - 1) * 100 / ($total-cells - 1);
-        $x: map-get($cell, 'x');
-        $y: map-get($cell, 'y');
-
-        #{$progress}% {
-          left: calc((#{$x} - 1) * #{$column-size});
-          top: calc((#{$y} - 1) * #{$row-size});
-          rotate: 0deg;
-
-          @if $path-name == 'row-1-2-u-turn' {
-            @if $i == 8 {
-              rotate: -60deg;
-            }
-            @if $i == 9 {
-              rotate: -120deg;
-            }
-            @if $i >= 10 {
-              rotate: -180deg;
-            }
-          }
-        }
-      }
-
-      100% {
-        $last-cell: nth($path-cells, $total-cells);
-        left: calc((#{map-get($last-cell, 'x')} - 1) * #{$column-size});
-        top: calc((#{map-get($last-cell, 'y')} - 1) * #{$row-size});
-      }
     }
   }
 }

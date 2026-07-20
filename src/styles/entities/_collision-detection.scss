@@ -2,9 +2,57 @@
 // COLLISION DETECTION
 // ============================================
 
+// Connect only the active flyby's isolated death latch to the actor's common
+// collision value. Reusing an actor therefore starts with a fresh zero value.
 @each $e, $config in $enemy-configs {
-  $path-name: map-get($config, 'path-type');
-  $path-cells: get-path-collision-cells($path-name);
+  @each $flyby-id, $flyby in get-enemy-flybys($config) {
+    @container enemy-vs-bullet-container
+      style(--enemy-#{$e}-active-flyby: #{$flyby-id}) {
+      .sub-container {
+        --enemy-#{$e}-flyby-#{$flyby-id}-hit-state: var(--enemy-#{$e}-current-hit-state);
+        --enemy-#{$e}-total-collision-value: var(--enemy-#{$e}-flyby-#{$flyby-id}-collision);
+      }
+
+      .enemy-#{$e} {
+        opacity: 1 !important;
+        --enemy-#{$e}-collision-trigger-animation: enemy-#{$e}-flyby-#{$flyby-id}-collision-trigger;
+        --enemy-#{$e}-hide-animation: enemy-#{$e}-flyby-#{$flyby-id}-hide;
+        --enemy-#{$e}-show-animation: enemy-#{$e}-flyby-#{$flyby-id}-show;
+      }
+    }
+  }
+}
+
+// A filled collision animation can retain its completed timeline when an
+// actor is reused. Removing those animations while the active flyby is alive
+// guarantees that the idle/explosion timelines are freshly created on hit.
+@each $e, $config in $enemy-configs {
+  @container enemy-vs-bullet-subcontainer
+    style(--enemy-#{$e}-total-collision-value: 0) {
+    .enemy-#{$e} {
+      .idle,
+      .collision {
+        --collision: 0;
+        animation: none !important;
+      }
+
+      .idle .animation {
+        opacity: 1 !important;
+        scale: 1 !important;
+        animation: none !important;
+      }
+
+      .collision .animation {
+        opacity: 0 !important;
+        scale: 0 !important;
+        animation: none !important;
+      }
+    }
+  }
+}
+
+@each $e, $config in $enemy-configs {
+  $path-cells: get-enemy-collision-cells($config);
 
   // Generate one query per enemy/path cell. Its OR group accepts any player
   // bullet slot, avoiding a complete copy of the query for every bullet.
@@ -29,7 +77,7 @@
       style(--enemy-#{$e}-posY: #{$row}) and
       (#{$player-bullet-at-cell}) {
       .sub-container {
-        --enemy-#{$e}-bullet-collision-animation: running !important;
+        --enemy-#{$e}-current-hit-state: running !important;
       }
     }
   }
@@ -38,8 +86,7 @@
 // These checks do not depend on a player bullet, so generate them once per
 // enemy/path cell rather than once for every player bullet slot.
 @each $e, $config in $enemy-configs {
-  $path-name: map-get($config, 'path-type');
-  $path-cells: get-path-collision-cells($path-name, $hover-columns);
+  $path-cells: get-enemy-collision-cells($config, $hover-columns);
 
   @each $cell in $path-cells {
     $col: map-get($cell, 'x');
@@ -86,22 +133,24 @@
   }
 }
 
-@for $e from 1 through length($enemy-configs) {
-  @for $shot from 1 through $enemy-bullet-shots {
+@each $e, $config in $enemy-configs {
+  @each $shot in get-enemy-shot-schedule($config) {
+    $shot-id: map-get($shot, 'id');
+
     @container enemy-bullet-launch-subcontainer
-      style(--enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger: 1) and
+      style(--enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger: 1) and
       style(--enemy-#{$e}-total-collision-value: 0) {
       .level {
-        --enemy-bullet-#{$e}-shot-#{$shot}-alive-when-1-state: running !important;
+        --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-1-state: running !important;
       }
     }
 
     @container enemy-bullet-launch-subcontainer
-      style(--enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger: 1) and
+      style(--enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger: 1) and
       (style(--enemy-#{$e}-total-collision-value: 1) or
       style(--enemy-#{$e}-total-collision-value: 3)) {
       .level {
-        --enemy-bullet-#{$e}-shot-#{$shot}-alive-when-0-state: running !important;
+        --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-0-state: running !important;
       }
     }
   }
@@ -110,16 +159,24 @@
 // Safari does not need to catch a future shot's brief launch trigger. As soon
 // as the enemy dies, persistently disable every shot after the current one.
 @supports (-webkit-appearance: none) and (hanging-punctuation: first) {
-  @for $e from 1 through length($enemy-configs) {
-    @for $current-shot from 1 through $enemy-bullet-shots {
-      @if $current-shot < $enemy-bullet-shots {
-        @container enemy-bullet-launch-subcontainer
-          (style(--enemy-#{$e}-total-collision-value: 1) or
-          style(--enemy-#{$e}-total-collision-value: 3)) and
-          style(--enemy-bullet-#{$e}-current-shot: #{$current-shot}) {
-          .level {
-            @for $future-shot from $current-shot + 1 through $enemy-bullet-shots {
-              --enemy-bullet-#{$e}-shot-#{$future-shot}-alive-when-0-state: running !important;
+  @each $e, $config in $enemy-configs {
+    $shot-schedule: get-enemy-shot-schedule($config);
+
+    @each $current-shot in $shot-schedule {
+      $current-id: map-get($current-shot, 'id');
+      $current-flyby: map-get($current-shot, 'flyby');
+
+      @container enemy-bullet-launch-subcontainer
+        (style(--enemy-#{$e}-total-collision-value: 1) or
+        style(--enemy-#{$e}-total-collision-value: 3)) and
+        style(--enemy-bullet-#{$e}-current-shot: #{$current-id}) {
+        .level {
+          @each $future-shot in $shot-schedule {
+            $future-id: map-get($future-shot, 'id');
+            $future-flyby: map-get($future-shot, 'flyby');
+
+            @if $future-flyby == $current-flyby and $future-id > $current-id {
+              --enemy-bullet-#{$e}-shot-#{$future-id}-alive-when-0-state: running !important;
             }
           }
         }
@@ -128,7 +185,104 @@
   }
 }
 
-@for $e from 1 through length($enemy-configs) {
+// ============================================
+// BOSS COLLISIONS
+// ============================================
+
+$boss-column: map-get($boss-config, 'column');
+$boss-centers: ();
+
+@each $cell in get-path-cells(map-get($boss-config, 'path-type')) {
+  $center: map-get($cell, 'y');
+
+  @if index($boss-centers, $center) == null {
+    $boss-centers: append($boss-centers, $center);
+  }
+}
+
+// Only nine center/turret combinations are needed for the moving three-cell
+// hitbox. Each query accepts any player bullet slot.
+@each $center in $boss-centers {
+  @for $turret-offset from -1 through 1 {
+    $row: $center + $turret-offset;
+    $turret: $turret-offset + 2;
+
+    @if $row >= 1 and $row <= $rows {
+      $player-bullet-at-turret: null;
+
+      @for $b from 1 through $player-bullets {
+        $condition: unquote("(style(--player-bullet-#{$b}-posX: #{$boss-column}) and style(--player-bullet-#{$b}-posY: #{$row}))");
+
+        @if $b == 1 {
+          $player-bullet-at-turret: $condition;
+        } @else {
+          $player-bullet-at-turret: unquote("#{$player-bullet-at-turret} or #{$condition}");
+        }
+      }
+
+      @container enemy-vs-bullet-container
+        style(--boss-active: 1) and
+        style(--boss-posY: #{$center}) and
+        (#{$player-bullet-at-turret}) {
+        .boss-hp-driver {
+          --boss-turret-#{$turret}-hp-state: running !important;
+        }
+      }
+    }
+  }
+}
+
+// Group all pooled boss bullets into one query per player cell. The launch
+// latch keeps an in-flight bullet alive after its turret has been destroyed.
+@for $hc from 1 through $hover-columns {
+  @for $hr from 1 through $rows {
+    $boss-bullet-at-player: null;
+
+    @for $slot from 1 through $boss-bullet-slots {
+      $condition: unquote("(style(--boss-bullet-#{$slot}-current-alive: 1) and style(--boss-bullet-#{$slot}-posX: #{$hc}) and style(--boss-bullet-#{$slot}-posY: #{$hr}))");
+
+      @if $slot == 1 {
+        $boss-bullet-at-player: $condition;
+      } @else {
+        $boss-bullet-at-player: unquote("#{$boss-bullet-at-player} or #{$condition}");
+      }
+    }
+
+    @container boss-bullet-state
+      style(--boss-active: 1) and
+      style(--player-alive: 1) and
+      style(--player-posX: #{$hc}) and
+      style(--player-posY: #{$hr}) and
+      (#{$boss-bullet-at-player}) {
+      .player .idle,
+      .player .collision {
+        animation-play-state: running !important;
+      }
+
+      .player-state {
+        --player-destroyed-state: running !important;
+        --player-death-at-#{$hc}-#{$hr}-state: running !important;
+      }
+
+      .player {
+        --player-controls-lock-state: running !important;
+      }
+    }
+  }
+}
+
+// Chrome's common launch latch and Safari's shot-specific latches share one
+// collision query per actor/player cell. Adding flybys therefore does not copy
+// the entire 5x5 collision grid for every scheduled shot.
+@each $e, $config in $enemy-configs {
+  $live-shot: unquote("(style(--enemy-bullet-default-collision-enabled: 1) and style(--enemy-bullet-#{$e}-current-alive-at-launch: 1))");
+
+  @each $shot in get-enemy-shot-schedule($config) {
+    $shot-id: map-get($shot, 'id');
+    $safari-live-shot: unquote("(style(--enemy-bullet-safari-debug: 1) and style(--enemy-bullet-#{$e}-current-shot: #{$shot-id}) and style(--enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch: 1))");
+    $live-shot: unquote("#{$live-shot} or #{$safari-live-shot}");
+  }
+
   @for $hc from 1 through $hover-columns {
     @for $hr from 1 through $rows {
       @container bullet-vs-player-subcontainer
@@ -137,8 +291,7 @@
         style(--player-posY: #{$hr}) and
         style(--enemy-bullet-#{$e}-posX: #{$hc}) and
         style(--enemy-bullet-#{$e}-posY: #{$hr}) and
-        style(--enemy-bullet-default-collision-enabled: 1) and
-        style(--enemy-bullet-#{$e}-current-alive-at-launch: 1) {
+        (#{$live-shot}) {
         .player .idle,
         .player .collision {
           animation-play-state: running !important;
@@ -151,41 +304,6 @@
 
         .player {
           --player-controls-lock-state: running !important;
-        }
-      }
-    }
-  }
-}
-
-// Safari reads the shot-specific launch latch directly. Its delayed
-// current-alive animation can retain a stale 1 even when this latch is 0.
-@supports (-webkit-appearance: none) and (hanging-punctuation: first) {
-  @for $e from 1 through length($enemy-configs) {
-    @for $shot from 1 through $enemy-bullet-shots {
-      @for $hc from 1 through $hover-columns {
-        @for $hr from 1 through $rows {
-          @container bullet-vs-player-subcontainer
-            style(--player-alive: 1) and
-            style(--player-posX: #{$hc}) and
-            style(--player-posY: #{$hr}) and
-            style(--enemy-bullet-#{$e}-posX: #{$hc}) and
-            style(--enemy-bullet-#{$e}-posY: #{$hr}) and
-            style(--enemy-bullet-#{$e}-current-shot: #{$shot}) and
-            style(--enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch: 1) {
-            .player .idle,
-            .player .collision {
-              animation-play-state: running !important;
-            }
-
-            .player-state {
-              --player-destroyed-state: running !important;
-              --player-death-at-#{$hc}-#{$hr}-state: running !important;
-            }
-
-            .player {
-              --player-controls-lock-state: running !important;
-            }
-          }
         }
       }
     }

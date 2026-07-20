@@ -38,28 +38,33 @@
 
 .player {
   --player-controls-lock-state: paused;
+  --player-overlay-events: none;
   transition: all 0.25s ease;
   left: calc((var(--player-posX) - 1) * #{$column-size});
   top: calc((var(--player-posY) - 1) * #{$row-size});
   animation: player-controls-lock 0.01s forwards var(--player-controls-lock-state);
 
-  &::before {
-    pointer-events: inherit;
-    content: "";
+  .death-overlay {
     position: fixed;
-    inset: 0;
+    // This fixed descendant is constrained by the animated player containing
+    // block in some engines. Overscan guarantees it owns the pointer even
+    // when the cursor was left outside the game after starting the level.
+    inset: -100vmax;
     z-index: 9001;
+    pointer-events: var(--player-overlay-events);
   }
 }
 
 @keyframes player-controls-lock {
   to {
     pointer-events: auto;
+    --player-overlay-events: auto;
   }
 }
 
 .enemy {
   left: 100%;
+  opacity: 0;
   box-sizing: border-box;
 
   &::after {

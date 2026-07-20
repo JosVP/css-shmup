@@ -49,3 +49,49 @@
 
   @return $collision-cells;
 }
+
+@function get-enemy-flybys($config) {
+  @return map-get($config, 'flybys');
+}
+
+// Flatten every flyby's relative shot offsets into one actor-wide schedule.
+// Unique shot ids let launch/death latches from an earlier flyby remain isolated.
+@function get-enemy-shot-schedule($config) {
+  $shot-schedule: ();
+  $shot-id: 0;
+
+  @each $flyby-id, $flyby in get-enemy-flybys($config) {
+    @each $shot-offset in map-get($flyby, 'shots') {
+      $shot-id: $shot-id + 1;
+      $shot-schedule: append(
+        $shot-schedule,
+        (
+          id: $shot-id,
+          flyby: $flyby-id,
+          delay: map-get($flyby, 'delay') + $shot-offset,
+          offset: $shot-offset
+        )
+      );
+    }
+  }
+
+  @return $shot-schedule;
+}
+
+// Collision rules use the unique union of every path assigned to this actor.
+// Reusing a cell in later flybys therefore adds no new cell query.
+@function get-enemy-collision-cells($config, $max-x: $columns) {
+  $collision-cells: ();
+
+  @each $flyby-id, $flyby in get-enemy-flybys($config) {
+    $path-cells: get-path-collision-cells(map-get($flyby, 'path-type'), $max-x);
+
+    @each $cell in $path-cells {
+      @if index($collision-cells, $cell) == null {
+        $collision-cells: append($collision-cells, $cell);
+      }
+    }
+  }
+
+  @return $collision-cells;
+}

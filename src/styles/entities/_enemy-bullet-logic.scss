@@ -32,10 +32,10 @@
 @for $e from 1 through length($enemy-configs) {
   #{enemy-bullet-selector($e)} {
     $animations: ();
-    $enemy-delay: map-get(map-get($enemy-configs, $e), 'delay');
+    $enemy-config: map-get($enemy-configs, $e);
 
-    @for $shot from 1 through $enemy-bullet-shots {
-      $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
+    @each $shot in get-enemy-shot-schedule($enemy-config) {
+      $delay: map-get($shot, 'delay');
       $animations: append(
         $animations,
         enemy-bullet-#{$e}-move $enemy-bullet-flight-duration #{$delay} linear forwards,
@@ -58,8 +58,14 @@
       --enemy-bullet-#{$e}-startX: var(--enemy-#{$e}-posX);
       --enemy-bullet-#{$e}-startY: var(--enemy-#{$e}-posY);
 
-      --enemy-bullet-#{$e}-diffX: calc(var(--enemy-bullet-#{$e}-startX) - var(--enemy-bullet-targetX));
-      --enemy-bullet-#{$e}-diffY: calc(var(--enemy-bullet-#{$e}-startY) - var(--enemy-bullet-targetY));
+      --enemy-bullet-#{$e}-raw-diffX: calc(var(--enemy-bullet-#{$e}-startX) - var(--enemy-bullet-targetX));
+      // A shot launched on the exact player/enemy collision frame can have a
+      // zero-length aim vector. Add one leftward cell only in that case.
+      --enemy-bullet-#{$e}-diffX: calc(var(--enemy-bullet-#{$e}-raw-diffX) + 1 - min(abs(var(--enemy-bullet-#{$e}-raw-diffX)), 1));
+      // Once the player is dead, targetX becomes -99 and player-alive makes
+      // the vertical difference zero. Future shots therefore fly straight
+      // left instead of seeking the cell where the player died.
+      --enemy-bullet-#{$e}-diffY: calc((var(--enemy-bullet-#{$e}-startY) - var(--enemy-bullet-targetY)) * var(--player-alive));
       --enemy-bullet-#{$e}-vector-distance: max(hypot(var(--enemy-bullet-#{$e}-diffX), var(--enemy-bullet-#{$e}-diffY)), 1);
 
       // A fixed vector length gives every shot the same speed and two extra cells
@@ -113,29 +119,33 @@
     $launch-animations: ();
 
     @for $e from 1 through length($enemy-configs) {
-      $enemy-delay: map-get(map-get($enemy-configs, $e), 'delay');
+      $enemy-config: map-get($enemy-configs, $e);
 
-      @for $shot from 1 through $enemy-bullet-shots {
-        $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
+      @each $shot in get-enemy-shot-schedule($enemy-config) {
+        $shot-id: map-get($shot, 'id');
+        $delay: map-get($shot, 'delay');
+        $launch-delay: max($delay - 0.05s, 0s);
         $launch-animations: append(
           $launch-animations,
-          enemy-bullet-#{$e}-shot-#{$shot}-launch-trigger 0.05s #{$delay} linear,
+          enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger 0.05s #{$launch-delay} linear,
           comma
         );
         $launch-animations: append(
           $launch-animations,
-          enemy-bullet-#{$e}-shot-#{$shot}-current-shot $enemy-bullet-flight-duration #{$delay} linear forwards,
+          enemy-bullet-#{$e}-shot-#{$shot-id}-current-shot $enemy-bullet-flight-duration #{$delay} linear forwards,
           comma
         );
       }
     }
 
-    @for $e from 1 through length($enemy-configs) {
-      $launch-animations: append(
-        $launch-animations,
-        enemy-#{$e}-bullet-collision-animation 0.01s forwards var(--enemy-#{$e}-bullet-collision-animation),
-        comma
-      );
+    @each $e, $config in $enemy-configs {
+      @each $flyby-id, $flyby in get-enemy-flybys($config) {
+        $launch-animations: append(
+          $launch-animations,
+          enemy-#{$e}-flyby-#{$flyby-id}-hit 0.01s forwards var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
+          comma
+        );
+      }
     }
 
     animation: $launch-animations;
@@ -143,24 +153,15 @@
 
   @for $e from 1 through length($enemy-configs) {
     $enemy-config: map-get($enemy-configs, $e);
-    $enemy-path-cells: get-path-cells(map-get($enemy-config, 'path-type'));
-    $enemy-first-cell: nth($enemy-path-cells, 1);
-    $enemy-last-cell: nth($enemy-path-cells, length($enemy-path-cells));
-    $enemy-travel-columns: abs(map-get($enemy-first-cell, 'x') - map-get($enemy-last-cell, 'x'));
-    $enemy-flight-seconds: map-get($enemy-config, 'speed') / 1s;
-    $bullet-flight-seconds: $enemy-bullet-flight-duration / 1s;
-    $enemy-columns-during-bullet-flight: $enemy-travel-columns * $bullet-flight-seconds / $enemy-flight-seconds;
-    $safari-relative-flight-columns: $columns - $enemy-columns-during-bullet-flight;
-    $safari-relative-flight-steps: round($safari-relative-flight-columns);
+    $shot-schedule: get-enemy-shot-schedule($enemy-config);
+    $tracking-animations: ();
 
-    @if $safari-relative-flight-steps < 1 {
-      $safari-relative-flight-steps: 1;
-    }
+    @each $shot in $shot-schedule {
+      $shot-id: map-get($shot, 'id');
 
-    @for $shot from 1 through $enemy-bullet-shots {
-      @keyframes enemy-bullet-#{$e}-shot-#{$shot}-current-shot {
+      @keyframes enemy-bullet-#{$e}-shot-#{$shot-id}-current-shot {
         from, 99.9% {
-          --enemy-bullet-#{$e}-current-shot: #{$shot};
+          --enemy-bullet-#{$e}-current-shot: #{$shot-id};
         }
 
         to {
@@ -180,26 +181,30 @@
       --enemy-bullet-#{$e}-posX: calc(var(--enemy-bullet-#{$e}-startX) + var(--enemy-bullet-#{$e}-offsetX));
       --enemy-bullet-#{$e}-posY: var(--enemy-bullet-#{$e}-startY);
 
-      @for $shot from 1 through $enemy-bullet-shots {
-        --enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch: 1;
+      @each $shot in $shot-schedule {
+        $shot-id: map-get($shot, 'id');
+        --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch: 1;
       }
     }
 
     #{enemy-bullet-selector($e)} {
-      $enemy-delay: map-get($enemy-config, 'delay');
-      $enemy-duration: map-get($enemy-config, 'speed');
       $visual-animations: ();
-      $visual-animations: append(
-        $visual-animations,
-        enemy-bullet-#{$e}-origin-safari #{$enemy-duration} #{$enemy-delay} linear forwards var(--enemy-tracking-state),
-        comma
-      );
 
-      @for $shot from 1 through $enemy-bullet-shots {
-        $delay: $enemy-delay + ($enemy-bullet-flight-duration * ($shot - 1));
+      @each $flyby-id, $flyby in get-enemy-flybys($enemy-config) {
         $visual-animations: append(
           $visual-animations,
-          enemy-bullet-#{$e}-relative-move-safari $enemy-bullet-flight-duration #{$delay} linear forwards,
+          enemy-bullet-#{$e}-flyby-#{$flyby-id}-origin-safari map-get($flyby, 'speed') map-get($flyby, 'delay') linear forwards var(--enemy-tracking-state),
+          comma
+        );
+      }
+
+      @each $shot in $shot-schedule {
+        $shot-id: map-get($shot, 'id');
+        $flyby-id: map-get($shot, 'flyby');
+        $delay: map-get($shot, 'delay');
+        $visual-animations: append(
+          $visual-animations,
+          enemy-bullet-#{$e}-flyby-#{$flyby-id}-relative-move-safari $enemy-bullet-flight-duration #{$delay} linear forwards,
           comma
         );
       }
@@ -215,10 +220,12 @@
 
     // Render a shot only when that exact shot is current and its persisted
     // launch latch is alive; Safari's delayed current-alive value can be stale.
-    @for $shot from 1 through $enemy-bullet-shots {
+    @each $shot in $shot-schedule {
+      $shot-id: map-get($shot, 'id');
+
       @container bullet-vs-player-subcontainer
-        style(--enemy-bullet-#{$e}-current-shot: #{$shot}) and
-        style(--enemy-bullet-#{$e}-shot-#{$shot}-alive-at-launch: 1) {
+        style(--enemy-bullet-#{$e}-current-shot: #{$shot-id}) and
+        style(--enemy-bullet-#{$e}-shot-#{$shot-id}-alive-at-launch: 1) {
         #{enemy-bullet-selector($e)} {
           opacity: 1;
         }
@@ -229,55 +236,67 @@
       }
     }
 
-    // Smoothly follow every cell in this enemy's path. The registered integer
-    // coordinates remain the source of truth for collision detection.
-    @keyframes enemy-bullet-#{$e}-origin-safari {
-      $total-path-cells: length($enemy-path-cells);
+    @each $flyby-id, $flyby in get-enemy-flybys($enemy-config) {
+      $path-cells: get-path-cells(map-get($flyby, 'path-type'));
+      $first-cell: nth($path-cells, 1);
+      $last-cell: nth($path-cells, length($path-cells));
+      $travel-columns: abs(map-get($first-cell, 'x') - map-get($last-cell, 'x'));
+      $flight-seconds: map-get($flyby, 'speed') / 1s;
+      $bullet-seconds: $enemy-bullet-flight-duration / 1s;
+      $columns-during-shot: $travel-columns * $bullet-seconds / $flight-seconds;
+      $relative-columns: $columns - $columns-during-shot;
+      $relative-steps: max(round($relative-columns), 1);
 
-      @for $i from 1 through $total-path-cells {
-        $cell: nth($enemy-path-cells, $i);
-        $progress: ($i - 1) * 100 / ($total-path-cells - 1);
+      // Smoothly follow this flyby's path; the relative animation below supplies
+      // the remainder of the bullet's leftward motion.
+      @keyframes enemy-bullet-#{$e}-flyby-#{$flyby-id}-origin-safari {
+        $total-path-cells: length($path-cells);
 
-        #{$progress}% {
-          top: calc((#{map-get($cell, 'y')} * #{$row-size}) - #{$row-size / 2});
-          left: calc((#{map-get($cell, 'x')} * #{$column-size}) - #{$column-size / 2});
+        @for $i from 1 through $total-path-cells {
+          $cell: nth($path-cells, $i);
+          $progress: ($i - 1) * 100 / ($total-path-cells - 1);
+
+          #{$progress}% {
+            top: calc((#{map-get($cell, 'y')} * #{$row-size}) - #{$row-size / 2});
+            left: calc((#{map-get($cell, 'x')} * #{$column-size}) - #{$column-size / 2});
+          }
+        }
+      }
+
+      @keyframes enemy-bullet-#{$e}-flyby-#{$flyby-id}-relative-move-safari {
+        from { margin-left: 0; }
+        to { margin-left: -#{$relative-columns * $column-size}; }
+      }
+
+      @keyframes enemy-bullet-#{$e}-flyby-#{$flyby-id}-tracking-safari {
+        $step: 100 / $relative-steps;
+
+        @for $i from 0 to $relative-steps {
+          $start-percent: $i * $step;
+          $end-percent: ($i + 1) * $step;
+
+          #{$start-percent}%, #{$end-percent - 0.01}% {
+            --enemy-bullet-#{$e}-offsetX: -#{$i};
+          }
+        }
+
+        98%, 99.99% { --enemy-bullet-#{$e}-offsetX: -#{$relative-steps}; }
+        100% { --enemy-bullet-#{$e}-offsetX: -99; }
+      }
+
+      @each $shot in $shot-schedule {
+        @if map-get($shot, 'flyby') == $flyby-id {
+          $tracking-animations: append(
+            $tracking-animations,
+            enemy-bullet-#{$e}-flyby-#{$flyby-id}-tracking-safari $enemy-bullet-flight-duration map-get($shot, 'delay') linear forwards,
+            comma
+          );
         }
       }
     }
 
-    // The enemy-origin movement supplies part of the intended bullet speed.
-    // Animate only the exact fractional remainder for a smooth twelve-cell trip.
-    @keyframes enemy-bullet-#{$e}-relative-move-safari {
-      from {
-        margin-left: 0;
-      }
-
-      to {
-        margin-left: -#{$safari-relative-flight-columns * $column-size};
-      }
-    }
-
-    // The relative part of asdf2. The live enemy position already supplies its
-    // share of the leftward speed, so only animate the remaining cell rate.
-    @keyframes enemy-bullet-#{$e}-tracking {
-      $step: 100 / $safari-relative-flight-steps;
-
-      @for $i from 0 to $safari-relative-flight-steps {
-        $start-percent: $i * $step;
-        $end-percent: ($i + 1) * $step;
-
-        #{$start-percent}%, #{$end-percent - 0.01}% {
-          --enemy-bullet-#{$e}-offsetX: -#{$i};
-        }
-      }
-
-      98%, 99.99% {
-        --enemy-bullet-#{$e}-offsetX: -#{$safari-relative-flight-steps};
-      }
-
-      100% {
-        --enemy-bullet-#{$e}-offsetX: -99;
-      }
+    .container {
+      --enemy-bullet-#{$e}-animation: #{$tracking-animations};
     }
   }
 }

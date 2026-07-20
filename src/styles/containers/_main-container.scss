@@ -14,11 +14,6 @@
   --enemy-bullet-targetY: var(--player-posY);
   --player-bullet-speed: #{$player-bullet-debug-speed + 0.75}s;
 
-  @each $e, $config in $enemy-configs {
-    --enemy-#{$e}-speed: #{map-get($config, 'speed')};
-    --enemy-#{$e}-delay: #{map-get($config, 'delay')};
-  }
-
   container-name: enemy-vs-bullet-container enemy-vs-player-container;
 
   @for $hc from 1 through $hover-columns {
@@ -71,10 +66,16 @@
   }
 }
 
-// Once the full-screen dead-player layover owns the hover, disable new player
+// Once the full-screen dead-player overlay owns the hover, disable new player
 // collisions without changing player-posX. Bullets already in flight still
 // need their launch position after the player dies.
-body:has(.player:hover) .container:has(.player:hover) {
-  --player-alive: 0 !important;
-  --enemy-bullet-targetX: -99;
+body:has(.death-overlay:hover) .container {
+  --player-death-latch-state: running;
+}
+
+@keyframes player-death-latch {
+  to {
+    --player-alive: 0;
+    --enemy-bullet-targetX: -99;
+  }
 }
