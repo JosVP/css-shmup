@@ -26,21 +26,48 @@
   @return $cells;
 }
 
-// Return only unique, integer cells inside the collision area. Visual-only
-// fractional turn points and offscreen path endpoints can never match the
-// game's registered integer collision coordinates.
+// Return the smooth visual position on a path at a specific flyby time.
+// Safari uses this to bake a shot's launch point into its own animation, so
+// the bullet no longer keeps following the enemy after it has been fired.
+@function get-path-position-at($path-name, $duration, $offset) {
+  $path-cells: get-path-cells($path-name);
+  $cell-count: length($path-cells);
+
+  @if $cell-count == 1 or $offset <= 0s {
+    @return nth($path-cells, 1);
+  }
+
+  @if $offset >= $duration {
+    @return nth($path-cells, $cell-count);
+  }
+
+  $path-progress: ($offset / $duration) * ($cell-count - 1);
+  $from-index: floor($path-progress) + 1;
+  $cell-progress: $path-progress - floor($path-progress);
+  $from-cell: nth($path-cells, $from-index);
+  $to-cell: nth($path-cells, $from-index + 1);
+  $from-x: map-get($from-cell, 'x');
+  $from-y: map-get($from-cell, 'y');
+
+  @return (
+    x: $from-x + ((map-get($to-cell, 'x') - $from-x) * $cell-progress),
+    y: $from-y + ((map-get($to-cell, 'y') - $from-y) * $cell-progress)
+  );
+}
+
+// Quantize smooth path points to the nearest collision cell, then return only
+// the unique cells inside the collision area. Sass rounds .5 upward, so a row
+// coordinate remains on row 5 through 4.5 and changes to row 4 below 4.5.
 @function get-path-collision-cells($path-name, $max-x: $columns) {
   $path-cells: get-path-cells($path-name);
   $collision-cells: ();
 
   @each $cell in $path-cells {
-    $x: map-get($cell, 'x');
-    $y: map-get($cell, 'y');
+    $x: round(map-get($cell, 'x'));
+    $y: round(map-get($cell, 'y'));
     $collision-cell: (x: $x, y: $y);
 
-    @if $x == round($x) and
-        $y == round($y) and
-        $x >= 1 and $x <= $max-x and
+    @if $x >= 1 and $x <= $max-x and
         $y >= 1 and $y <= $rows and
         index($collision-cells, $collision-cell) == null {
       $collision-cells: append($collision-cells, $collision-cell);

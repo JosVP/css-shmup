@@ -33,8 +33,10 @@
 
         #{$progress}% {
           --enemy-#{$e}-active-flyby: #{$flyby-id};
-          --enemy-#{$e}-posX: #{map-get($cell, 'x')};
-          --enemy-#{$e}-posY: #{map-get($cell, 'y')};
+          // Collision stays on the nearest whole cell while the separate
+          // visual animation moves smoothly through fractional coordinates.
+          --enemy-#{$e}-posX: #{round(map-get($cell, 'x'))};
+          --enemy-#{$e}-posY: #{round(map-get($cell, 'y'))};
         }
       }
 
