@@ -79,6 +79,11 @@
       .sub-container {
         --enemy-#{$e}-current-hit-state: running !important;
       }
+
+      .enemy-#{$e} .idle .animation {
+        filter: brightness(4) !important;
+        transition-duration: 0s !important;
+      }
     }
   }
 }

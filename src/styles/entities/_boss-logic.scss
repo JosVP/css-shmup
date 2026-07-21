@@ -9,7 +9,7 @@ $boss-hp: map-get($boss-config, 'hp');
 $boss-damage: map-get($boss-config, 'damage-per-hit');
 $boss-path-cells: get-path-cells(map-get($boss-config, 'path-type'));
 $boss-hit-count: $boss-hp / $boss-damage;
-$boss-hp-duration: (($player-bullet-debug-speed + 0.75) * 1s * $boss-hit-count / $columns * 0.9);
+$boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
 
 .boss-hp-driver {
   container-name: boss-hp-state;

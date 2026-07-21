@@ -78,6 +78,8 @@
 
     .animation {
       rotate: 180deg;
+      filter: brightness(1);
+      transition: filter 500ms cubic-bezier(0.22, 1, 0.36, 1);
     }
   }
 }

@@ -12,7 +12,7 @@
   --player-posY: 3;
   --enemy-bullet-targetX: var(--player-posX);
   --enemy-bullet-targetY: var(--player-posY);
-  --player-bullet-speed: #{$player-bullet-debug-speed + 0.75}s;
+  --player-bullet-speed: #{$player-bullet-speed};
 
   container-name: enemy-vs-bullet-container enemy-vs-player-container;
 

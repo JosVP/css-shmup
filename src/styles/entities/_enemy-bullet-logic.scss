@@ -142,7 +142,7 @@
       @each $flyby-id, $flyby in get-enemy-flybys($config) {
         $launch-animations: append(
           $launch-animations,
-          enemy-#{$e}-flyby-#{$flyby-id}-hit 0.01s forwards var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
+          enemy-#{$e}-flyby-#{$flyby-id}-hit $enemy-hp-duration forwards steps(1, end) var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
           comma
         );
       }
