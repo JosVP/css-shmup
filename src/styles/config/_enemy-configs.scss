@@ -72,7 +72,7 @@ $enemy-configs: (
 // The boss occupies the final twelve seconds of the one-minute level.
 $boss-config: (
   delay: 48s,
-  duration: 12s,
+  duration: 10s,
   column: 12,
   hp: 100,
   damage-per-hit: 10,

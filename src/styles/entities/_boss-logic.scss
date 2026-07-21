@@ -36,7 +36,7 @@ $boss-hp-duration: (($player-bullet-debug-speed + 0.75) * 1s * $boss-hit-count /
   height: $row-size * $boss-turrets;
   opacity: 0;
   z-index: 2;
-  animation: boss-move $boss-duration $boss-delay linear infinite var(--enemy-tracking-state);
+  animation: boss-move $boss-duration $boss-delay ease-in-out infinite var(--enemy-tracking-state);
 
   .boss-body {
     position: absolute;
@@ -54,17 +54,6 @@ $boss-hp-duration: (($player-bullet-debug-speed + 0.75) * 1s * $boss-hit-count /
     border: 3px solid white;
     border-radius: 50% 0 0 50%;
     background: crimson;
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: 42%;
-      right: 70%;
-      width: 60%;
-      height: 15%;
-      border-radius: 100% 0 0 100%;
-      background: white;
-    }
   }
 
   @for $turret from 1 through $boss-turrets {
