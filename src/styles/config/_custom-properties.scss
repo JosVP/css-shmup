@@ -8,6 +8,12 @@
   initial-value: 1;
 }
 
+@property --player-deaths {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+
 @for $e from 1 through length($enemy-configs) {
   @property --enemy-#{$e}-total-collision-value {
     syntax: "<integer>";

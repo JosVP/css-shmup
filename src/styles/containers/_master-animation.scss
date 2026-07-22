@@ -8,7 +8,6 @@
   }
 
   --enemy-tracking-state: paused;
-  --player-death-latch-state: paused;
   --boss-active: 0;
   --boss-posY: 99;
 
@@ -50,11 +49,6 @@
     comma
   );
 
-  $animations: append(
-    $animations,
-    player-death-latch 0.01s forwards var(--player-death-latch-state),
-    comma
-  );
   animation: $animations;
 
   position: absolute;

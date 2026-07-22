@@ -13,6 +13,9 @@
   --enemy-bullet-targetX: var(--player-posX);
   --enemy-bullet-targetY: var(--player-posY);
   --player-bullet-speed: #{$player-bullet-speed};
+  --player-alive: 1;
+
+  transition: --player-alive 0s $player-invincibility-after-respawn;
 
   container-name: enemy-vs-bullet-container enemy-vs-player-container;
 
@@ -66,16 +69,8 @@
   }
 }
 
-// Once the full-screen dead-player overlay owns the hover, disable new player
-// collisions without changing player-posX. Bullets already in flight still
-// need their launch position after the player dies.
 body:has(.death-overlay:hover) .container {
-  --player-death-latch-state: running;
-}
-
-@keyframes player-death-latch {
-  to {
-    --player-alive: 0;
-    --enemy-bullet-targetX: -99;
-  }
+  --player-alive: 0;
+  --enemy-bullet-targetX: -99;
+  transition-delay: 0s;
 }

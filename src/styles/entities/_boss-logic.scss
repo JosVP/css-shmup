@@ -414,9 +414,58 @@ $boss-latch-animations: ();
     font-size: 8vw;
     animation: boss-destroyed 1s forwards;
   }
+
+  .result-screen {
+    animation: show-result-screen 0.01s $result-screen-delay forwards;
+  }
 }
 
 @keyframes boss-destroyed {
   from { opacity: 1; scale: 0.5; }
   to { opacity: 0; scale: 2; }
+}
+
+.result-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  cursor: unset;
+  background:
+    linear-gradient(rgba(10, 10, 24, 0.88), rgba(10, 10, 24, 0.96)),
+    repeating-linear-gradient(90deg, transparent 0 6vw, rgba(255, 255, 255, 0.04) 6vw 6.1vw);
+
+  .result-body {
+    width: 100%;
+    max-width: 555px;
+    padding: 2.5rem;
+    border-block: 1px solid rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  h1 {
+    font: 700 7rem/0.9 Georgia, serif;
+    margin: 0;
+  }
+
+  .player-deaths {
+    margin: 1.5rem 0 0;
+    counter-reset: playerDeaths var(--player-deaths);
+
+    &::after {
+      content: counter(playerDeaths);
+    }
+  }
+}
+
+@keyframes show-result-screen {
+  to {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }

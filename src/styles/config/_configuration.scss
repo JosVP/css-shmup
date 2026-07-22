@@ -10,6 +10,14 @@ $row-size: 100% / $rows;
 
 $player-bullets: 10;
 $player-bullet-speed: 0.75s;
+$player-respawn-duration: 2s;
+$player-death-animation-duration: 1s;
+$player-respawn-flight-duration: $player-respawn-duration - $player-death-animation-duration;
+$player-invincibility-duration: 4s;
+$player-invincibility-after-respawn: #{$player-invincibility-duration - $player-respawn-duration};
+$player-invincibility-blink-duration: #{$player-invincibility-duration / 15};
+$max-player-deaths: 99;
+$result-screen-delay: 2s;
 
 $enemy-speed: 7;
 $enemy-hits: 2;

@@ -44,7 +44,8 @@
 
 .player-state {
   --player-alive: 1;
-  --player-destroyed-state: paused;
+  --player-deaths: 0;
+  transition: --player-alive 0s $player-invincibility-after-respawn;
   @for $e from 1 through length($enemy-configs) {
     --enemy-bullet-#{$e}-safari-current-alive: 0;
   }
@@ -55,6 +56,7 @@
   &::after {
     $debug-counters:
       safari var(--enemy-bullet-safari-debug, -9)
+      playerDeaths var(--player-deaths, -9)
       playerX var(--player-posX, -9)
       playerY var(--player-posY, -9)
       playerBullet1X var(--player-bullet-1-posX, -9)
@@ -68,6 +70,7 @@
       bossHp3 var(--boss-turret-3-hp, -9);
     $debug-content:
       "Safari: " counter(safari)
+      " | deaths: " counter(playerDeaths)
       " | player: " counter(playerX) "/" counter(playerY)
       " | bullet 1: " counter(playerBullet1X) "/" counter(playerBullet1Y)
       " | enemy target: " counter(enemyTargetX) "/" counter(enemyTargetY)
@@ -123,51 +126,16 @@
     content: $debug-content;
   }
 
-  $animations: (
-    player-destroyed-state 0.02s forwards var(--player-destroyed-state)
-  );
-
-  @for $col from 1 through $hover-columns {
-    @for $row from 1 through $rows {
-      --player-death-at-#{$col}-#{$row}: 0;
-      --player-death-at-#{$col}-#{$row}-state: paused;
-      $animations: append(
-        $animations,
-        player-death-at-#{$col}-#{$row} 0.01s forwards var(--player-death-at-#{$col}-#{$row}-state),
-        comma
-      );
-    }
-  }
-
-  animation: $animations;
+  animation: player-death-count ($player-respawn-duration * $max-player-deaths) steps(#{$max-player-deaths}, end) forwards paused;
 }
 
-@for $col from 1 through $hover-columns {
-  @for $row from 1 through $rows {
-    @keyframes player-death-at-#{$col}-#{$row} {
-      to {
-        --player-death-at-#{$col}-#{$row}: 1;
-      }
-    }
-
-    @container player-death-position
-      style(--player-death-at-#{$col}-#{$row}: 1) {
-      .player {
-        left: #{($col - 1) * $column-size} !important;
-        top: #{($row - 1) * $row-size} !important;
-        transition: none;
-      }
-    }
-  }
+body:has(.death-overlay:hover) .player-state {
+  --player-alive: 0;
+  transition-delay: 0s;
+  animation-play-state: running;
 }
 
-@keyframes player-destroyed-state {
-  from,
-  99.9% {
-    --player-alive: 1;
-  }
-
-  to {
-    --player-alive: 0;
-  }
+@keyframes player-death-count {
+  from { --player-deaths: 0; }
+  to { --player-deaths: #{$max-player-deaths}; }
 }

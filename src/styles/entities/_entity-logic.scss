@@ -44,14 +44,47 @@
   top: calc((var(--player-posY) - 1) * #{$row-size});
   animation: player-controls-lock 0.01s forwards var(--player-controls-lock-state);
 
+  .collision .animation {
+    animation: none;
+  }
+
   .death-overlay {
     position: fixed;
-    // This fixed descendant is constrained by the animated player containing
-    // block in some engines. Overscan guarantees it owns the pointer even
-    // when the cursor was left outside the game after starting the level.
     inset: -100vmax;
     z-index: 9001;
     pointer-events: var(--player-overlay-events);
+  }
+}
+
+body:has(.death-overlay:hover) .player {
+  transition:
+    left $player-death-animation-duration step-end,
+    top $player-death-animation-duration step-end;
+  animation: player-respawn-controls $player-respawn-duration linear forwards;
+
+  .idle,
+  .collision {
+    animation: none !important;
+  }
+
+  .idle {
+    opacity: 0;
+    animation: player-invincibility-blink $player-invincibility-blink-duration steps(1, end) $player-death-animation-duration infinite !important;
+  }
+
+  .idle .animation {
+    animation: player-respawn-plane $player-respawn-flight-duration linear $player-death-animation-duration forwards !important;
+  }
+
+  .collision .animation {
+    animation: show-collision $player-death-animation-duration linear forwards !important;
+  }
+}
+
+@container player-state style(--player-alive: 0) {
+  .player .idle .animation {
+    scale: 1;
+    animation: player-invincibility-blink $player-invincibility-blink-duration steps(1, end) infinite !important;
   }
 }
 
@@ -59,6 +92,39 @@
   to {
     pointer-events: auto;
     --player-overlay-events: auto;
+  }
+}
+
+@keyframes player-respawn-controls {
+  0%,
+  99% {
+    pointer-events: auto;
+    --player-overlay-events: auto;
+  }
+
+  100% {
+    pointer-events: none;
+    --player-overlay-events: none;
+  }
+}
+
+@keyframes player-respawn-plane {
+  from {
+    translate: -50vw 0;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes player-invincibility-blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
   }
 }
 
@@ -109,11 +175,13 @@
     opacity: 0;
     scale: 0;
   }
+
   1% {
     opacity: 1;
     scale: 1;
   }
-  100% {
+
+  to {
     opacity: 0;
     scale: 2;
   }

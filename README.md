@@ -20,3 +20,8 @@ Notes
 
 - SCSS is imported in `src/main.js` so Vite handles style HMR automatically.
 - The dev server is configured to run on port 2900 in `vite.config.js`.
+
+GIT
+
+- /usr/bin/git -C /Users/josvanpanhuis/Projects/prive/css-shmup pull
+- /usr/bin/git -C /Users/josvanpanhuis/Projects/prive/css-shmup push

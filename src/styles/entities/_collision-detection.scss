@@ -106,11 +106,6 @@
       style(--enemy-#{$e}-posY: #{$row}) {
       @container enemy-vs-bullet-subcontainer
         style(--enemy-#{$e}-total-collision-value: 0) {
-        .player-state {
-          --player-destroyed-state: running !important;
-          --player-death-at-#{$col}-#{$row}-state: running !important;
-        }
-
         .player {
           --player-controls-lock-state: running !important;
         }
@@ -264,11 +259,6 @@ $boss-centers: ();
         animation-play-state: running !important;
       }
 
-      .player-state {
-        --player-destroyed-state: running !important;
-        --player-death-at-#{$hc}-#{$hr}-state: running !important;
-      }
-
       .player {
         --player-controls-lock-state: running !important;
       }
@@ -300,11 +290,6 @@ $boss-centers: ();
         .player .idle,
         .player .collision {
           animation-play-state: running !important;
-        }
-
-        .player-state {
-          --player-destroyed-state: running !important;
-          --player-death-at-#{$hc}-#{$hr}-state: running !important;
         }
 
         .player {
