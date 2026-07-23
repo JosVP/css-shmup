@@ -290,7 +290,7 @@ $boss-latch-animations: ();
     // Safari retains horizontal bullets, but their visual origin uses the
     // same interpolated turret row as the smooth boss animation.
     @keyframes boss-shot-#{$shot}-tracking-safari {
-      from, 99.9% { --boss-bullet-#{$slot}-current-alive: var(--boss-shot-#{$shot}-alive-at-launch); }
+      from, 99.9% { --boss-bullet-#{$slot}-current-alive: var(--boss-turret-#{$turret}-alive); }
 
       from {
         --boss-bullet-#{$slot}-posX: #{$boss-column};
@@ -425,6 +425,53 @@ $boss-latch-animations: ();
   to { opacity: 0; scale: 2; }
 }
 
+.score-hud,
+.result-screen {
+  $score-expression: unquote("0");
+
+  @each $e, $config in $enemy-configs {
+    @each $flyby-id, $flyby in get-enemy-flybys($config) {
+      --enemy-#{$e}-flyby-#{$flyby-id}-score: 0;
+      $score-expression: unquote("#{$score-expression} + var(--enemy-#{$e}-flyby-#{$flyby-id}-score)");
+    }
+  }
+
+  @for $turret from 1 through $boss-turrets {
+    --boss-turret-#{$turret}-score: 0;
+    $score-expression: unquote("#{$score-expression} + var(--boss-turret-#{$turret}-score)");
+  }
+
+  --score: calc(#{$score-expression});
+
+  .score {
+    counter-reset: score var(--score);
+
+    &::after {
+      content: " " counter(score);
+    }
+  }
+
+  .player-deaths {
+    counter-reset: playerDeaths var(--player-deaths);
+
+    &::after {
+      content: " " counter(playerDeaths);
+    }
+  }
+}
+
+.score-hud {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  text-shadow: 2px 2px 0 #000;
+
+  p {
+    margin: 0;
+  }
+}
+
 .result-screen {
   position: fixed;
   inset: 0;
@@ -453,13 +500,9 @@ $boss-latch-animations: ();
     margin: 0;
   }
 
+  .score,
   .player-deaths {
     margin: 1.5rem 0 0;
-    counter-reset: playerDeaths var(--player-deaths);
-
-    &::after {
-      content: counter(playerDeaths);
-    }
   }
 }
 

@@ -13,6 +13,8 @@
   }
 
   @each $flyby-id, $flyby in $flybys {
+    $enemy-type: map-get($flyby, 'enemy-type');
+    $type-config: map-get($enemy-types, $enemy-type);
     $path-name: map-get($flyby, 'path-type');
     $path-cells: get-path-cells($path-name);
     $duration: map-get($flyby, 'speed');
@@ -90,6 +92,13 @@
       0% { opacity: 0; scale: 0; }
       1% { opacity: 1; scale: 1; }
       100% { opacity: 0; scale: 2; }
+    }
+
+    @container enemy-vs-bullet-container
+      style(--enemy-#{$e}-active-flyby: #{$flyby-id}) {
+      .enemy-#{$e} .idle .animation {
+        color: map-get($type-config, 'color');
+      }
     }
   }
 

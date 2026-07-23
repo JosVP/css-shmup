@@ -126,7 +126,7 @@
     content: $debug-content;
   }
 
-  animation: player-death-count ($player-respawn-duration * $max-player-deaths) steps(#{$max-player-deaths}, end) forwards paused;
+  animation: player-death-count ($player-respawn-duration * $max-player-deaths) 0.01s steps(#{$max-player-deaths}, start) forwards paused;
 }
 
 body:has(.death-overlay:hover) .player-state {

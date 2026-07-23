@@ -14,6 +14,18 @@
   initial-value: 0;
 }
 
+@property --player-posX {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 2;
+}
+
+@property --player-posY {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 3;
+}
+
 @for $e from 1 through length($enemy-configs) {
   @property --enemy-#{$e}-total-collision-value {
     syntax: "<integer>";

@@ -72,5 +72,7 @@
 body:has(.death-overlay:hover) .container {
   --player-alive: 0;
   --enemy-bullet-targetX: -99;
-  transition-delay: 0s;
+  transition:
+    --player-posX 0s $player-death-animation-duration,
+    --player-posY 0s $player-death-animation-duration;
 }

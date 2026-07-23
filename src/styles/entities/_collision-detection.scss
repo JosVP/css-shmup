@@ -2,6 +2,21 @@
 // COLLISION DETECTION
 // ============================================
 
+@each $e, $config in $enemy-configs {
+  @each $flyby-id, $flyby in get-enemy-flybys($config) {
+    $enemy-type: map-get($flyby, 'enemy-type');
+    $points: map-get(map-get($enemy-types, $enemy-type), 'points');
+
+    @container enemy-vs-bullet-subcontainer
+      style(--enemy-#{$e}-flyby-#{$flyby-id}-collision: 1) {
+      .score-hud,
+      .result-screen {
+        --enemy-#{$e}-flyby-#{$flyby-id}-score: #{$points};
+      }
+    }
+  }
+}
+
 // Connect only the active flyby's isolated death latch to the actor's common
 // collision value. Reusing an actor therefore starts with a fresh zero value.
 @each $e, $config in $enemy-configs {
@@ -108,6 +123,11 @@
         style(--enemy-#{$e}-total-collision-value: 0) {
         .player {
           --player-controls-lock-state: running !important;
+          animation-play-state: running !important;
+
+          .death-overlay {
+            pointer-events: auto !important;
+          }
         }
 
         @container player-state style(--player-alive: 1) {
@@ -192,6 +212,15 @@
 $boss-column: map-get($boss-config, 'column');
 $boss-centers: ();
 
+@for $turret from 1 through $boss-turrets {
+  @container boss-hp-state style(--boss-turret-#{$turret}-alive: 0) {
+    .score-hud,
+    .result-screen {
+      --boss-turret-#{$turret}-score: #{map-get($boss-config, 'turret-points')};
+    }
+  }
+}
+
 @each $cell in get-path-cells(map-get($boss-config, 'path-type')) {
   $center: map-get($cell, 'y');
 
@@ -261,6 +290,11 @@ $boss-centers: ();
 
       .player {
         --player-controls-lock-state: running !important;
+        animation-play-state: running !important;
+
+        .death-overlay {
+          pointer-events: auto !important;
+        }
       }
     }
   }
@@ -294,6 +328,11 @@ $boss-centers: ();
 
         .player {
           --player-controls-lock-state: running !important;
+          animation-play-state: running !important;
+
+          .death-overlay {
+            pointer-events: auto !important;
+          }
         }
       }
     }
