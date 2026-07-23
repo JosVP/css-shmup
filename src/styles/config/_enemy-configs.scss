@@ -3,11 +3,10 @@
 // ============================================
 
 $two-shots: (2s, 5s);
-$three-shots: (0s, 3s, 6s);
-$four-shots: (0s, 2s, 4s, 6s);
-, $enemy-types
-(
-    fighter: (
+$three-shots: (0.5s, 3.5s, 6.5s);
+
+$enemy-types: (
+  fighter: (
     color: crimson,
     points: 990
   ),
@@ -15,7 +14,7 @@ $four-shots: (0s, 2s, 4s, 6s);
     color: orange,
     points: 1270
   ),
-  bomber: (
+  jet: (
     color: aqua,
     points: 1850
   )
@@ -25,75 +24,80 @@ $enemy-configs: (
   1: (
     flybys: (
       1: (path-type: row-1-straight, speed: 7s, delay: 0.5s, shots: $three-shots, enemy-type: fighter),
-      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 9s, shots: $three-shots, enemy-type: interceptor),
-      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 18s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 11s, shots: $three-shots, enemy-type: interceptor),
+      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 18s, shots: $two-shots, enemy-type: jet),
 
     )
   ),
   2: (
     flybys: (
       1: (path-type: row-2-straight, speed: 7s, delay: 0.25s, shots: $three-shots, enemy-type: fighter),
-      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 8.5s, shots: $three-shots, enemy-type: interceptor),
-      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 18.5s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 10.5s, shots: $three-shots, enemy-type: interceptor),
+      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 18.5s, shots: $two-shots, enemy-type: jet),
     )
   ),
   3: (
     flybys: (
       1: (path-type: row-3-straight, speed: 7s, delay: 0s, shots: $three-shots, enemy-type: fighter),
-      2: (path-type: row-3-straight, speed: 7s, delay: 8s, shots: $three-shots, enemy-type: fighter),
-      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 19s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-3-straight, speed: 7s, delay: 10s, shots: $three-shots, enemy-type: fighter),
+      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 19s, shots: $two-shots, enemy-type: jet),
 
     )
   ),
   4: (
     flybys: (
       1: (path-type: row-4-straight, speed: 7s, delay: 0.25s, shots: $three-shots, enemy-type: fighter),
-      2: (path-type: row-5-4-u-turn, speed: 7s, delay: 8.5s, shots: $three-shots, enemy-type: interceptor),
-      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 19.5s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-5-4-u-turn, speed: 7s, delay: 10.5s, shots: $three-shots, enemy-type: interceptor),
+      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 19.5s, shots: $two-shots, enemy-type: jet),
 
     )
   ),
   5: (
     flybys: (
       1: (path-type: row-5-straight, speed: 7s, delay: 0.5s, shots: $three-shots, enemy-type: fighter),
-      2: (path-type: row-5-4-u-turn, speed: 7s, delay: 9s, shots: $three-shots, enemy-type: interceptor),
-      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 20s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-5-4-u-turn, speed: 7s, delay: 11s, shots: $three-shots, enemy-type: interceptor),
+      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 20s, shots: $two-shots, enemy-type: jet),
     )
   ),
   6: (
     flybys: (
       1: (path-type: diagonal-1-to-5, speed: 7s, delay: 4s, shots: $three-shots, enemy-type: interceptor),
-      2: (path-type: row-2-retreat, speed: 7s, delay: 13s, shots: $three-shots, enemy-type: fighter),
-      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 20.5s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-2-retreat, speed: 7s, delay: 15s, shots: $three-shots, enemy-type: fighter),
+      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 20.5s, shots: $two-shots, enemy-type: jet),
     )
   ),
   7: (
     flybys: (
       1: (path-type: diagonal-1-to-5, speed: 7s, delay: 5s, shots: $three-shots, enemy-type: interceptor),
-      2: (path-type: row-3-retreat, speed: 7s, delay: 12s, shots: $three-shots, enemy-type: fighter),
-      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 21s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-3-retreat, speed: 7s, delay: 14s, shots: $three-shots, enemy-type: fighter),
+      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 21s, shots: $two-shots, enemy-type: jet),
     )
   ),
   8: (
     flybys: (
       1: (path-type: diagonal-1-to-5, speed: 7s, delay: 6s, shots: $three-shots, enemy-type: interceptor),
-      2: (path-type: row-4-retreat, speed: 7s, delay: 13s, shots: $three-shots, enemy-type: fighter),
-      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 21.5s, shots: $two-shots, enemy-type: bomber),
+      2: (path-type: row-4-retreat, speed: 7s, delay: 15s, shots: $three-shots, enemy-type: fighter),
+      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 21.5s, shots: $two-shots, enemy-type: jet),
     )
   ),
   9: (
     flybys: (
-      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 4s, shots: $three-shots, enemy-type: interceptor),
-        , // 2: (path-type: row-1-straight, enemy-type: fighter, speed: 7s, delay: 9s, shots: $three-shots), )
+      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 4.5s, shots: $three-shots, enemy-type: interceptor),
+      2: (path-type: diagonal-1-to-5, speed: 7s, delay: 17.5s, shots: $three-shots, enemy-type: interceptor),
+      3: (path-type: row-2-straight, speed: 7s, delay: 24.5s, shots: $three-shots, enemy-type: fighter),
+    )
   ),
   10: (
     flybys: (
-      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 5s, shots: $three-shots, enemy-type: interceptor),
+      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 5.5s, shots: $three-shots, enemy-type: interceptor),
+      2: (path-type: diagonal-5-to-1, speed: 7s, delay: 18.5s, shots: $three-shots, enemy-type: interceptor),
+      3: (path-type: row-3-straight, speed: 7s, delay: 24s, shots: $three-shots, enemy-type: fighter),
     )
   ),
   11: (
     flybys: (
-      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 6s, shots: $three-shots, enemy-type: interceptor),
+      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 6.5s, shots: $three-shots, enemy-type: interceptor),
+      3: (path-type: row-4-straight, speed: 7s, delay: 24.5s, shots: $three-shots, enemy-type: fighter),
     )
   )
 );

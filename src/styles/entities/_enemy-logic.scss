@@ -1,5 +1,5 @@
 // ============================================
-// REUSABLE ENEMY ACTOR ANIMATIONS
+// ENEMY LOGIC & ANIMATIONS
 // ============================================
 
 @each $e, $config in $enemy-configs {
@@ -19,9 +19,18 @@
     $path-cells: get-path-cells($path-name);
     $duration: map-get($flyby, 'speed');
     $delay: map-get($flyby, 'delay');
+    $path-animation: $path-name;
+    @if not $path-animation {
+      $path-animation: flight-default;
+    }
     $move-animations: append(
       $move-animations,
       enemy-#{$e}-flyby-#{$flyby-id}-move $duration $delay linear forwards var(--enemy-tracking-state),
+      comma
+    );
+    $move-animations: append(
+      $move-animations,
+      $path-animation $duration $delay linear forwards var(--enemy-tracking-state),
       comma
     );
 
@@ -63,12 +72,6 @@
           left: calc((#{map-get($cell, 'x')} - 1) * #{$column-size});
           top: calc((#{map-get($cell, 'y')} - 1) * #{$row-size});
           rotate: 0deg;
-
-          @if $path-name == 'row-1-2-u-turn' {
-            @if $i == 8 { rotate: -60deg; }
-            @if $i == 9 { rotate: -120deg; }
-            @if $i >= 10 { rotate: -180deg; }
-          }
         }
       }
     }
@@ -125,4 +128,61 @@
       content: counter(posX) "/" counter(posY);
     }
   }
+}
+
+@keyframes flight-default {
+  from, to { rotate: 0deg; }
+}
+
+@keyframes row-2-retreat {
+  0%, 40% { rotate: 0deg; }
+  50%, 100% { rotate: -180deg; }
+}
+
+@keyframes row-3-retreat {
+  0%, 40% { rotate: 0deg; }
+  50%, 100% { rotate: -180deg; }
+}
+
+@keyframes row-4-retreat {
+  0%, 40% { rotate: 0deg; }
+  50%, 100% { rotate: -180deg; }
+}
+
+@keyframes row-1-2-u-turn {
+  0%, 40% { rotate: 0deg; }
+  60%, 100% { rotate: -180deg; }
+}
+
+@keyframes row-5-4-u-turn {
+  0%, 40% { rotate: 0deg; }
+  60%, 100% { rotate: 180deg; }
+}
+
+@keyframes diagonal-1-to-5 {
+  0%, 16% { rotate: 0deg; }
+  17%, 77% { rotate: -45deg; }
+  78%, 100% { rotate: 0deg; }
+}
+
+@keyframes diagonal-5-to-1 {
+  0%, 16% { rotate: 0deg; }
+  17%, 77% { rotate: 45deg; }
+  78%, 100% { rotate: 0deg; }
+}
+
+@keyframes circle-6-to-9-high {
+  0%, 29% { rotate: -90deg; }
+  30%, 41% { rotate: -120deg; }
+  42%, 57% { rotate: -180deg; }
+  58%, 70% { rotate: -210deg; }
+  71%, 100% { rotate: -270deg; }
+}
+
+@keyframes circle-6-to-9-low {
+  0%, 29% { rotate: 90deg; }
+  30%, 41% { rotate: 120deg; }
+  42%, 57% { rotate: 180deg; }
+  58%, 70% { rotate: 210deg; }
+  71%, 100% { rotate: 270deg; }
 }
