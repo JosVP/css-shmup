@@ -4,10 +4,10 @@
 
 $two-shots: (2s, 5s);
 $three-shots: (0s, 3s, 6s);
-$four-shots-types: (
-: (0s, 2s, 4s, 6s);
+$four-shots: (0s, 2s, 4s, 6s);
 
-$enemy  fighter: (
+$enemy-types: (
+    fighter: (
     color: crimson,
     points: 990
   ),
