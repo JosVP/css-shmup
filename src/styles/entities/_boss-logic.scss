@@ -472,6 +472,19 @@ $boss-latch-animations: ();
   }
 }
 
+.warning-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  color: #ff3030;
+  text-align: center;
+  animation: warning-screen-visibility 3s 50s linear both var(--enemy-tracking-state);
+}
+
 .result-screen {
   position: fixed;
   inset: 0;
@@ -495,15 +508,29 @@ $boss-latch-animations: ();
     text-align: center;
   }
 
-  h1 {
-    font: 700 7rem/0.9 Georgia, serif;
-    margin: 0;
-  }
-
   .score,
   .player-deaths {
     margin: 1.5rem 0 0;
   }
+}
+
+.warning-screen h1,
+.result-screen h1 {
+  font: 700 7rem/0.9 Georgia, serif;
+  margin: 0;
+}
+
+.warning-screen h1 {
+  animation: warning-blink 1s step-start infinite var(--enemy-tracking-state);
+}
+
+@keyframes warning-screen-visibility {
+  0%, 100% { opacity: 0; }
+  1%, 99% { opacity: 1; }
+}
+
+@keyframes warning-blink {
+  50% { opacity: 0; }
 }
 
 @keyframes show-result-screen {
