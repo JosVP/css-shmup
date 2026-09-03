@@ -4,6 +4,8 @@
 
 $two-shots: (2s, 5s);
 $three-shots: (0.5s, 3.5s, 6.5s);
+// low-performance
+// $three-shots: (2s, 5s);
 
 $enemy-types: (
   fighter: (
@@ -61,7 +63,7 @@ $enemy-configs: (
     flybys: (
       1: (path-type: row-5-straight, speed: 7s, delay: 1s, shots: $three-shots, enemy-type: fighter),
       2: (path-type: row-5-4-u-turn, speed: 7s, delay: 11s, shots: $three-shots, enemy-type: interceptor),
-      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 21s, shots: $two-shots, enemy-type: jet),
+      3: (path-type: circle-6-to-9-low, speed: 7s, delay: 22s, shots: $two-shots, enemy-type: jet),
       4: (path-type: row-5-straight, speed: 7s, delay: 30s, shots: $three-shots, enemy-type: fighter),
       5: (path-type: circle-6-to-9-low, speed: 7s, delay: 41.5s, shots: $two-shots, enemy-type: jet),
     )
@@ -113,6 +115,9 @@ $enemy-configs: (
     )
   )
 );
+
+// low-performance
+// $enemy-configs: map-remove($enemy-configs, 8, 9, 10, 11);
 
 $boss-config: (
   delay: 55s,
