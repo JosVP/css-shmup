@@ -23,7 +23,7 @@ $enemy-types: (
 $enemy-configs: (
   1: (
     flybys: (
-      1: (path-type: row-1-straight, speed: 7s, delay: 0.5s, shots: $three-shots, enemy-type: fighter),
+      1: (path-type: row-1-straight, speed: 7s, delay: 1s, shots: $three-shots, enemy-type: fighter),
       2: (path-type: row-1-2-u-turn, speed: 7s, delay: 11s, shots: $three-shots, enemy-type: interceptor),
       3: (path-type: circle-6-to-9-high, speed: 7s, delay: 19s, shots: $two-shots, enemy-type: jet),
       4: (path-type: row-1-straight, speed: 7s, delay: 32s, shots: $three-shots, enemy-type: fighter),
@@ -32,7 +32,7 @@ $enemy-configs: (
   ),
   2: (
     flybys: (
-      1: (path-type: row-2-straight, speed: 7s, delay: 0.25s, shots: $three-shots, enemy-type: fighter),
+      1: (path-type: row-2-straight, speed: 7s, delay: 0.5s, shots: $three-shots, enemy-type: fighter),
       2: (path-type: row-1-2-u-turn, speed: 7s, delay: 10.5s, shots: $three-shots, enemy-type: interceptor),
       3: (path-type: circle-6-to-9-high, speed: 7s, delay: 19.5s, shots: $two-shots, enemy-type: jet),
       4: (path-type: row-2-straight, speed: 7s, delay: 31.5s, shots: $three-shots, enemy-type: fighter),
@@ -50,7 +50,7 @@ $enemy-configs: (
   ),
   4: (
     flybys: (
-      1: (path-type: row-4-straight, speed: 7s, delay: 0.25s, shots: $three-shots, enemy-type: fighter),
+      1: (path-type: row-4-straight, speed: 7s, delay: 0.5s, shots: $three-shots, enemy-type: fighter),
       2: (path-type: row-5-4-u-turn, speed: 7s, delay: 10.5s, shots: $three-shots, enemy-type: interceptor),
       3: (path-type: circle-6-to-9-high, speed: 7s, delay: 20.5s, shots: $two-shots, enemy-type: jet),
       4: (path-type: row-4-straight, speed: 7s, delay: 30.5s, shots: $three-shots, enemy-type: fighter),
@@ -59,7 +59,7 @@ $enemy-configs: (
   ),
   5: (
     flybys: (
-      1: (path-type: row-5-straight, speed: 7s, delay: 0.5s, shots: $three-shots, enemy-type: fighter),
+      1: (path-type: row-5-straight, speed: 7s, delay: 1s, shots: $three-shots, enemy-type: fighter),
       2: (path-type: row-5-4-u-turn, speed: 7s, delay: 11s, shots: $three-shots, enemy-type: interceptor),
       3: (path-type: circle-6-to-9-low, speed: 7s, delay: 21s, shots: $two-shots, enemy-type: jet),
       4: (path-type: row-5-straight, speed: 7s, delay: 30s, shots: $three-shots, enemy-type: fighter),

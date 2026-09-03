@@ -232,16 +232,15 @@
         }
       }
 
-      // The launch coordinates are compile-time snapshots of the enemy path.
-      // Once fired, this animation is completely independent of enemy motion.
+      // Keep Safari's visual row identical to its collision row.
       @keyframes enemy-bullet-#{$e}-shot-#{$shot-id}-move-safari {
         from {
-          top: calc((#{$visual-start-y} * #{$row-size}) - #{$row-size / 2});
+          top: calc((#{$collision-start-y} * #{$row-size}) - #{$row-size / 2});
           left: calc((#{$visual-start-x} * #{$column-size}) - #{$column-size / 2});
         }
 
         99.9% {
-          top: calc((#{$visual-start-y} * #{$row-size}) - #{$row-size / 2});
+          top: calc((#{$collision-start-y} * #{$row-size}) - #{$row-size / 2});
           left: calc((#{$visual-end-x} * #{$column-size}) - #{$column-size / 2});
         }
       }

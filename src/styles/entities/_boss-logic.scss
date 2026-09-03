@@ -203,7 +203,7 @@ $boss-latch-animations: ();
     $visual-list: append($visual-list, boss-shot-#{$shot}-move $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
     $tracking-list: append($tracking-list, boss-shot-#{$shot}-tracking $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
     $safari-visual-list: append($safari-visual-list, boss-shot-#{$shot}-move-safari $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
-    $safari-tracking-list: append($safari-tracking-list, boss-shot-#{$shot}-tracking-safari $enemy-bullet-flight-duration $shot-delay steps(#{$columns + 2}) forwards var(--enemy-tracking-state), comma);
+    $safari-tracking-list: append($safari-tracking-list, boss-shot-#{$shot}-tracking-safari $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
 
     $boss-visual-animations: map-merge($boss-visual-animations, ($slot: $visual-list));
     $boss-tracking-animations: map-merge($boss-tracking-animations, ($slot: $tracking-list));
@@ -287,19 +287,32 @@ $boss-latch-animations: ();
       to { opacity: 0; }
     }
 
-    // Safari retains horizontal bullets, but their visual origin uses the
-    // same interpolated turret row as the smooth boss animation.
+    // Safari retains horizontal bullets on the discrete row used by collision.
     @keyframes boss-shot-#{$shot}-tracking-safari {
       from, 99.9% { --boss-bullet-#{$slot}-current-alive: var(--boss-turret-#{$turret}-alive); }
 
-      from {
-        --boss-bullet-#{$slot}-posX: #{$boss-column};
+      from, 99.9% {
         --boss-bullet-#{$slot}-posY: #{$shot-row};
       }
 
-      99.9% {
-        --boss-bullet-#{$slot}-posX: -2;
-        --boss-bullet-#{$slot}-posY: #{$shot-row};
+      $travel-cells: $boss-column + 2;
+      $step: 100 / $travel-cells;
+
+      @for $i from 0 through $travel-cells {
+        $start-percent: ($i - 0.5) * $step;
+        $end-percent: ($i + 0.5) * $step;
+
+        @if $i == 0 {
+          $start-percent: 0;
+        }
+
+        @if $i == $travel-cells {
+          $end-percent: 99.99;
+        }
+
+        #{$start-percent}%, #{$end-percent - 0.01}% {
+          --boss-bullet-#{$slot}-posX: #{$boss-column - $i};
+        }
       }
 
       to {
@@ -313,13 +326,13 @@ $boss-latch-animations: ();
       from {
         opacity: var(--boss-bullet-#{$slot}-current-alive);
         left: calc((#{$boss-column} - 0.5) * #{$column-size});
-        top: calc((#{$visual-shot-row} - 0.5) * #{$row-size});
+        top: calc((#{$shot-row} - 0.5) * #{$row-size});
       }
 
       99.9% {
         opacity: var(--boss-bullet-#{$slot}-current-alive);
         left: calc(-2.5 * #{$column-size});
-        top: calc((#{$visual-shot-row} - 0.5) * #{$row-size});
+        top: calc((#{$shot-row} - 0.5) * #{$row-size});
       }
 
       to { opacity: 0; }
@@ -400,6 +413,16 @@ $boss-latch-animations: ();
   style(--boss-turret-1-alive: 0) and
   style(--boss-turret-2-alive: 0) and
   style(--boss-turret-3-alive: 0) {
+  .boss-bullet-state {
+    --boss-active: 0;
+    animation: none !important;
+  }
+
+  .boss-bullet {
+    opacity: 0 !important;
+    animation: none !important;
+  }
+
   .boss-body {
     opacity: 0;
     scale: 0;
