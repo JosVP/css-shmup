@@ -38,7 +38,7 @@
       $delay: map-get($shot, 'delay');
       $animations: append(
         $animations,
-        enemy-bullet-#{$e}-move $enemy-bullet-flight-duration #{$delay} linear forwards,
+        enemy-bullet-#{$e}-move $enemy-bullet-flight-duration #{$delay} linear forwards var(--enemy-tracking-state),
         comma
       );
     }
@@ -127,12 +127,12 @@
         $launch-delay: max($delay - 0.05s, 0s);
         $launch-animations: append(
           $launch-animations,
-          enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger 0.05s #{$launch-delay} linear,
+          enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger 0.05s #{$launch-delay} linear var(--enemy-tracking-state),
           comma
         );
         $launch-animations: append(
           $launch-animations,
-          enemy-bullet-#{$e}-shot-#{$shot-id}-current-shot $enemy-bullet-flight-duration #{$delay} linear forwards,
+          enemy-bullet-#{$e}-shot-#{$shot-id}-current-shot $enemy-bullet-flight-duration #{$delay} linear forwards var(--enemy-tracking-state),
           comma
         );
       }
@@ -174,12 +174,12 @@
 
       $visual-animations: append(
         $visual-animations,
-        enemy-bullet-#{$e}-shot-#{$shot-id}-move-safari $enemy-bullet-flight-duration #{$delay} linear forwards,
+        enemy-bullet-#{$e}-shot-#{$shot-id}-move-safari $enemy-bullet-flight-duration #{$delay} linear forwards var(--enemy-tracking-state),
         comma
       );
       $tracking-animations: append(
         $tracking-animations,
-        enemy-bullet-#{$e}-shot-#{$shot-id}-tracking-safari $enemy-bullet-flight-duration #{$delay} linear forwards,
+        enemy-bullet-#{$e}-shot-#{$shot-id}-tracking-safari $enemy-bullet-flight-duration #{$delay} linear forwards var(--enemy-tracking-state),
         comma
       );
 

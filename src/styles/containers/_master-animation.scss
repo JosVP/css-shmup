@@ -23,7 +23,7 @@
       $delay: map-get($shot, 'delay');
       $enemy-bullet-animations: append(
         $enemy-bullet-animations,
-        enemy-bullet-#{$e}-tracking $enemy-bullet-flight-duration #{$delay} linear forwards,
+        enemy-bullet-#{$e}-tracking $enemy-bullet-flight-duration #{$delay} linear forwards var(--enemy-tracking-state),
         comma
       );
     }
