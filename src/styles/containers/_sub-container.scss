@@ -2,8 +2,6 @@
 // SUB-CONTAINER SETUP
 // ============================================
 
-$enemy-hp-duration: ($player-bullet-speed * $enemy-hits / $columns * 0.9);
-
 .sub-container {
   container-name: enemy-vs-bullet-subcontainer enemy-bullet-launch-subcontainer;
 
@@ -30,9 +28,13 @@ $enemy-hp-duration: ($player-bullet-speed * $enemy-hits / $columns * 0.9);
 
   @each $e, $config in $enemy-configs {
     @each $flyby-id, $flyby in get-enemy-flybys($config) {
+      $enemy-type: map-get($flyby, 'enemy-type');
+      $enemy-hits: map-get(map-get($enemy-types, $enemy-type), 'hits');
+      $enemy-hp-duration: ($player-bullet-speed * $enemy-hits / $columns * 0.9);
+
       $animations: append(
         $animations,
-        enemy-#{$e}-flyby-#{$flyby-id}-hit $enemy-hp-duration forwards steps(1, end) var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
+        enemy-#{$e}-flyby-#{$flyby-id}-hit $enemy-hp-duration forwards steps(1) var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
         comma
       );
     }

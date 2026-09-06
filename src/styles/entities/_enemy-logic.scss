@@ -92,15 +92,32 @@
     }
 
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-show {
-      0% { opacity: 0; scale: 0; }
-      1% { opacity: 1; scale: 1; }
-      100% { opacity: 0; scale: 2; }
+      0% { opacity: 0; }
+      1% { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     @container enemy-vs-bullet-container
       style(--enemy-#{$e}-active-flyby: #{$flyby-id}) {
       .enemy-#{$e} .idle .animation {
-        color: map-get($type-config, 'color');
+        color: transparent;
+        --enemy-sprite-width: #{map-get($type-config, 'sprite-width')};
+        --enemy-sprite-height: #{map-get($type-config, 'sprite-height')};
+        --enemy-sprite-frame-count: #{map-get($type-config, 'sprite-frame-count')};
+        --enemy-sprite-row: #{map-get($type-config, 'sprite-row')};
+        --enemy-sprite-opacity: 1;
+        --enemy-sprite-animation: #{map-get($type-config, 'sprite-animation')};
+        --enemy-sprite-animation-state: running;
+
+        @if $enemy-type == fighter {
+          --enemy-sprite-animation-duration: 0.85s;
+          --enemy-sprite-animation-timing: steps(17);
+        } @else if $enemy-type == interceptor {
+          --enemy-sprite-animation-state: paused;
+        } @else {
+          --enemy-sprite-animation-duration: 0.2s;
+          --enemy-sprite-animation-timing: steps(2);
+        }
       }
     }
   }
@@ -120,6 +137,10 @@
 
     .collision .animation {
       animation-name: var(--enemy-#{$e}-show-animation, show-collision);
+
+      &::before {
+        animation-name: explosion-sprite;
+      }
     }
 
     &::after {

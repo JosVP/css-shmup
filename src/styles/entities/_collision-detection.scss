@@ -53,14 +53,17 @@
 
       .idle .animation {
         opacity: 1 !important;
-        scale: 1 !important;
         animation: none !important;
       }
 
       .collision .animation {
         opacity: 0 !important;
-        scale: 0 !important;
         animation: none !important;
+
+        &::before {
+          animation: none !important;
+          transform: none;
+        }
       }
     }
   }

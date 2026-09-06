@@ -86,14 +86,23 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
 
 .boss-bullet {
   position: absolute;
-  width: 24px;
+  width: 32px;
   aspect-ratio: 1;
   translate: -50% -50%;
-  border-radius: 50%;
-  background: #ffb000;
-  box-shadow: 0 0 14px #ff4d00;
   opacity: 0;
   z-index: 1;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 128px;
+    height: 32px;
+    background: url('https://i.imgur.com/qvoPzrC.png') 0 0 no-repeat;
+    image-rendering: pixelated;
+    animation: enemy-bullet-sprite 0.32s steps(3) infinite;
+  }
 }
 
 @keyframes boss-tracking {
@@ -163,7 +172,7 @@ $boss-latch-animations: ();
 @for $turret from 1 through $boss-turrets {
   $boss-hp-animations: append(
     $boss-hp-animations,
-    boss-turret-#{$turret}-hp-depletion $boss-hp-duration forwards steps(#{$boss-hit-count}, end) var(--boss-turret-#{$turret}-hp-state),
+    boss-turret-#{$turret}-hp-depletion $boss-hp-duration forwards steps(#{$boss-hit-count}) var(--boss-turret-#{$turret}-hp-state),
     comma
   );
 
@@ -428,14 +437,26 @@ $boss-latch-animations: ();
     scale: 0;
   }
 
-  .boss-visual::before {
-    content: "\1F4A5";
+  .boss-explosion {
     position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    font-size: 8vw;
-    animation: boss-destroyed 1s forwards;
+    left: 50%;
+    top: 50%;
+    width: 64px;
+    height: 64px;
+    translate: -50% -50%;
+    overflow: hidden;
+    animation:
+      boss-destroyed 1s steps(1) forwards;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 960px;
+      height: 64px;
+      background: url('https://i.imgur.com/MX5mQnY.png') 0 0 no-repeat;
+      image-rendering: pixelated;
+      animation: explosion-sprite 1s steps(14) forwards;
+    }
   }
 
   .result-screen {
@@ -444,8 +465,8 @@ $boss-latch-animations: ();
 }
 
 @keyframes boss-destroyed {
-  from { opacity: 1; scale: 0.5; }
-  to { opacity: 0; scale: 2; }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 .score-hud,

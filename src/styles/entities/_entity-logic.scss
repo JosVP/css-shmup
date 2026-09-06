@@ -4,6 +4,7 @@
 
 .entity {
   position: absolute;
+  container-type: inline-size;
   width: var(--column-size);
   height: var(--row-size);
   font-size: 5vw;
@@ -30,8 +31,29 @@
 
   .collision {
     .animation {
+      position: absolute;
+      left: 50%;
+      top: 50%;
       opacity: 0;
-      animation: show-collision 1s forwards paused;
+      width: 64px;
+      height: 64px;
+      translate: -50% -50%;
+      font-size: 0;
+      overflow: hidden;
+      animation:
+        show-collision 1s steps(1) paused;
+      animation-fill-mode: none;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 960px;
+        height: 64px;
+        background: url('https://i.imgur.com/MX5mQnY.png') 0 0 no-repeat;
+        image-rendering: pixelated;
+        animation: explosion-sprite 1s steps(14) forwards paused;
+      }
     }
   }
 }
@@ -46,6 +68,11 @@
 
   .collision .animation {
     animation: none;
+
+    &::before {
+      animation: none;
+      transform: none;
+    }
   }
 
   .death-overlay {
@@ -54,6 +81,47 @@
     z-index: 9001;
     pointer-events: var(--player-overlay-events);
   }
+
+  .idle .sprite {
+    position: relative;
+    overflow: hidden;
+    width: 80px;
+    aspect-ratio: 1;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 240px;
+      height: 160px;
+      background: url('https://i.imgur.com/2D140QE.png') 0 0 no-repeat;
+      image-rendering: pixelated;
+      animation: player-plane-1 0.1s steps(2) infinite;
+      will-change: transform;
+    }
+  }
+}
+
+@keyframes player-plane-1 {
+  from {
+    transform: translate3d(var(--player-plane-x, -160px), 0, 0);
+  }
+
+  to {
+    transform: translate3d(var(--player-plane-x, -160px), -160px, 0);
+  }
+}
+
+.select-plane {
+  display: none;
+}
+
+body:has(#plane2:checked) .player {
+  --player-plane-x: -80px;
+}
+
+body:has(#plane3:checked) .player {
+  --player-plane-x: 0;
 }
 
 body:has(.death-overlay:hover) .player {
@@ -69,7 +137,7 @@ body:has(.death-overlay:hover) .player {
 
   .idle {
     opacity: 0;
-    animation: player-invincibility-blink $player-invincibility-blink-duration steps(1, end) $player-death-animation-duration infinite !important;
+    animation: player-invincibility-blink $player-invincibility-blink-duration steps(1) $player-death-animation-duration infinite !important;
   }
 
   .idle .animation {
@@ -77,14 +145,19 @@ body:has(.death-overlay:hover) .player {
   }
 
   .collision .animation {
-    animation: show-collision $player-death-animation-duration linear forwards !important;
+    animation:
+      show-collision $player-death-animation-duration steps(1) forwards !important;
+
+    &::before {
+      animation: explosion-sprite $player-death-animation-duration steps(14) forwards !important;
+    }
   }
 }
 
 @container player-state style(--player-alive: 0) {
   .player .idle .animation {
     scale: 1;
-    animation: player-invincibility-blink $player-invincibility-blink-duration steps(1, end) infinite !important;
+    animation: player-invincibility-blink $player-invincibility-blink-duration steps(1) infinite !important;
   }
 }
 
@@ -140,19 +213,56 @@ body:has(.death-overlay:hover) .player {
   }
 
   .idle {
-    color: crimson;
-
     .animation {
-      rotate: 180deg;
+      position: relative;
+      overflow: hidden;
+      width: var(--enemy-sprite-width, 60px);
+      height: var(--enemy-sprite-height, 64px);
       filter: brightness(1);
       transition: filter 500ms cubic-bezier(0.22, 1, 0.36, 1);
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: calc(var(--enemy-sprite-width, 60px) * var(--enemy-sprite-frame-count, 1));
+        height: var(--enemy-sprite-height, 64px);
+        opacity: var(--enemy-sprite-opacity, 0);
+        background: url('https://i.imgur.com/kGgCSlB.png') 0 var(--enemy-sprite-row, 0) no-repeat;
+        image-rendering: pixelated;
+        animation-name: var(--enemy-sprite-animation, none);
+        animation-duration: var(--enemy-sprite-animation-duration, 0.85s);
+        animation-timing-function: var(--enemy-sprite-animation-timing, steps(1));
+        animation-iteration-count: infinite;
+        animation-play-state: var(--enemy-sprite-animation-state, paused);
+      }
     }
+  }
+}
+
+@keyframes enemy-fighter-barrel-roll {
+  to {
+    transform: translate3d(-1020px, 0, 0);
+  }
+}
+
+@keyframes enemy-jet-flight {
+  to {
+    transform: translate3d(-120px, 0, 0);
+  }
+}
+
+@keyframes enemy-bomber-flight {
+  to {
+    transform: translate3d(-196px, 0, 0);
   }
 }
 
 @container entity-collision-trigger style(--collision: 1) {
   .animation,
-  .collision {
+  .animation::before,
+  .collision,
+  .collision::before {
     animation-play-state: running !important;
   }
 }
@@ -173,16 +283,21 @@ body:has(.death-overlay:hover) .player {
 @keyframes show-collision {
   0% {
     opacity: 0;
-    scale: 0;
   }
 
-  1% {
+  1%,
+  99% {
     opacity: 1;
-    scale: 1;
   }
 
-  to {
+  100% {
     opacity: 0;
-    scale: 2;
+  }
+}
+
+@keyframes explosion-sprite {
+  93.333333%,
+  100% {
+    transform: translate3d(-896px, 0, 0);
   }
 }

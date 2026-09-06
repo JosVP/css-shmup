@@ -2,6 +2,12 @@
 // BULLET ANIMATIONS & TRACKING
 // ============================================
 
+@keyframes player-bullet-sprite {
+  to {
+    transform: translate3d(-60px, -16px, 0);
+  }
+}
+
 @for $b from 1 through $player-bullets {
   .container {
     --player-bullet-#{$b}-posY: 3;

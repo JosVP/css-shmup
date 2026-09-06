@@ -45,7 +45,7 @@
 
   $animations: append(
     $animations,
-    boss-tracking $boss-duration $boss-delay infinite steps(1, end) var(--enemy-tracking-state),
+    boss-tracking $boss-duration $boss-delay infinite steps(1) var(--enemy-tracking-state),
     comma
   );
 

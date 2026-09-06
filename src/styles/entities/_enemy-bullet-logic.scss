@@ -3,19 +3,35 @@
 // ============================================
 
 .enemy-bullet {
-  width: 20px;
+  width: 32px;
   aspect-ratio: 1;
+  overflow: hidden;
   transform: translate3d(-50%, -50%, 0);
-  background: red;
-  border-radius: 100%;
   position: absolute;
   opacity: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 128px;
+    height: 32px;
+    background: url('https://i.imgur.com/qvoPzrC.png') 0 0 no-repeat;
+    image-rendering: pixelated;
+    animation: enemy-bullet-sprite 0.32s steps(3) infinite;
+  }
 
   &::after {
     position: absolute;
     bottom: 110%;
     font-size: 20px;
     visibility: hidden;
+  }
+}
+
+@keyframes enemy-bullet-sprite {
+  to {
+    transform: translate3d(-96px, 0, 0);
   }
 }
 
@@ -140,9 +156,13 @@
 
     @each $e, $config in $enemy-configs {
       @each $flyby-id, $flyby in get-enemy-flybys($config) {
+        $enemy-type: map-get($flyby, 'enemy-type');
+        $enemy-hits: map-get(map-get($enemy-types, $enemy-type), 'hits');
+        $enemy-hp-duration: ($player-bullet-speed * $enemy-hits / $columns * 0.9);
+
         $launch-animations: append(
           $launch-animations,
-          enemy-#{$e}-flyby-#{$flyby-id}-hit $enemy-hp-duration forwards steps(1, end) var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
+          enemy-#{$e}-flyby-#{$flyby-id}-hit $enemy-hp-duration forwards steps(1) var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
           comma
         );
       }
