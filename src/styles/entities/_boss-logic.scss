@@ -86,22 +86,34 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
 
 .boss-bullet {
   position: absolute;
-  width: 32px;
-  aspect-ratio: 1;
+  container-type: inline-size;
+  width: var(--column-size);
+  height: var(--row-size);
   translate: -50% -50%;
   opacity: 0;
   z-index: 1;
-  overflow: hidden;
+  overflow: visible;
 
-  &::before {
-    content: "";
+  .sprite {
     position: absolute;
-    inset: 0;
-    width: 128px;
-    height: 32px;
-    background: url('https://i.imgur.com/qvoPzrC.png') 0 0 no-repeat;
-    image-rendering: pixelated;
-    animation: enemy-bullet-sprite 0.32s steps(3) infinite;
+    left: 50%;
+    top: 50%;
+    width: 32px;
+    aspect-ratio: 1;
+    scale: calc(40cqi / 32px);
+    translate: -50% -50%;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 128px;
+      height: 32px;
+      background: url('https://i.imgur.com/qvoPzrC.png') 0 0 no-repeat;
+      image-rendering: pixelated;
+      animation: enemy-bullet-sprite 0.32s steps(3) infinite;
+    }
   }
 }
 
@@ -439,23 +451,35 @@ $boss-latch-animations: ();
 
   .boss-explosion {
     position: absolute;
+    container-type: inline-size;
     left: 50%;
     top: 50%;
-    width: 64px;
-    height: 64px;
+    width: 100%;
+    height: 100%;
     translate: -50% -50%;
-    overflow: hidden;
+    overflow: visible;
     animation:
       boss-destroyed 1s steps(1) forwards;
 
-    &::before {
-      content: "";
+    .sprite {
       position: absolute;
-      width: 960px;
+      left: 50%;
+      top: 50%;
+      width: 64px;
       height: 64px;
-      background: url('https://i.imgur.com/MX5mQnY.png') 0 0 no-repeat;
-      image-rendering: pixelated;
-      animation: explosion-sprite 1s steps(14) forwards;
+      scale: calc(80cqi / 64px);
+      translate: -50% -50%;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 960px;
+        height: 64px;
+        background: url('https://i.imgur.com/MX5mQnY.png') 0 0 no-repeat;
+        image-rendering: pixelated;
+        animation: explosion-sprite 1s steps(14) forwards;
+      }
     }
   }
 

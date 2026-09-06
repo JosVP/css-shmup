@@ -14,6 +14,7 @@ $enemy-types: (
     hits: 2,
     sprite-width: 60px,
     sprite-height: 64px,
+    sprite-scale: 70cqi,
     sprite-row: 0,
     sprite-frame-count: 18,
     sprite-animation: enemy-fighter-barrel-roll
@@ -24,6 +25,7 @@ $enemy-types: (
     hits: 2,
     sprite-width: 40px,
     sprite-height: 34px,
+    sprite-scale: 44cqi,
     sprite-row: -70px,
     sprite-frame-count: 1,
     sprite-animation: none
@@ -34,6 +36,7 @@ $enemy-types: (
     hits: 2,
     sprite-width: 60px,
     sprite-height: 58px,
+    sprite-scale: 70cqi,
     sprite-row: -110px,
     sprite-frame-count: 3,
     sprite-animation: enemy-jet-flight
@@ -44,6 +47,7 @@ $enemy-types: (
     hits: 8,
     sprite-width: 98px,
     sprite-height: 126px,
+    sprite-scale: 110cqi,
     sprite-row: -170px,
     sprite-frame-count: 3,
     sprite-animation: enemy-bomber-flight

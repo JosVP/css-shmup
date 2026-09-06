@@ -3,22 +3,34 @@
 // ============================================
 
 .enemy-bullet {
-  width: 32px;
-  aspect-ratio: 1;
-  overflow: hidden;
+  container-type: inline-size;
+  width: var(--column-size);
+  height: var(--row-size);
+  overflow: visible;
   transform: translate3d(-50%, -50%, 0);
   position: absolute;
   opacity: 0;
 
-  &::before {
-    content: "";
+  .sprite {
     position: absolute;
-    inset: 0;
-    width: 128px;
-    height: 32px;
-    background: url('https://i.imgur.com/qvoPzrC.png') 0 0 no-repeat;
-    image-rendering: pixelated;
-    animation: enemy-bullet-sprite 0.32s steps(3) infinite;
+    left: 50%;
+    top: 50%;
+    width: 32px;
+    aspect-ratio: 1;
+    scale: calc(40cqi / 32px);
+    translate: -50% -50%;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 128px;
+      height: 32px;
+      background: url('https://i.imgur.com/qvoPzrC.png') 0 0 no-repeat;
+      image-rendering: pixelated;
+      animation: enemy-bullet-sprite 0.32s steps(3) infinite;
+    }
   }
 
   &::after {

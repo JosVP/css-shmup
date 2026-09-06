@@ -103,6 +103,7 @@
         color: transparent;
         --enemy-sprite-width: #{map-get($type-config, 'sprite-width')};
         --enemy-sprite-height: #{map-get($type-config, 'sprite-height')};
+        --enemy-sprite-scale: #{map-get($type-config, 'sprite-scale')};
         --enemy-sprite-frame-count: #{map-get($type-config, 'sprite-frame-count')};
         --enemy-sprite-row: #{map-get($type-config, 'sprite-row')};
         --enemy-sprite-opacity: 1;

@@ -1,0 +1,14 @@
+.background {
+  position: absolute;
+  inset: 0;
+  background: url('https://i.imgur.com/98onSdU.png') left center no-repeat;
+  background-size: cover;
+  image-rendering: pixelated;
+  animation: bg-scroll 60s linear forwards;
+}
+
+@keyframes bg-scroll {
+  to {
+    background-position: right center;
+  }
+}

@@ -89,24 +89,37 @@
 
   .player-bullet {
     position: absolute;
-    width: 32px;
-    height: 38px;
+    container-type: inline-size;
+    width: var(--column-size);
+    height: var(--row-size);
     transform: translate3d(0, -50%, 0);
     pointer-events: none;
     opacity: 0;
-    overflow: hidden;
+    overflow: visible;
 
-    &::before {
-      content: "";
+    .sprite {
       position: absolute;
-      left: 50%;
+      left: 0;
       top: 50%;
-      width: 76px;
-      height: 32px;
-      background: url('https://i.imgur.com/08L5dI9.png') 0 0 no-repeat;
-      image-rendering: pixelated;
-      transform: translate3d(-22px, -16px, 0);
-      animation: player-bullet-sprite 0.3s steps(1) infinite;
+      width: 32px;
+      height: 38px;
+      scale: calc(30cqi / 32px);
+      transform: translate3d(0, -50%, 0);
+      transform-origin: left center;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 76px;
+        height: 32px;
+        background: url('https://i.imgur.com/08L5dI9.png') 0 0 no-repeat;
+        image-rendering: pixelated;
+        transform: translate3d(-22px, -16px, 0);
+        animation: player-bullet-sprite 0.3s steps(1) infinite;
+      }
     }
 
     &::after {
