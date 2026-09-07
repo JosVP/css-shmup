@@ -99,7 +99,7 @@
 
     @container enemy-vs-bullet-container
       style(--enemy-#{$e}-active-flyby: #{$flyby-id}) {
-      .enemy-#{$e} .idle .animation {
+      .enemy-#{$e} .idle {
         color: transparent;
         --enemy-sprite-width: #{map-get($type-config, 'sprite-width')};
         --enemy-sprite-height: #{map-get($type-config, 'sprite-height')};
