@@ -232,10 +232,8 @@ $boss-centers: ();
   }
 }
 
-// Only nine center/turret combinations are needed for the moving three-cell
-// hitbox. Each query accepts any player bullet slot.
 @each $center in $boss-centers {
-  @for $turret-offset from -1 through 1 {
+  @for $turret-offset from -1 through ($boss-turrets - 2) {
     $row: $center + $turret-offset;
     $turret: $turret-offset + 2;
 
@@ -258,6 +256,11 @@ $boss-centers: ();
         (#{$player-bullet-at-turret}) {
         .boss-hp-driver {
           --boss-turret-#{$turret}-hp-state: running !important;
+        }
+
+        .boss-turret-#{$turret} {
+          filter: brightness(0) invert(1) !important;
+          transition-duration: 0s !important;
         }
       }
     }

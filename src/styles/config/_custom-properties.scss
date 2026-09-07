@@ -52,6 +52,12 @@
   initial-value: 99;
 }
 
+@property --boss-visual-posY {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 3;
+}
+
 @for $turret from 1 through $boss-turrets {
   @property --boss-turret-#{$turret}-hp {
     syntax: "<integer>";

@@ -23,6 +23,6 @@ $enemy-speed: 7;
 $enemy-bullet-speed: 3;
 $enemy-bullet-flight-duration: $enemy-bullet-speed * 1s;
 
-$boss-turrets: 3;
+$boss-turrets: 4;
 $boss-bullet-slots-per-turret: 2;
 $boss-bullet-slots: $boss-turrets * $boss-bullet-slots-per-turret;

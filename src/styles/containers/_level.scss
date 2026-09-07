@@ -67,7 +67,8 @@
       bossY var(--boss-posY, -9)
       bossHp1 var(--boss-turret-1-hp, -9)
       bossHp2 var(--boss-turret-2-hp, -9)
-      bossHp3 var(--boss-turret-3-hp, -9);
+      bossHp3 var(--boss-turret-3-hp, -9)
+      bossHp4 var(--boss-turret-4-hp, -9);
     $debug-content:
       "Safari: " counter(safari)
       " | deaths: " counter(playerDeaths)
@@ -75,7 +76,7 @@
       " | bullet 1: " counter(playerBullet1X) "/" counter(playerBullet1Y)
       " | enemy target: " counter(enemyTargetX) "/" counter(enemyTargetY)
       " | boss active/Y: " counter(bossActive) "/" counter(bossY)
-      " | turret HP: " counter(bossHp1) "/" counter(bossHp2) "/" counter(bossHp3);
+      " | turret HP: " counter(bossHp1) "/" counter(bossHp2) "/" counter(bossHp3) "/" counter(bossHp4);
 
     @for $e from 1 through 1 {
       $debug-counters: append($debug-counters, enemy#{$e}X var(--enemy-#{$e}-posX, -9), space);

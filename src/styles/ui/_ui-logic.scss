@@ -181,7 +181,9 @@ body {
   }
 
   &:has(#debug:checked) {
-    .container {
+    .container,
+    .background,
+    .background-boss {
       inset: 4vw 5vw;
     }
 
