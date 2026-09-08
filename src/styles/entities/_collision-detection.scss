@@ -149,6 +149,10 @@
   @container enemy-vs-bullet-subcontainer
     style(--enemy-#{$e}-total-collision-value: 1) or
     style(--enemy-#{$e}-total-collision-value: 3) {
+    .enemy-#{$e} .idle::before {
+      display: none;
+    }
+
     .enemy-#{$e} .idle,
     .enemy-#{$e} .collision {
       animation-play-state: running !important;
