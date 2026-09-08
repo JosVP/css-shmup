@@ -99,7 +99,7 @@
         height: 80px;
         translate: calc(-50% - 30px) calc(-50% + 60px);
         scale: calc((80cqi / 80px) * 0.6);
-        background: url('https://i.imgur.com/2D140QE.png') var(--player-plane-x, -160px) 0 no-repeat;
+        background: url('https://i.imgur.com/2D140QE.png') var(--player-plane-x, -80px) 0 no-repeat;
         image-rendering: pixelated;
         filter: brightness(0);
         opacity: 0.45;
@@ -131,24 +131,20 @@
 
 @keyframes player-plane-1 {
   from {
-    transform: translate3d(var(--player-plane-x, -160px), 0, 0);
+    transform: translate3d(var(--player-plane-x, -80px), 0, 0);
   }
 
   to {
-    transform: translate3d(var(--player-plane-x, -160px), -160px, 0);
+    transform: translate3d(var(--player-plane-x, -80px), -160px, 0);
   }
 }
 
-.select-plane {
-  display: none;
-}
-
 body:has(#plane2:checked) .player {
-  --player-plane-x: -80px;
+  --player-plane-x: 0;
 }
 
 body:has(#plane3:checked) .player {
-  --player-plane-x: 0;
+  --player-plane-x: -160px;
 }
 
 body:has(.death-overlay:hover) .player {

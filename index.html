@@ -7,21 +7,39 @@
     <script type="module" src="/src/main.js"></script>
   </head>
   <body>
-    <label class="start" for="start">
-      <input type="checkbox" id="start" checked />Start level
-    </label>
+    <input class="level-start-toggle" type="checkbox" id="start" />
 
     <label class="debug" for="debug">
       <input type="checkbox" id="debug" />Debug
     </label>
 
     <div class="select-plane">
-      <input type="radio" id="plane1" name="plane" checked />
-      <label for="plane1"></label>
-      <input type="radio" id="plane2" name="plane"  />
-      <label for="plane2"></label>
-      <input type="radio" id="plane3" name="plane"  />
-      <label for="plane3"></label>
+      <div class="select-plane__stage">
+        <div class="select-plane__title"></div>
+
+        <fieldset class="plane-options">
+          <input type="radio" id="plane2" name="plane" />
+          <label class="plane-option plane-option--2" for="plane2">
+            <span class="visually-hidden">Lightning</span>
+          </label>
+
+          <input type="radio" id="plane1" name="plane" checked />
+          <label class="plane-option plane-option--1" for="plane1">
+            <span class="visually-hidden">Mosquito</span>
+          </label>
+
+          <input type="radio" id="plane3" name="plane" />
+          <label class="plane-option plane-option--3" for="plane3">
+            <span class="visually-hidden">Striker</span>
+          </label>
+        </fieldset>
+
+        <div class="player-select-preview">
+          <span class="preview-plane"></span>
+        </div>
+
+        <label class="select-plane__launch" for="start">Start level</label>
+      </div>
     </div>
 
     <div class="background"></div>
