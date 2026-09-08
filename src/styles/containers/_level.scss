@@ -33,7 +33,7 @@
       );
       $animations: append(
         $animations,
-        enemy-bullet-#{$e}-shot-#{$shot-id}-current-alive $enemy-bullet-flight-duration #{$delay} linear forwards var(--enemy-tracking-state),
+        enemy-bullet-#{$e}-shot-#{$shot-id}-current-alive $enemy-bullet-flight-duration calc(#{$delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state),
         comma
       );
     }

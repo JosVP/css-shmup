@@ -37,7 +37,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
   height: $row-size * $boss-turrets;
   opacity: 0;
   z-index: 2;
-  animation: boss-move $boss-duration $boss-delay ease-in-out infinite var(--enemy-tracking-state);
+  animation: boss-move $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out infinite var(--enemy-tracking-state);
 
   .boss-body {
     position: absolute;
@@ -297,10 +297,10 @@ $boss-latch-animations: ();
     $safari-visual-list: map-get($boss-safari-visual-animations, $slot);
     $safari-tracking-list: map-get($boss-safari-tracking-animations, $slot);
 
-    $visual-list: append($visual-list, boss-shot-#{$shot}-move $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
-    $tracking-list: append($tracking-list, boss-shot-#{$shot}-tracking $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
-    $safari-visual-list: append($safari-visual-list, boss-shot-#{$shot}-move-safari $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
-    $safari-tracking-list: append($safari-tracking-list, boss-shot-#{$shot}-tracking-safari $enemy-bullet-flight-duration $shot-delay linear forwards var(--enemy-tracking-state), comma);
+    $visual-list: append($visual-list, boss-shot-#{$shot}-move $enemy-bullet-flight-duration calc(#{$shot-delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state), comma);
+    $tracking-list: append($tracking-list, boss-shot-#{$shot}-tracking $enemy-bullet-flight-duration calc(#{$shot-delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state), comma);
+    $safari-visual-list: append($safari-visual-list, boss-shot-#{$shot}-move-safari $enemy-bullet-flight-duration calc(#{$shot-delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state), comma);
+    $safari-tracking-list: append($safari-tracking-list, boss-shot-#{$shot}-tracking-safari $enemy-bullet-flight-duration calc(#{$shot-delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state), comma);
 
     $boss-visual-animations: map-merge($boss-visual-animations, ($slot: $visual-list));
     $boss-tracking-animations: map-merge($boss-tracking-animations, ($slot: $tracking-list));
@@ -311,7 +311,7 @@ $boss-latch-animations: ();
       $boss-launch-animations,
       // Capture the turret state just before the movement animation samples
       // its first frame, avoiding a same-frame container-query race.
-      boss-shot-#{$shot}-launch-trigger 0.05s ($shot-delay - 0.05s) linear,
+      boss-shot-#{$shot}-launch-trigger 0.05s calc(#{$shot-delay - 0.05s} + var(--level-start-delay)) linear,
       comma
     );
     $boss-latch-animations: append(

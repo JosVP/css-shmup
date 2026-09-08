@@ -4,7 +4,10 @@
   background: url('https://i.imgur.com/98onSdU.png') left center no-repeat;
   background-size: cover;
   image-rendering: pixelated;
-  animation: bg-scroll 60s linear forwards;
+
+  body:has(#start:checked) & {
+    animation: bg-scroll 60s 1.75s linear forwards;
+  }
 }
 
 @keyframes bg-scroll {

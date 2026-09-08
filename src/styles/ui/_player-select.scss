@@ -8,14 +8,19 @@
   pointer-events: none;
 }
 
+@keyframes hide-select-screen {
+  to {
+    display: none;
+  }
+}
 body:has(#start:checked) .select-plane {
-  display: none;
+  animation: hide-select-screen 0.1s 1.75s forwards;
 }
 
 .select-plane {
   position: fixed;
   inset: 0;
-  z-index: 9001;
+  z-index: 9000;
   display: grid;
   place-items: center;
   overflow: hidden;

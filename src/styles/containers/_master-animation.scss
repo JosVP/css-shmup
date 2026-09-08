@@ -8,6 +8,7 @@
   }
 
   --enemy-tracking-state: paused;
+  --level-start-delay: 0s;
   --boss-active: 0;
   --boss-posY: 99;
 
@@ -23,7 +24,7 @@
       $delay: map-get($shot, 'delay');
       $enemy-bullet-animations: append(
         $enemy-bullet-animations,
-        enemy-bullet-#{$e}-tracking $enemy-bullet-flight-duration #{$delay} linear forwards var(--enemy-tracking-state),
+        enemy-bullet-#{$e}-tracking $enemy-bullet-flight-duration calc(#{$delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state),
         comma
       );
     }
@@ -37,7 +38,7 @@
       $path-cells: get-path-cells(map-get($flyby, 'path-type'));
       $animations: append(
         $animations,
-        enemy-#{$e}-flyby-#{$flyby-id}-tracking map-get($flyby, 'speed') map-get($flyby, 'delay') forwards steps(#{length($path-cells)}) var(--enemy-tracking-state),
+        enemy-#{$e}-flyby-#{$flyby-id}-tracking map-get($flyby, 'speed') calc(#{map-get($flyby, 'delay')} + var(--level-start-delay)) forwards steps(#{length($path-cells)}) var(--enemy-tracking-state),
         comma
       );
     }
@@ -45,7 +46,7 @@
 
   $animations: append(
     $animations,
-    boss-tracking $boss-duration $boss-delay infinite ease-in-out var(--enemy-tracking-state),
+    boss-tracking $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) infinite ease-in-out var(--enemy-tracking-state),
     comma
   );
 

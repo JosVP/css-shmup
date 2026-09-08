@@ -174,10 +174,7 @@ body {
 
   &:has(#start:checked) .container {
     --enemy-tracking-state: running;
-
-    .enemy {
-      animation-play-state: running;
-    }
+    --level-start-delay: 3s;
   }
 
   &:has(#debug:checked) {

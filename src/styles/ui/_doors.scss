@@ -1,0 +1,67 @@
+.doors {
+  position: fixed;
+  inset: 0;
+  z-index: 9001;
+  animation: player-select 3.5s forwards;
+
+  &::before,
+  &::after {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50vw;
+    background: url('https://i.imgur.com/MiparKz.png') right center / cover no-repeat;
+    image-rendering: pixelated;
+    transform: translateX(var(--translate));
+    transition: transform 1s ease-out;
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+    scale: -1 1;
+  }
+
+  body:has(#start:checked) & {
+    animation: start-level 3.5s forwards;
+  }
+}
+
+@keyframes player-select {
+  0% {
+    --translate: -100vh;
+    pointer-events: none;
+  }
+
+  50% {
+    --translate: 0vh;
+    pointer-events: inherit;
+  }
+
+  100% {
+    --translate: -40vh;
+    pointer-events: none;
+  }
+}
+
+@keyframes start-level {
+  0% {
+    --translate: -40vh;
+    pointer-events: none;
+  }
+
+  50% {
+    --translate: 0vh;
+    pointer-events: inherit;
+  }
+
+  100% {
+    --translate: -100vh;
+    pointer-events: none;
+  }
+}

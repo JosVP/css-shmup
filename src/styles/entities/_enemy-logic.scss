@@ -25,12 +25,12 @@
     }
     $move-animations: append(
       $move-animations,
-      enemy-#{$e}-flyby-#{$flyby-id}-move $duration $delay linear forwards var(--enemy-tracking-state),
+      enemy-#{$e}-flyby-#{$flyby-id}-move $duration calc(#{$delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state),
       comma
     );
     $move-animations: append(
       $move-animations,
-      $path-animation $duration $delay linear forwards var(--enemy-tracking-state),
+      $path-animation $duration calc(#{$delay} + var(--level-start-delay)) linear forwards var(--enemy-tracking-state),
       comma
     );
 
