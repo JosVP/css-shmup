@@ -2,93 +2,82 @@
 // PLAYER SELECT
 // ============================================
 
-.level-start-toggle {
+#start {
   position: fixed;
-  width: 1px;
-  height: 1px;
   opacity: 0;
   pointer-events: none;
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.select-plane {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: #000;
-
-  &__stage {
-    position: relative;
-    width: min(100vw, 66.6667vh);
-    height: 100vh;
-    max-width: 256px;
-    max-height: 384px;
-    overflow: hidden;
-    background: url('../../../sprites/player-select-bg.png') center / 100% 100% no-repeat;
-    image-rendering: pixelated;
-  }
-
-  &__title {
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    width: 50%;
-    aspect-ratio: 128 / 48;
-    translate: -50% 0;
-    background: url('../../../sprites/player-select-text.png') center / contain no-repeat;
-    image-rendering: pixelated;
-  }
-
-  &__launch {
-    position: absolute;
-    left: 50%;
-    bottom: 2.5%;
-    translate: -50% 0;
-    padding: 4px 14px;
-    border: 2px solid #d9ffff;
-    color: #fff7b0;
-    background: #061d24;
-    box-shadow: 0 0 0 2px #17747c, 0 0 12px #3eefff;
-    font: 700 clamp(9px, 2.8vh, 12px)/1 monospace;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  &__launch:hover,
-  &__launch:focus-visible {
-    color: #fff;
-    background: #0c4b55;
-  }
 }
 
 body:has(#start:checked) .select-plane {
   display: none;
 }
 
+.select-plane {
+  position: fixed;
+  inset: 0;
+  z-index: 9001;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+
+  &-stage {
+    position: relative;
+    width: min(100vw, 80vh);
+    height: 100vh;
+    aspect-ratio: 300 / 500;
+    background: url('https://i.imgur.com/A4Uq0wz.png') center / 100% 100% no-repeat;
+    image-rendering: pixelated;
+    overflow: hidden;
+    z-index: -1;
+
+    &::after {
+      display: block;
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: crimson;
+      z-index: -1;
+      animation: alarm-colors 1.2s ease-in-out alternate infinite;
+      mix-blend-mode: darken;
+    }
+  }
+
+  @keyframes alarm-colors {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  &-title {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 50%;
+    aspect-ratio: 128 / 48;
+    translate: -50% 0;
+    background: url('https://i.imgur.com/ZcFFZkc.png') center / contain no-repeat;
+    image-rendering: pixelated;
+  }
+
+  &-launch {
+    position: absolute;
+    right: 15%;
+    bottom: 12%;
+    padding: 10px;
+    border: 4px solid #fff;
+    color: #fff7b0;
+    background: #061d24;
+    font: monospace;
+    text-transform: uppercase;
+  }
+}
+
 .plane-options {
   position: absolute;
   container-type: inline-size;
-  top: 38%;
+  top: 35%;
   left: 0;
   right: 0;
-  padding: 0;
-  margin: 0;
-  border: 0;
 
   input {
     position: absolute;
@@ -102,81 +91,70 @@ body:has(#start:checked) .select-plane {
   display: block;
   height: 109px;
   position: absolute;
-  background: url('../../../sprites/player-select.png') 0 0 no-repeat;
+  background: url('https://i.imgur.com/qT4OCkc.png') 0 0 no-repeat;
   background-size: 388px 109px;
-  filter: grayscale(1) brightness(0.42);
-  transition: filter 120ms ease;
+  filter: grayscale(0.5) brightness(0.5);
+  transition: filter 200ms;
+  transform-origin: left;
 
-  &--2 {
+  &-2 {
     width: 88px;
-    margin-left: calc(88px / 1.5);
-    transform: translate3d(0, 10%, 0);
-    scale: 1.75;
-    left: 0;
-  }
-
-  &--1 {
-    width: 157px;
-    margin-left: calc(157px / 2);
-    left: 50%;
-    top: 50%;
     scale: 2;
-    background-position: -89px 0;
-    transform: translate3d(-50%, 50%, 0);
+    left: 5%;
     z-index: 1;
   }
 
-  &--3 {
+  &-1 {
+    width: 157px;
+    left: 50%;
+    scale: 3;
+    background-position: -89px 0;
+    transform: translate3d(-50%, 35%, 0);
+  }
+
+  &-3 {
     width: 138px;
-    margin-right: calc(138px / 6);
-    scale: 1.75;
+    scale: 2;
     background-position: -250px 0;
-    right: 0;
+    right: -2%;
+    top: -2%;
+    transform-origin: right 60%;
+    z-index: 1;
   }
 
   &:hover,
   &:focus-visible {
-    filter: grayscale(0.5) brightness(0.82);
+    filter: none;
   }
 }
 
-.plane-options:not(:has(.plane-option:hover)):not(:has(.plane-option:focus-visible)) input:checked + .plane-option {
+.plane-options:not(:has(.plane-option:hover)) input:checked + .plane-option {
   filter: none;
-}
-
-.plane-options input:focus-visible + .plane-option {
-  filter: none;
-  transform: translateY(-3%);
-  outline: 2px solid rgba(93, 255, 255, 0.85);
-  outline-offset: -4px;
 }
 
 .player-select-preview {
-  --preview-left: 50%;
   --preview-box-position: left;
   --preview-plane-position: right top;
 
   position: absolute;
-  left: var(--preview-left);
-  bottom: 11%;
-  width: min(30%, 96px);
-  aspect-ratio: 96 / 84;
-  translate: -50% 0;
-  background: url('../../../sprites/player-select-preview.png') var(--preview-box-position) center / 308.3333% 100% no-repeat;
+  left: 15%;
+  bottom: 12%;
+  width: 96px;
+  height: 84px;
+  scale: 2;
+  background: url('https://i.imgur.com/PBzxfZ9.png') var(--preview-box-position) center / 308.3333% 100% no-repeat;
 
   .preview-plane {
     position: absolute;
-    top: 0;
-    left: 50%;
-    width: 83.3333%;
-    height: 57%;
-    overflow: hidden;
-    translate: -50% 0;
+    top: 16%;
+    right: 28%;
+    bottom: 45%;
+    left: 28%;
 
     &::before {
       content: "";
       position: absolute;
-      top: -18%;
+      top: -15%;
       left: 0;
       width: 100%;
       aspect-ratio: 1;
@@ -194,23 +172,4 @@ body:has(#plane2:checked) .player-select-preview {
 body:has(#plane3:checked) .player-select-preview {
   --preview-box-position: center;
   --preview-plane-position: left top;
-}
-
-@media (min-aspect-ratio: 2 / 3) and (min-height: 384px) {
-  .select-plane__stage {
-    width: 66.6667vh;
-    height: 100vh;
-    max-width: none;
-    max-height: none;
-  }
-}
-
-@media (max-aspect-ratio: 2 / 3) {
-  .select-plane__stage {
-    width: 100vw;
-    height: 100vh;
-    max-width: none;
-    max-height: none;
-    background-size: cover;
-  }
 }
