@@ -255,7 +255,6 @@ $boss-centers: ();
       }
 
       @container enemy-vs-bullet-container
-        style(--boss-active: 1) and
         style(--boss-posY: #{$center}) and
         (#{$player-bullet-at-turret}) {
         .boss-hp-driver {

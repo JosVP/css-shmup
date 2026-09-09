@@ -46,7 +46,7 @@
 
   $animations: append(
     $animations,
-    boss-tracking $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) infinite ease-in-out var(--enemy-tracking-state),
+    boss-tracking $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) infinite linear var(--enemy-tracking-state),
     comma
   );
 

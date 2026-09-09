@@ -184,16 +184,59 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
   }
 }
 
+@function boss-ease-in-out-time-at($value-progress) {
+  $lower: 0;
+  $upper: 1;
+
+  @for $iteration from 1 through 16 {
+    $parameter: ($lower + $upper) / 2;
+    $eased-progress: 3 * (1 - $parameter) * $parameter * $parameter + $parameter * $parameter * $parameter;
+
+    @if $eased-progress < $value-progress {
+      $lower: $parameter;
+    } @else {
+      $upper: $parameter;
+    }
+  }
+
+  $parameter: ($lower + $upper) / 2;
+  @return
+    3 * (1 - $parameter) * (1 - $parameter) * $parameter * 0.42 +
+    3 * (1 - $parameter) * $parameter * $parameter * 0.58 +
+    $parameter * $parameter * $parameter;
+}
+
 @keyframes boss-tracking {
   $total-cells: length($boss-path-cells);
+  $segment-duration: 100 / ($total-cells - 1);
 
   from, to { --boss-active: 1; }
 
-  @for $i from 1 through $total-cells {
-    $cell: nth($boss-path-cells, $i);
-    $progress: ($i - 1) * 100 / ($total-cells - 1);
+  @for $i from 1 through ($total-cells - 1) {
+    $from-row: map-get(nth($boss-path-cells, $i), 'y');
+    $to-row: map-get(nth($boss-path-cells, $i + 1), 'y');
+    $distance: abs($to-row - $from-row);
+    $direction: if($to-row > $from-row, 1, -1);
+    $segment-start: ($i - 1) * $segment-duration;
 
-    #{$progress}% { --boss-posY: #{map-get($cell, 'y')}; }
+    #{$segment-start}% {
+      --boss-posY: #{$from-row};
+      animation-timing-function: steps(1, jump-end);
+    }
+
+    @if $distance > 0 {
+      @for $crossing from 1 through $distance {
+        $value-progress: ($crossing - 0.5) / $distance;
+        $time-progress: boss-ease-in-out-time-at($value-progress);
+        $boundary: $segment-start + ($time-progress * $segment-duration);
+        $rounded-row: $from-row + ($crossing * $direction);
+
+        #{$boundary}% {
+          --boss-posY: #{$rounded-row};
+          animation-timing-function: steps(1, jump-end);
+        }
+      }
+    }
   }
 }
 
