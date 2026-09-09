@@ -152,10 +152,10 @@ $enemy-configs: (
 // $enemy-configs: map-remove($enemy-configs, 8, 9, 10, 11);
 
 $boss-config: (
-  delay: 1s,
+  delay: 55s,
   duration: 10s,
   column: 12,
-  hp: 20,
+  hp: 100,
   damage-per-hit: 10,
   turret-points: 5000,
   path-type: boss-flight-pattern,
