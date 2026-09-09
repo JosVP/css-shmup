@@ -286,6 +286,12 @@ body:has(.death-overlay:hover) .player {
   }
 }
 
+@keyframes enemy-fighter-flight {
+  to {
+    transform: translate3d(-120px, 0, 0);
+  }
+}
+
 @keyframes enemy-fighter-barrel-roll {
   to {
     transform: translate3d(-1020px, 0, 0);
