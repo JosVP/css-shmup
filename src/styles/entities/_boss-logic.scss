@@ -47,7 +47,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
     aspect-ratio: 479 / 200;
     translate: 35% -50%;
     rotate: 90deg;
-    background: url(/sprites/boss-plane.png) center / 100% 100% no-repeat;
+    background: url('https://i.imgur.com/QcTShhQ.png') center / 100% 100% no-repeat;
     filter: drop-shadow(30px 30px 0 rgba(0, 0, 0, 0.45));
     image-rendering: pixelated;
   }
@@ -70,7 +70,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
       inset: 0 auto auto 0;
       width: 256px;
       height: 12px;
-      background: url(/sprites/boss-blades-sheet.png) 0 0 no-repeat;
+      background: url('https://i.imgur.com/p3iOxSX.png') 0 0 no-repeat;
       animation: boss-blades-spin 0.4s steps(7) infinite;
     }
   }
@@ -113,16 +113,10 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
     }
   }
 
-  @for $turret from 1 through $boss-turrets {
-    .boss-turret-#{$turret} {
-      background-image: url('/sprites/boss-turret-#{$turret}.png');
-    }
-  }
-
-  .boss-turret-1 { top: 17.5cqh; right: 20cqh; }
-  .boss-turret-2 { top: 30.5cqh; right: 21cqh; }
-  .boss-turret-3 { top: 69.5cqh; right: 21cqh; }
-  .boss-turret-4 { top: 82.5cqh; right: 20cqh; }
+  .boss-turret-1 { top: 17.5cqh; right: 20cqh; background-image: url('https://i.imgur.com/LASATB6.png'); }
+  .boss-turret-2 { top: 30.5cqh; right: 21cqh; background-image: url('https://i.imgur.com/8jypTaP.png'); }
+  .boss-turret-3 { top: 69.5cqh; right: 21cqh; background-image: url('https://i.imgur.com/DRtPdcM.png'); }
+  .boss-turret-4 { top: 82.5cqh; right: 20cqh; background-image: url('https://i.imgur.com/PWpBZ5N.png'); }
 
   &::after {
     content:
