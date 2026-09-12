@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shmup</title>
     <script type="module" src="/src/main.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&family=Press+Start+2P&display=swap" rel="stylesheet">
   </head>
   <body>
     <input type="checkbox" id="start" />
+    <input type="checkbox" id="select-plane" />
 
     <label class="debug" for="debug">
       <input type="checkbox" id="debug" />Debug
@@ -16,12 +20,18 @@
     <div class="doors"></div>
 
     <div class="start-screen">
-      <div class="logo"></div>
+      <div class="logo">
+        <div>CSS-only Edition</div>
+      </div>
       <div class="plane-1"></div>
       <div class="plane-2"></div>
       <div class="plane-3"></div>
-      <div class="copyright-capcom"></div>
-      <div class="copyright-snk"></div>
+      <label for="select-plane" class="start"></label>
+      <div class="footer">
+        <div class="copyright-capcom">© Original GFX and SFX by Capcom</div>
+        <div class="copyright-snk">© Original OST by SNK</div>
+        <div class="copyright-jos">CSS by Jos van Panhuis</div>
+      </div>
     </div>
 
     <div class="select-plane">

@@ -1,0 +1,68 @@
+// ============================================
+// START SCREEN
+// ============================================
+
+.start-screen {
+  container-style: inline-size;
+  position: fixed;
+  inset: 0;
+  z-index: 19001;
+  animation: scroll-up 2.2s 1s ease-in-out forwards;
+  display: block;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://i.imgur.com/UC74sSh.png') bottom center / cover no-repeat;
+  image-rendering: pixelated;
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  text-shadow: -2px 2px 0 #000;
+  font-size: 1em;
+  line-height: 1.5;
+
+  .logo {
+    background: url('https://i.imgur.com/y78wOY1.png') center / cover no-repeat;
+    width: 374px;
+    height: 141px;
+    image-rendering: pixelated;
+    scale: calc(60cqi / 374px);
+    margin: 21vh auto 0;
+    opacity: 0;
+    animation: fade-in 0.4s 3.3s ease-in-out forwards;
+
+    div {
+      text-align: center;
+      color: #ffee99;
+      position: absolute;
+      bottom: 21%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-transform: uppercase;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: #ffee99;
+    opacity: 0;
+    animation: fade-in 0.4s 3.3s ease-in-out forwards;
+  }
+}
+
+@keyframes scroll-up {
+  to {
+    background-position: top center;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}

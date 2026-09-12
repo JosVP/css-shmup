@@ -1,8 +1,12 @@
+// ============================================
+// DOORS ANIMATION
+// ============================================
+
 .doors {
   position: fixed;
   inset: 0;
   z-index: 9001;
-  animation: player-select 3.5s forwards;
+  // animation: player-select 3.5s forwards;
 
   &::before,
   &::after {
