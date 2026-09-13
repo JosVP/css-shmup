@@ -76,7 +76,7 @@
         #{$progress}% {
           left: calc((#{map-get($cell, 'x')} - 1) * #{$column-size});
           top: calc((#{map-get($cell, 'y')} - 1) * #{$row-size});
-          rotate: 0deg;
+          --enemy-rotation: 0deg;
         }
       }
     }
@@ -150,58 +150,58 @@
 }
 
 @keyframes flight-default {
-  from, to { rotate: 0deg; }
+  from, to { --enemy-rotation: 0deg; }
 }
 
 @keyframes row-2-retreat {
-  0%, 40% { rotate: 0deg; }
-  50%, 100% { rotate: -180deg; }
+  0%, 40% { --enemy-rotation: 0deg; }
+  50%, 100% { --enemy-rotation: -180deg; }
 }
 
 @keyframes row-3-retreat {
-  0%, 40% { rotate: 0deg; }
-  50%, 100% { rotate: -180deg; }
+  0%, 40% { --enemy-rotation: 0deg; }
+  50%, 100% { --enemy-rotation: -180deg; }
 }
 
 @keyframes row-4-retreat {
-  0%, 40% { rotate: 0deg; }
-  50%, 100% { rotate: -180deg; }
+  0%, 40% { --enemy-rotation: 0deg; }
+  50%, 100% { --enemy-rotation: -180deg; }
 }
 
 @keyframes row-1-2-u-turn {
-  0%, 40% { rotate: 0deg; }
-  60%, 100% { rotate: -180deg; }
+  0%, 40% { --enemy-rotation: 0deg; }
+  60%, 100% { --enemy-rotation: -180deg; }
 }
 
 @keyframes row-5-4-u-turn {
-  0%, 40% { rotate: 0deg; }
-  60%, 100% { rotate: 180deg; }
+  0%, 40% { --enemy-rotation: 0deg; }
+  60%, 100% { --enemy-rotation: 180deg; }
 }
 
 @keyframes diagonal-1-to-5 {
-  0%, 16% { rotate: 0deg; }
-  17%, 77% { rotate: -45deg; }
-  78%, 100% { rotate: 0deg; }
+  0%, 16% { --enemy-rotation: 0deg; }
+  17%, 77% { --enemy-rotation: -45deg; }
+  78%, 100% { --enemy-rotation: 0deg; }
 }
 
 @keyframes diagonal-5-to-1 {
-  0%, 16% { rotate: 0deg; }
-  17%, 77% { rotate: 45deg; }
-  78%, 100% { rotate: 0deg; }
+  0%, 16% { --enemy-rotation: 0deg; }
+  17%, 77% { --enemy-rotation: 45deg; }
+  78%, 100% { --enemy-rotation: 0deg; }
 }
 
 @keyframes circle-6-to-9-high {
-  0%, 29% { rotate: -90deg; }
-  30%, 41% { rotate: -120deg; }
-  42%, 57% { rotate: -180deg; }
-  58%, 70% { rotate: -210deg; }
-  71%, 100% { rotate: -270deg; }
+  0%, 29% { --enemy-rotation: -90deg; }
+  30%, 41% { --enemy-rotation: -120deg; }
+  42%, 57% { --enemy-rotation: -180deg; }
+  58%, 70% { --enemy-rotation: -210deg; }
+  71%, 100% { --enemy-rotation: -270deg; }
 }
 
 @keyframes circle-6-to-9-low {
-  0%, 29% { rotate: 90deg; }
-  30%, 41% { rotate: 120deg; }
-  42%, 57% { rotate: 180deg; }
-  58%, 70% { rotate: 210deg; }
-  71%, 100% { rotate: 270deg; }
+  0%, 29% { --enemy-rotation: 90deg; }
+  30%, 41% { --enemy-rotation: 120deg; }
+  42%, 57% { --enemy-rotation: 180deg; }
+  58%, 70% { --enemy-rotation: 210deg; }
+  71%, 100% { --enemy-rotation: 270deg; }
 }

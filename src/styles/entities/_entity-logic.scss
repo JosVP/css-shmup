@@ -240,6 +240,8 @@ body:has(.death-overlay:hover) .player {
   }
 
   .idle {
+    rotate: var(--enemy-rotation, 0deg);
+
     &::before {
       content: "";
       position: absolute;
