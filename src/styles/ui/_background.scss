@@ -9,7 +9,7 @@
   background-size: cover;
   image-rendering: pixelated;
 
-  body:has(#start:checked) & {
+  body:has(#start-level:checked) & {
     animation: bg-scroll 60s 1.75s linear forwards;
   }
 }

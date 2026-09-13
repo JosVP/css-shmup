@@ -3,10 +3,11 @@
 // ============================================
 
 .doors {
+  --translate: -50vw;
   position: fixed;
   inset: 0;
   z-index: 9001;
-  // animation: player-select 3.5s forwards;
+  pointer-events: none;
 
   &::before,
   &::after {
@@ -18,30 +19,28 @@
     width: 50vw;
     background: url('https://i.imgur.com/MiparKz.png') right center / cover no-repeat;
     image-rendering: pixelated;
-    transform: translateX(var(--translate));
-    transition: transform 1s ease-out;
+    transition: all 1s ease-out;
   }
 
   &::before {
-    left: 0;
+    left: var(--translate);
   }
 
   &::after {
-    right: 0;
+    right: var(--translate);
     scale: -1 1;
   }
 
-  body:has(#start:checked) & {
+  body:has(#go-to-select:checked) & {
+    animation: to-player-select 3.5s forwards;
+  }
+
+  body:has(#start-level:checked) & {
     animation: start-level 3.5s forwards;
   }
 }
 
-@keyframes player-select {
-  0% {
-    --translate: -100vh;
-    pointer-events: none;
-  }
-
+@keyframes to-player-select {
   50% {
     --translate: 0vh;
     pointer-events: inherit;
@@ -65,7 +64,7 @@
   }
 
   100% {
-    --translate: -110vh;
+    --translate: -100vh;
     pointer-events: none;
   }
 }

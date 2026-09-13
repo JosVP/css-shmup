@@ -172,7 +172,7 @@ body {
     cursor: crosshair;
   }
 
-  &:has(#start:checked) .container {
+  &:has(#start-level:checked) .container {
     --enemy-tracking-state: running;
     --level-start-delay: 3s;
   }
@@ -202,7 +202,6 @@ body {
     }
   }
 
-  label.start,
   label.debug {
     position: fixed;
     left: 10px;
@@ -215,10 +214,6 @@ body {
     }
   }
 
-  label.start {
-    bottom: 10px;
-    left: 100px;
-  }
   label.debug {
     bottom: 10px;
   }

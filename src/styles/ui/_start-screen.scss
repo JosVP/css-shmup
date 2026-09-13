@@ -3,23 +3,38 @@
 // ============================================
 
 .start-screen {
-  container-style: inline-size;
   position: fixed;
   inset: 0;
-  z-index: 19001;
+  z-index: 9000;
   animation: scroll-up 2.2s 1s ease-in-out forwards;
   display: block;
-  content: '';
   position: absolute;
   inset: 0;
   background: url('https://i.imgur.com/UC74sSh.png') bottom center / cover no-repeat;
   image-rendering: pixelated;
-  font-family: "Press Start 2P", system-ui;
-  font-weight: 400;
-  font-style: normal;
+  font: 1em "Press Start 2P";
+  color: #fff3b0;
   text-shadow: -2px 2px 0 #000;
-  font-size: 1em;
   line-height: 1.5;
+  text-transform: uppercase;
+
+  body:has(#go-to-select:checked) & {
+    animation: hide-start-screen 0.1s 1.75s forwards, scroll-up 0.01s ease-in-out forwards;
+  }
+
+  .start {
+    position: absolute;
+    cursor: pointer;
+    left: 50vw;
+    translate: -50%;
+    top: 58vh;
+    font-size: 1.5em;
+    display: block;
+    padding: 1em;
+    overflow: hidden;
+    animation: blink 1.1s steps(1) infinite, fade-for-blink 0.01s 4s ease-in-out forwards;
+    visibility: hidden;
+  }
 
   .logo {
     background: url('https://i.imgur.com/y78wOY1.png') center / cover no-repeat;
@@ -27,9 +42,9 @@
     height: 141px;
     image-rendering: pixelated;
     scale: calc(60cqi / 374px);
-    margin: 21vh auto 0;
-    opacity: 0;
+    margin: 21.5vh auto 0;
     animation: fade-in 0.4s 3.3s ease-in-out forwards;
+    opacity: 0;
 
     div {
       text-align: center;
@@ -50,8 +65,8 @@
     width: 100%;
     text-align: center;
     color: #ffee99;
-    opacity: 0;
     animation: fade-in 0.4s 3.3s ease-in-out forwards;
+    opacity: 0;
   }
 }
 
@@ -64,5 +79,23 @@
 @keyframes fade-in {
   to {
     opacity: 1;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-for-blink {
+  to {
+    visibility: visible;
+  }
+}
+
+@keyframes hide-start-screen {
+  to {
+    display: none;
   }
 }
