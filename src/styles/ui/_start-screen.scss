@@ -38,7 +38,7 @@
     image-rendering: pixelated;
     scale: calc(60cqi / 374px);
     margin: 21.5vh auto 0;
-    animation: fade-in 0.4s 3.3s ease-in-out forwards;
+    animation: fade-in 0.8s 3.3s ease-in-out forwards;
     opacity: 0;
 
     div {
@@ -60,7 +60,7 @@
     width: 100%;
     text-align: center;
     color: #ffee99;
-    animation: fade-in 0.4s 3.3s ease-in-out forwards;
+    animation: fade-in 0.8s 3.3s ease-in-out forwards;
     opacity: 0;
   }
 }
@@ -92,5 +92,44 @@
 @keyframes hide-start-screen {
   to {
     display: none;
+  }
+}
+
+.start-screen {
+  .plane-1,
+  .plane-2,
+  .plane-3 {
+    position: absolute;
+    image-rendering: pixelated;
+    filter: brightness(0.5);
+    transform: scale(4);
+    scale: -1 1;
+    width: 40px;
+    height: 40px;
+    animation: plane-start-screen-fly 2s 1.8s linear forwards;
+  }
+
+  .plane-1 {
+    background: url(/screenshots/102712.png) -410px -500px no-repeat;
+    top: 50vh;
+    right: -100px;
+  }
+
+  .plane-2 {
+    background: url(/screenshots/102559.png) -260px -410px no-repeat;
+    top: 72vh;
+    right: -280px;
+  }
+
+  .plane-3 {
+    background: url(/screenshots/102778.png) -370px -340px no-repeat;
+    top: 75vh;
+    right: -50px;
+  }
+
+  @keyframes plane-start-screen-fly {
+    to {
+      transform: translate3d(90vw, -100vh, 0) scale(4)
+    }
   }
 }
