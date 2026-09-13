@@ -3,9 +3,9 @@
 // ============================================
 
 $two-shots: (2s, 5s);
-$three-shots: (0.5s, 3.5s, 6.5s);
+// $three-shots: (0.5s, 3.5s, 6.5s);
 // low-performance
-// $three-shots: (2s, 5s);
+$three-shots: (2s, 5s);
 
 $enemy-types: (
   fighter: (
@@ -149,7 +149,7 @@ $enemy-configs: (
 );
 
 // low-performance
-// $enemy-configs: map-remove($enemy-configs, 8, 9, 10, 11);
+$enemy-configs: map-remove($enemy-configs, 8, 9, 10, 11);
 
 $boss-config: (
   delay: 55s,

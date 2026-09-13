@@ -12,14 +12,9 @@
   inset: 0;
   background: url('https://i.imgur.com/UC74sSh.png') bottom center / cover no-repeat;
   image-rendering: pixelated;
-  font: 1em "Press Start 2P";
-  color: #fff3b0;
-  text-shadow: -2px 2px 0 #000;
-  line-height: 1.5;
-  text-transform: uppercase;
 
   body:has(#go-to-select:checked) & {
-    animation: hide-start-screen 0.1s 1.75s forwards, scroll-up 0.01s ease-in-out forwards;
+    animation: hide-start-screen 0.1s 1.25s forwards, scroll-up 0.01s ease-in-out forwards;
   }
 
   .start {

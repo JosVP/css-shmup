@@ -32,7 +32,7 @@
   }
 
   body:has(#go-to-select:checked) & {
-    animation: to-player-select 3.5s forwards;
+    animation: to-player-select 2.5s forwards;
   }
 
   body:has(#start-level:checked) & {
@@ -41,7 +41,7 @@
 }
 
 @keyframes to-player-select {
-  50% {
+  0%, 40% {
     --translate: 0vh;
     pointer-events: inherit;
   }

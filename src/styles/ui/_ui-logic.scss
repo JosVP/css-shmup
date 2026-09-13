@@ -163,10 +163,14 @@ body {
   padding: 0;
   width: 100vw;
   height: 100vh;
-  font-family: system-ui;
   background: #1a1a2a;
-  color: white;
   overflow: hidden;
+
+  font: 1em "Press Start 2P";
+  color: #fff3b0;
+  text-shadow: -2px 2px 0 #000;
+  line-height: 1.5;
+  text-transform: uppercase;
 
   * {
     cursor: crosshair;
@@ -216,5 +220,12 @@ body {
 
   label.debug {
     bottom: 10px;
+  }
+
+  .score span {
+    color: aqua;
+  }
+  .player-deaths span {
+    color: crimson;
   }
 }
