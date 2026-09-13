@@ -58,6 +58,12 @@
   initial-value: 3;
 }
 
+@property --boss-defeat-progress {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
 @for $turret from 1 through $boss-turrets {
   @property --boss-turret-#{$turret}-hp {
     syntax: "<integer>";

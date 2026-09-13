@@ -30,6 +30,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
 }
 
 .boss-visual {
+  --boss-defeat-progress: 0;
   container-type: size;
   position: absolute;
   left: calc((#{$boss-column} - 1) * #{$column-size});
@@ -37,7 +38,17 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
   height: $row-size * $boss-turrets;
   opacity: 0;
   z-index: 2;
-  animation: boss-move $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out infinite var(--enemy-tracking-state);
+  translate:
+    calc(-50% * var(--boss-defeat-progress))
+    calc(
+      (2.5 - var(--boss-visual-posY)) *
+      #{calc(100% / $boss-turrets)} *
+      var(--boss-defeat-progress)
+    );
+  transition: --boss-defeat-progress 1.5s ease-in-out;
+  animation:
+    boss-move $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out infinite var(--enemy-tracking-state),
+    boss-defeated-shake 0.15s infinite paused;
 
   .boss-body {
     position: absolute;
@@ -210,7 +221,12 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
     $from-row: map-get(nth($boss-path-cells, $i), 'y');
     $to-row: map-get(nth($boss-path-cells, $i + 1), 'y');
     $distance: abs($to-row - $from-row);
-    $direction: if($to-row > $from-row, 1, -1);
+    $direction: -1;
+
+    @if $to-row > $from-row {
+      $direction: 1;
+    }
+
     $segment-start: ($i - 1) * $segment-duration;
 
     #{$segment-start}% {
@@ -577,11 +593,12 @@ $all-boss-turrets-dead: null;
 
 @container boss-hp-state (#{$all-boss-turrets-dead}) {
   .boss-visual {
+    --boss-defeat-progress: 1;
     opacity: 1;
-    animation:
-      boss-move $boss-duration $boss-delay ease-in-out infinite paused,
-      boss-defeated-center 1.5s ease-in-out forwards,
-      boss-defeated-shake 0.15s infinite;
+    // Freeze boss-move at its exact sampled position. Since the visual is
+    // one row tall per turret, convert parent-row movement to its own height.
+    // The 2.5 target places that visual's bounding box in the vertical center.
+    animation-play-state: paused, running;
   }
 
   .boss-bullet-state {
@@ -636,12 +653,6 @@ $all-boss-turrets-dead: null;
   .result-screen {
     animation: show-result-screen 0.01s $result-screen-delay forwards;
   }
-}
-
-@keyframes boss-defeated-center {
-  from { top: calc((var(--boss-visual-posY) - 2) * #{$row-size}); }
-
-  to { top: $row-size / 2; translate: -50% 0; }
 }
 
 @keyframes boss-defeated-shake {
