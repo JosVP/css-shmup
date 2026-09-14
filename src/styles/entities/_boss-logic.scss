@@ -47,7 +47,9 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
     );
   transition: --boss-defeat-progress 1.5s ease-in-out;
   animation:
+    boss-intro 3s calc(#{$boss-delay} + var(--level-start-delay) - 2.5s) ease-out forwards,
     boss-move $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out infinite var(--enemy-tracking-state),
+    boss-move-x 3s calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out alternate infinite var(--enemy-tracking-state),
     boss-defeated-shake 0.15s infinite paused;
 
   .boss-body {
@@ -262,6 +264,12 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
       --boss-visual-posY: #{map-get($cell, 'y')};
       top: calc((#{map-get($cell, 'y')} - 2) * #{$row-size});
     }
+  }
+}
+
+@keyframes boss-move-x {
+  to {
+    transform: translateX(30px);
   }
 }
 
@@ -640,14 +648,14 @@ $all-boss-turrets-dead: null;
       }
     }
 
-    .sprite:nth-child(1) { --boss-explosion-x: -10cqh; --boss-explosion-y: 18%; --boss-explosion-delay: 0s; }
-    .sprite:nth-child(2) { --boss-explosion-x: 8cqh; --boss-explosion-y: 72%; --boss-explosion-delay: 0.2s; }
-    .sprite:nth-child(3) { --boss-explosion-x: -25cqh; --boss-explosion-y: 48%; --boss-explosion-delay: 0.4s; }
-    .sprite:nth-child(4) { --boss-explosion-x: 14cqh; --boss-explosion-y: 32%; --boss-explosion-delay: 0.6s; }
-    .sprite:nth-child(5) { --boss-explosion-x: -16cqh; --boss-explosion-y: 82%; --boss-explosion-delay: 0.8s; }
-    .sprite:nth-child(6) { --boss-explosion-x: 2cqh; --boss-explosion-y: 55%; --boss-explosion-delay: 1s; }
-    .sprite:nth-child(7) { --boss-explosion-x: -28cqh; --boss-explosion-y: 25%; --boss-explosion-delay: 1.2s; }
-    .sprite:nth-child(8) { --boss-explosion-x: -5cqh; --boss-explosion-y: 42%; --boss-explosion-delay: 1.4s; }
+    .sprite:nth-child(1) { --boss-explosion-x: -2cqh; --boss-explosion-y: 2%; --boss-explosion-delay: 0s; }
+    .sprite:nth-child(2) { --boss-explosion-x: -9cqh; --boss-explosion-y: 22%; --boss-explosion-delay: 0.2s; }
+    .sprite:nth-child(3) { --boss-explosion-x: -28cqh; --boss-explosion-y: 42%; --boss-explosion-delay: 0.3s; }
+    .sprite:nth-child(4) { --boss-explosion-x: 12cqh; --boss-explosion-y: 32%; --boss-explosion-delay: 0.6s; }
+    .sprite:nth-child(5) { --boss-explosion-x: -16cqh; --boss-explosion-y: 52%; --boss-explosion-delay: 0.9s; }
+    .sprite:nth-child(6) { --boss-explosion-x: 7cqh; --boss-explosion-y: 51%; --boss-explosion-delay: 1s; }
+    .sprite:nth-child(7) { --boss-explosion-x: -7cqh; --boss-explosion-y: 65%; --boss-explosion-delay: 1.1s; }
+    .sprite:nth-child(8) { --boss-explosion-x: 1cqh; --boss-explosion-y: 89%; --boss-explosion-delay: 1.5s; }
   }
 
   .result-screen {
@@ -774,6 +782,19 @@ $all-boss-turrets-dead: null;
 
 @keyframes warning-blink {
   50% { opacity: 0; }
+}
+
+@keyframes boss-intro {
+  0% {
+    opacity: 1;
+    transform: scale(4) translateX(-50vw);
+    top: 0%;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+    top: 21%;
+  }
 }
 
 @keyframes show-result-screen {

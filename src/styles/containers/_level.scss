@@ -93,14 +93,14 @@
 
       $debug-content: append($debug-content, "\A enemy #{$e}: ", space);
       $debug-content: append($debug-content, counter(enemy#{$e}X) "/" counter(enemy#{$e}Y), space);
+      $debug-content: append($debug-content, " | enemy collision: ", space);
+      $debug-content: append($debug-content, counter(enemy#{$e}Collision), space);
       $debug-content: append($debug-content, " | bullet start: ", space);
       $debug-content: append($debug-content, counter(enemy#{$e}BulletStartX) "/" counter(enemy#{$e}BulletStartY), space);
       $debug-content: append($debug-content, " | shot/offset: ", space);
       $debug-content: append($debug-content, counter(enemy#{$e}BulletShot) "/" counter(enemy#{$e}BulletOffsetX), space);
       $debug-content: append($debug-content, " | collision pos: ", space);
       $debug-content: append($debug-content, counter(enemy#{$e}BulletX) "/" counter(enemy#{$e}BulletY), space);
-      $debug-content: append($debug-content, " | visible Safari/legacy: ", space);
-      $debug-content: append($debug-content, counter(enemy#{$e}BulletSafariAlive) "/" counter(enemy#{$e}BulletAlive), space);
 
       @each $shot in get-enemy-shot-schedule(map-get($enemy-configs, $e)) {
         $shot-id: map-get($shot, 'id');
@@ -108,9 +108,6 @@
         $debug-content: append($debug-content, " | shot #{$shot-id}: ", space);
         $debug-content: append($debug-content, counter(enemy#{$e}Shot#{$shot-id}Alive), space);
       }
-
-      $debug-content: append($debug-content, " | enemy collision: ", space);
-      $debug-content: append($debug-content, counter(enemy#{$e}Collision), space);
     }
 
     visibility: hidden;

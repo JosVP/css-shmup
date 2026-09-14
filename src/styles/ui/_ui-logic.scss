@@ -48,7 +48,7 @@
 
         &:hover {
           background: crimson;
-          opacity: 0.5;
+          opacity: 0.3;
         }
 
         @for $hc from 1 through $hover-columns {
@@ -199,6 +199,11 @@ body {
     .player-bullet::after,
     .enemy-bullet::after {
       visibility: visible !important;
+    }
+
+    .score-hud {
+      left: 6vw;
+      top: 5vw;
     }
 
     .enemy {
