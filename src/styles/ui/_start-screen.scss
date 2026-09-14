@@ -59,9 +59,18 @@
     bottom: 20px;
     width: 100%;
     text-align: center;
-    color: #ffee99;
     animation: fade-in 0.8s 3.3s ease-in-out forwards;
     opacity: 0;
+
+    div {
+      background: linear-gradient(to bottom, #ffee99 0%, #c91414 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+      filter: drop-shadow(-2px 2px 0 #000);
+    }
   }
 }
 
@@ -103,33 +112,32 @@
     image-rendering: pixelated;
     filter: brightness(0.5);
     transform: scale(4);
-    scale: -1 1;
     width: 40px;
     height: 40px;
     animation: plane-start-screen-fly 2s 1.8s linear forwards;
   }
 
   .plane-1 {
-    background: url(/screenshots/102712.png) -410px -500px no-repeat;
+    background: url('https://i.imgur.com/Se2DXoT.png') 0 0 no-repeat;
     top: 50vh;
-    right: -100px;
+    right: -150px;
   }
 
   .plane-2 {
-    background: url(/screenshots/102559.png) -260px -410px no-repeat;
+    background: url('https://i.imgur.com/Se2DXoT.png') -40px 0 no-repeat;
     top: 72vh;
-    right: -280px;
+    right: -330px;
   }
 
   .plane-3 {
-    background: url(/screenshots/102778.png) -370px -340px no-repeat;
+    background: url('https://i.imgur.com/Se2DXoT.png') -80px 0 no-repeat;
     top: 75vh;
-    right: -50px;
+    right: -100px;
   }
 
   @keyframes plane-start-screen-fly {
     to {
-      transform: translate3d(90vw, -100vh, 0) scale(4)
+      transform: translate3d(-90vw, -100vh, 0) scale(4)
     }
   }
 }
