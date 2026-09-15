@@ -106,14 +106,14 @@ body:has(#start-level:checked) .select-plane {
 
   &-2 {
     width: 88px;
-    scale: 2;
+    scale: calc(50cqi / 150px);
     left: 5%;
   }
 
   &-1 {
     width: 157px;
     left: 50%;
-    scale: 3;
+    scale: calc(100cqi / 250px);
     background-position: -89px 0;
     transform: translate3d(-50%, 35%, 0);
     clip-path: polygon(100% 35%, 100% 100%, 0% 100%, 0% 35%, 25% 35%, 35% 0%, 70% 0%, 70% 35%);
@@ -122,7 +122,7 @@ body:has(#start-level:checked) .select-plane {
 
   &-3 {
     width: 138px;
-    scale: 2;
+    scale: calc(50cqi / 150px);
     background-position: -250px 0;
     right: -2%;
     top: -2%;

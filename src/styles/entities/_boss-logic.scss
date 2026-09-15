@@ -767,12 +767,22 @@ $all-boss-turrets-dead: null;
 
 .warning-screen h1,
 .result-screen h1 {
-  font: 700 7rem/0.9 Georgia, serif;
+  font: 700 5rem "Press Start 2P";
   margin: 0;
 }
 
 .warning-screen h1 {
   animation: warning-blink 1s step-start infinite var(--enemy-tracking-state);
+  color: crimson;
+}
+
+.result-screen h1 {
+  background: linear-gradient(to bottom, #FFD700 0%, #FDB813 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(-6px 6px 0 #000);
 }
 
 @keyframes warning-screen-visibility {

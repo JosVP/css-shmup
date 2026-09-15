@@ -2,20 +2,56 @@
 // LEVEL BACKGROUND
 // ============================================
 
+:root {
+  --bg-width: calc(100vh * 2882 / 384);
+  --bg-main-shift: calc(var(--bg-width) - 100vw);
+  --bg-repeat-tile: calc(100vh * 611 / 384);
+  --bg-repeat-start: calc(-1 * var(--bg-main-shift) + var(--bg-repeat-tile));
+  --bg-repeat-end: calc(-1 * var(--bg-main-shift));
+  --bg-animation-duration: 120s;
+  --bg-loop-delay: calc(var(--bg-animation-duration) + 1.75s);
+  --bg-loop-duration: calc(var(--bg-animation-duration) * 611 / 2882);
+}
+
 .background {
   position: absolute;
-  inset: 0;
-  background: url('https://i.imgur.com/98onSdU.png') left center no-repeat;
-  background-size: cover;
+  left: 0;
+  top: 0;
+  width: var(--bg-width);
+  height: 100%;
+  min-width: 100vw;
+  background: url('https://i.imgur.com/1JtpOrf.png') left center / auto 100% no-repeat;
   image-rendering: pixelated;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  contain: paint;
+}
 
-  body:has(#start-level:checked) & {
-    animation: bg-scroll 60s 1.75s linear forwards;
+body:has(#start-level:checked) {
+  .background {
+    animation:
+      bg-scroll var(--bg-animation-duration) 1.75s linear forwards,
+      bg-repeat var(--bg-loop-duration) var(--bg-loop-delay) linear infinite;
   }
 }
 
 @keyframes bg-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
   to {
-    background-position: right center;
+    transform: translate3d(calc(-1 * var(--bg-main-shift)), 0, 0);
+  }
+}
+
+@keyframes bg-repeat {
+  0% {
+    transform: translate3d(var(--bg-repeat-start), 0, 0);
+  }
+
+  100% {
+    transform: translate3d(var(--bg-repeat-end), 0, 0);
   }
 }
