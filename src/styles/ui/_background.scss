@@ -8,7 +8,7 @@
   --bg-repeat-tile: calc(100vh * 611 / 384);
   --bg-repeat-start: calc(-1 * var(--bg-main-shift) + var(--bg-repeat-tile));
   --bg-repeat-end: calc(-1 * var(--bg-main-shift));
-  --bg-animation-duration: 120s;
+  --bg-animation-duration: 140s;
   --bg-loop-delay: calc(var(--bg-animation-duration) + 1.75s);
   --bg-loop-duration: calc(var(--bg-animation-duration) * 611 / 2882);
 }
