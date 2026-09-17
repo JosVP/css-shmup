@@ -179,15 +179,15 @@
 }
 
 @keyframes diagonal-1-to-5 {
-  0%, 16% { --enemy-rotation: 0deg; }
-  17%, 77% { --enemy-rotation: -45deg; }
-  78%, 100% { --enemy-rotation: 0deg; }
+  0%, 15% { --enemy-rotation: 0deg; }
+  19%, 75% { --enemy-rotation: -45deg; }
+  79%, 100% { --enemy-rotation: 0deg; }
 }
 
 @keyframes diagonal-5-to-1 {
-  0%, 16% { --enemy-rotation: 0deg; }
-  17%, 77% { --enemy-rotation: 45deg; }
-  78%, 100% { --enemy-rotation: 0deg; }
+  0%, 15% { --enemy-rotation: 0deg; }
+  19%, 75% { --enemy-rotation: 45deg; }
+  79%, 100% { --enemy-rotation: 0deg; }
 }
 
 @keyframes circle-6-to-9-high {

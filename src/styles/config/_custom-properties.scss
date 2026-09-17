@@ -40,6 +40,12 @@
   }
 }
 
+@property --enemy-rotation {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
 @property --boss-active {
   syntax: "<integer>";
   inherits: true;

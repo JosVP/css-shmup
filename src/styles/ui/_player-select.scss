@@ -70,12 +70,77 @@ body:has(#start-level:checked) .select-plane {
     position: absolute;
     right: 15%;
     bottom: 12%;
-    padding: 10px;
-    border: 4px solid #fff;
+    padding: 10px 14px;
+    cursor: pointer;
     color: #fff7b0;
-    background: #061d24;
-    font: monospace;
     text-transform: uppercase;
+    font-size: 18px;
+    background: linear-gradient(#f0f0b0, #f0d040);
+    clip-path: polygon(
+      6px 0,
+      calc(100% - 6px) 0,
+      calc(100% - 6px) 2px,
+      calc(100% - 4px) 2px,
+      calc(100% - 4px) 4px,
+      calc(100% - 2px) 4px,
+      calc(100% - 2px) 6px,
+      100% 6px,
+      100% calc(100% - 6px),
+      calc(100% - 2px) calc(100% - 6px),
+      calc(100% - 2px) calc(100% - 4px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 4px) calc(100% - 2px),
+      calc(100% - 6px) calc(100% - 2px),
+      calc(100% - 6px) 100%,
+      6px 100%,
+      6px calc(100% - 2px),
+      4px calc(100% - 2px),
+      4px calc(100% - 4px),
+      2px calc(100% - 4px),
+      2px calc(100% - 6px),
+      0 calc(100% - 6px),
+      0 6px,
+      2px 6px,
+      2px 4px,
+      4px 4px,
+      4px 2px,
+      6px 2px
+    );
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      z-index: -1;
+      background: #305050;
+      background: linear-gradient(180deg, #305050 0%, #305050 89%, #1e3232 90%, #1e3232 100%);
+      clip-path: polygon(
+        4px 0,
+        calc(100% - 4px) 0,
+        calc(100% - 4px) 2px,
+        calc(100% - 2px) 2px,
+        calc(100% - 2px) 4px,
+        100% 4px,
+        100% calc(100% - 4px),
+        calc(100% - 2px) calc(100% - 4px),
+        calc(100% - 2px) calc(100% - 2px),
+        calc(100% - 4px) calc(100% - 2px),
+        calc(100% - 4px) 100%,
+        4px 100%,
+        4px calc(100% - 2px),
+        2px calc(100% - 2px),
+        2px calc(100% - 4px),
+        0 calc(100% - 4px),
+        0 4px,
+        2px 4px,
+        2px 2px,
+        4px 2px
+      );
+    }
+
+    body:has(#start-level:checked) & {
+      pointer-events: none;
+    }
   }
 }
 
