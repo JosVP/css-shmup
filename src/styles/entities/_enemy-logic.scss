@@ -191,17 +191,13 @@
 }
 
 @keyframes circle-6-to-9-high {
-  0%, 29% { --enemy-rotation: -90deg; }
-  30%, 41% { --enemy-rotation: -120deg; }
-  42%, 57% { --enemy-rotation: -180deg; }
-  58%, 70% { --enemy-rotation: -210deg; }
+  0%, 27% { --enemy-rotation: -90deg; }
+  45%, 55% { --enemy-rotation: -180deg; }
   71%, 100% { --enemy-rotation: -270deg; }
 }
 
 @keyframes circle-6-to-9-low {
-  0%, 29% { --enemy-rotation: 90deg; }
-  30%, 41% { --enemy-rotation: 120deg; }
-  42%, 57% { --enemy-rotation: 180deg; }
-  58%, 70% { --enemy-rotation: 210deg; }
+  0%, 27% { --enemy-rotation: 90deg; }
+  45%, 55% { --enemy-rotation: 180deg; }
   71%, 100% { --enemy-rotation: 270deg; }
 }

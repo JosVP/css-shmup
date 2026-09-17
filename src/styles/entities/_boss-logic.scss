@@ -47,7 +47,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
     );
   transition: --boss-defeat-progress 1.5s ease-in-out;
   animation:
-    boss-intro 3s calc(#{$boss-delay} + var(--level-start-delay) - 2.5s) ease-out forwards,
+    boss-intro 3s calc(#{$boss-delay} + var(--level-start-delay) - 2.5s) ease-out forwards var(--enemy-tracking-state),
     boss-move $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out infinite var(--enemy-tracking-state),
     boss-move-x 3s calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out alternate infinite var(--enemy-tracking-state),
     boss-defeated-shake 0.15s infinite paused;

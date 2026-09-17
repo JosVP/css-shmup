@@ -54,11 +54,11 @@ $enemy-types: (
 $enemy-configs: (
   1: (
     flybys: (
-      1: (path-type: row-1-straight, speed: 7s, delay: 551s, shots: $two-shots, enemy-type: fighter),
-      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 5511s, shots: $two-shots, enemy-type: jet),
-      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 5519s, shots: $two-shots, enemy-type: interceptor),
-      4: (path-type: row-1-straight, speed: 7s, delay: 5532s, shots: $two-shots, enemy-type: fighter),
-      5: (path-type: circle-6-to-9-high, speed: 7s, delay: 5540s, shots: $two-shots, enemy-type: interceptor),
+      1: (path-type: row-1-straight, speed: 7s, delay: 1s, shots: $two-shots, enemy-type: fighter),
+      2: (path-type: row-1-2-u-turn, speed: 7s, delay: 11s, shots: $two-shots, enemy-type: jet),
+      3: (path-type: circle-6-to-9-high, speed: 7s, delay: 19s, shots: $two-shots, enemy-type: interceptor),
+      4: (path-type: row-1-straight, speed: 7s, delay: 32s, shots: $two-shots, enemy-type: fighter),
+      5: (path-type: circle-6-to-9-high, speed: 7s, delay: 40s, shots: $two-shots, enemy-type: interceptor),
     )
   ),
   2: (
