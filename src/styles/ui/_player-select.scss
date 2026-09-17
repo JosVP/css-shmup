@@ -29,6 +29,7 @@ body:has(#start-level:checked) .select-plane {
   background: #000;
 
   &-stage {
+    container-type: inline-size;
     position: relative;
     width: min(100vw, 80vh);
     height: 100vh;
@@ -71,6 +72,8 @@ body:has(#start-level:checked) .select-plane {
     right: 15%;
     bottom: 12%;
     padding: 10px 14px;
+    scale: calc(32cqi / 226px);
+    transform-origin: right;
     cursor: pointer;
     color: #fff7b0;
     text-transform: uppercase;
@@ -146,7 +149,6 @@ body:has(#start-level:checked) .select-plane {
 
 .plane-options {
   position: absolute;
-  container-type: inline-size;
   top: 35%;
   left: 0;
   right: 0;
@@ -172,7 +174,7 @@ body:has(#start-level:checked) .select-plane {
   &-2 {
     width: 88px;
     scale: calc(50cqi / 150px);
-    left: 5%;
+    left: 7%;
   }
 
   &-1 {
@@ -213,7 +215,7 @@ body:has(#start-level:checked) .select-plane {
   bottom: 12%;
   width: 96px;
   height: 84px;
-  scale: 2;
+  scale: calc(28cqi / 96px);
   background: url('https://i.imgur.com/PBzxfZ9.png') var(--preview-box-position) center / 308.3333% 100% no-repeat;
 
   .preview-plane {
