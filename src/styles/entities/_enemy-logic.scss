@@ -74,8 +74,8 @@
         $progress: ($i - 1) * 99.9 / ($total-cells - 1);
 
         #{$progress}% {
-          left: calc((#{map-get($cell, 'x')} - 1) * #{$column-size});
-          top: calc((#{map-get($cell, 'y')} - 1) * #{$row-size});
+          --enemy-#{$e}-visual-x: #{(map-get($cell, 'x') - 1) * $column-size};
+          top: #{(map-get($cell, 'y') - 1) * $row-size};
           --enemy-rotation: 0deg;
         }
       }
@@ -125,7 +125,8 @@
     }
   }
 
-  .enemy-#{$e} {
+  .enemy.enemy-#{$e} {
+    left: var(--enemy-#{$e}-visual-x);
     opacity: 0;
     animation: $move-animations;
 
