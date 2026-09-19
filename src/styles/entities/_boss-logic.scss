@@ -729,7 +729,7 @@ $all-boss-turrets-dead: null;
   pointer-events: none;
   color: #ff3030;
   text-align: center;
-  animation: warning-screen-visibility 3s 50s linear both var(--enemy-tracking-state);
+  animation: warning-screen-visibility 3s calc(#{$boss-delay} + var(--level-start-delay) - 6s) linear both var(--enemy-tracking-state);
 }
 
 .result-screen {
