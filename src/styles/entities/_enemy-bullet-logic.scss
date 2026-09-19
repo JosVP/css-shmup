@@ -177,6 +177,11 @@
           enemy-#{$e}-flyby-#{$flyby-id}-hit $enemy-hp-duration forwards steps(1) var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
           comma
         );
+        $launch-animations: append(
+          $launch-animations,
+          enemy-#{$e}-flyby-#{$flyby-id}-player-collision 0.05s forwards steps(1) var(--enemy-#{$e}-flyby-#{$flyby-id}-player-collision-state),
+          comma
+        );
       }
     }
 
