@@ -88,6 +88,11 @@
       to { --enemy-#{$e}-flyby-#{$flyby-id}-collision: 1; }
     }
 
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-player-collision {
+      from { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 0; }
+      to { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 1; }
+    }
+
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-collision-trigger {
       to { --collision: 1; }
     }

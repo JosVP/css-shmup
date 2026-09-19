@@ -25,7 +25,11 @@
       style(--enemy-#{$e}-active-flyby: #{$flyby-id}) {
       .sub-container {
         --enemy-#{$e}-flyby-#{$flyby-id}-hit-state: var(--enemy-#{$e}-current-hit-state);
-        --enemy-#{$e}-total-collision-value: var(--enemy-#{$e}-flyby-#{$flyby-id}-collision);
+        --enemy-#{$e}-flyby-#{$flyby-id}-player-collision-state: var(--enemy-#{$e}-current-player-collision-state);
+        --enemy-#{$e}-total-collision-value: max(
+          var(--enemy-#{$e}-flyby-#{$flyby-id}-collision),
+          var(--enemy-#{$e}-flyby-#{$flyby-id}-player-collision)
+        );
       }
 
       .enemy-#{$e} {
@@ -121,21 +125,19 @@
       style(--player-posX: #{$col}) and
       style(--enemy-#{$e}-posX: #{$col}) and
       style(--player-posY: #{$row}) and
-      style(--enemy-#{$e}-posY: #{$row}) {
-      @container enemy-vs-bullet-subcontainer
-        style(--enemy-#{$e}-total-collision-value: 0) {
+      style(--enemy-#{$e}-posY: #{$row})
+    {
+      .sub-container {
+        --enemy-#{$e}-current-player-collision-state: running !important;
+      }
+
+      @container enemy-vs-bullet-subcontainer style(--enemy-#{$e}-total-collision-value: 0) {
         .player {
           --player-controls-lock-state: running !important;
           animation-play-state: running !important;
-
-          .death-overlay {
-            pointer-events: auto !important;
-          }
         }
 
         @container player-state style(--player-alive: 1) {
-          .enemy-#{$e} .idle,
-          .enemy-#{$e} .collision,
           .player .idle,
           .player .collision {
             animation-play-state: running !important;

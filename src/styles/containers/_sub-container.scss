@@ -7,11 +7,14 @@
 
   @each $e, $config in $enemy-configs {
     --enemy-#{$e}-current-hit-state: paused;
+    --enemy-#{$e}-current-player-collision-state: paused;
     --enemy-#{$e}-total-collision-value: 0;
 
     @each $flyby-id, $flyby in get-enemy-flybys($config) {
       --enemy-#{$e}-flyby-#{$flyby-id}-collision: 0;
       --enemy-#{$e}-flyby-#{$flyby-id}-hit-state: paused;
+      --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 0;
+      --enemy-#{$e}-flyby-#{$flyby-id}-player-collision-state: paused;
     }
   }
 
@@ -39,6 +42,11 @@
       $animations: append(
         $animations,
         enemy-#{$e}-flyby-#{$flyby-id}-hit $enemy-hp-duration forwards steps(1) var(--enemy-#{$e}-flyby-#{$flyby-id}-hit-state),
+        comma
+      );
+      $animations: append(
+        $animations,
+        enemy-#{$e}-flyby-#{$flyby-id}-player-collision 0.01s forwards steps(1) var(--enemy-#{$e}-flyby-#{$flyby-id}-player-collision-state),
         comma
       );
     }
