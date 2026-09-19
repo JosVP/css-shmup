@@ -40,11 +40,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
   z-index: 2;
   translate:
     calc(-50% * var(--boss-defeat-progress))
-    calc(
-      (2.5 - var(--boss-visual-posY)) *
-      #{calc(100% / $boss-turrets)} *
-      var(--boss-defeat-progress)
-    );
+    calc(var(--boss-center-offset) * var(--boss-defeat-progress));
   transition: --boss-defeat-progress 1.5s ease-in-out;
   animation:
     boss-intro 3s calc(#{$boss-delay} + var(--level-start-delay) - 2.5s) ease-out forwards var(--enemy-tracking-state),
@@ -261,7 +257,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
 
     #{$progress}% {
       opacity: 1;
-      --boss-visual-posY: #{map-get($cell, 'y')};
+      --boss-center-offset: #{(2.5 - map-get($cell, 'y')) * 100% / $boss-turrets};
       top: calc((#{map-get($cell, 'y')} - 2) * #{$row-size});
     }
   }
@@ -603,10 +599,10 @@ $all-boss-turrets-dead: null;
   .boss-visual {
     --boss-defeat-progress: 1;
     opacity: 1;
-    // Freeze boss-move at its exact sampled position. Since the visual is
-    // one row tall per turret, convert parent-row movement to its own height.
-    // The 2.5 target places that visual's bounding box in the vertical center.
-    animation-play-state: paused, running;
+    // Freeze boss-move so top and its inverse center offset remain locked at
+    // their exact defeat-frame values while defeat progress centers the boss.
+    // Match boss-intro, boss-move, boss-move-x, and boss-defeated-shake.
+    animation-play-state: paused, paused, paused, running;
   }
 
   .boss-bullet-state {
@@ -783,6 +779,7 @@ $all-boss-turrets-dead: null;
   color: transparent;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(-6px 6px 0 #000);
+  text-shadow: none;
 }
 
 @keyframes warning-screen-visibility {

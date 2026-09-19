@@ -58,10 +58,10 @@
   initial-value: 99;
 }
 
-@property --boss-visual-posY {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 3;
+@property --boss-center-offset {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -12.5%;
 }
 
 @property --boss-defeat-progress {
