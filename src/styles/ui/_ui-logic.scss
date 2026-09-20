@@ -158,6 +158,14 @@ body:has(#group5-input2:checked) .hover-grid input:checked + label {
 // BODY & UI CONTROLS
 // ============================================
 
+#go-to-start-screen,
+#go-to-select,
+#start-level {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
 body {
   margin: 0;
   padding: 0;

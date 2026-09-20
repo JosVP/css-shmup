@@ -1,0 +1,118 @@
+// ============================================
+// LOADING & PRELOAD SCREENS
+// ============================================
+
+#loading-screen,
+.preloading-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #000;
+  color: #fff;
+}
+
+#loading-screen {
+  visibility: visible;
+  animation: hide-loading-screen 0.35s ease 0.15s forwards;
+}
+
+.preloading-screen {
+  z-index: 9200;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+
+  body:has(#go-to-start-screen:checked) & {
+    animation: hide-preloading-screen 0.3s ease forwards;
+    pointer-events: none;
+  }
+}
+
+.preloading-screen-inner {
+  position: relative;
+  width: min(90vw, 780px);
+  height: 180px;
+}
+
+.preload-title,
+.preload-loading,
+.preload-audio,
+.preload-continue {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  letter-spacing: 0.08em;
+  text-align: center;
+  line-height: 1.7;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.preload-title {
+  top: 20px;
+  font-size: clamp(1rem, 1.8vw, 2.1rem);
+}
+
+.preload-loading,
+.preload-audio {
+  top: 92px;
+  font-size: clamp(0.6rem, 1vw, 0.9rem);
+}
+
+.preload-continue {
+  top: 136px;
+  font-size: clamp(0.5rem, 0.8vw, 0.75rem);
+  cursor: pointer;
+  user-select: none;
+}
+
+#loading-screen {
+  .preload-title,
+  .preload-loading {
+    opacity: 1;
+  }
+}
+
+.preloading-screen {
+  .preload-title {
+    opacity: 1;
+  }
+
+  .preload-audio,
+  .preload-continue {
+    opacity: 0;
+  }
+
+  .preload-audio {
+    animation: preload-fade-in 0.7s ease 0.25s forwards;
+  }
+
+  .preload-continue {
+    animation: preload-fade-in 0.7s ease 1s forwards;
+  }
+}
+
+@keyframes hide-loading-screen {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes preload-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hide-preloading-screen {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}

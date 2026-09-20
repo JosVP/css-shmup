@@ -2,13 +2,6 @@
 // PLAYER SELECT
 // ============================================
 
-#go-to-select,
-#start-level {
-  position: fixed;
-  opacity: 0;
-  pointer-events: none;
-}
-
 @keyframes hide-select-screen {
   to {
     display: none;
