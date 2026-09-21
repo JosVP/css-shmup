@@ -235,10 +235,47 @@ body {
     bottom: 10px;
   }
 
+  label.fps {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    display: block;
+    user-select: none;
+    z-index: 100000;
+
+    input {
+      margin-inline: -2px 8px;
+    }
+
+    span {
+      display: none;
+      width: 2ch;
+      text-align: right;
+      counter-reset: fps var(--fps);
+
+      &::after {
+        content: counter(fps);
+      }
+    }
+
+    &:has(input:checked) span {
+      display: inline-block;
+      animation: fps-counter 1s steps(1, end) infinite;
+    }
+  }
+
   .score span {
     color: aqua;
   }
   .player-deaths span {
     color: crimson;
+  }
+}
+
+@keyframes fps-counter {
+  @for $fps from 1 through 60 {
+    #{($fps) * 100% / 60} {
+      --fps: #{$fps};
+    }
   }
 }

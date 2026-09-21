@@ -3,41 +3,43 @@
 // ============================================
 
 .sound {
-  position: fixed;
-  top: 50%;
-  left: 0;
-  z-index: 9300;
-  width: 100vw;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-50%);
+  --play-x: 27px;
+  --play-y: 27px;
 
-  
   position: fixed;
-  top: 50vh;
-  left: 0;
+  left: calc(50vw - var(--play-x));
+  top: calc(50vh - var(--play-y));
   z-index: 9300;
-  width: 100vw;
+
+  width: 300px;
+  height: 54px;
   opacity: 0;
   pointer-events: none;
-  transform: scaleY(10);
-  transform-origin: left center;
+
+  transform: scaleX(200) scaleY(50);
+  transform-origin: var(--play-x) var(--play-y);
 
   body:has(#go-to-start-screen:checked) & {
-    animation: trigger-audio 0.5s linear forwards;
+    animation: trigger-audio 0.75s linear forwards;
+  }
+}
+
+@supports (-webkit-appearance: none) and (hanging-punctuation: first) {
+  .sound {
+    --play-x: 21px;
+    --play-y: 30px;
   }
 }
 
 @keyframes trigger-audio {
   0%,
-  99.9%,
-  100% {
-    opacity: 1;
+  99.9% {
+    opacity: 0.001;
     pointer-events: auto;
   }
 
-  // 100% {
-  //   // opacity: 0;
-  //   // pointer-events: none;
-  // }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
