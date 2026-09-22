@@ -2,6 +2,16 @@
 // HOVER GRID & BULLET INPUTS
 // ============================================
 
+@keyframes player-bullet-fire-cooldown {
+  from {
+    pointer-events: none;
+  }
+
+  to {
+    pointer-events: auto;
+  }
+}
+
 .hover-grid {
   position: absolute;
   inset: 0;
@@ -39,6 +49,7 @@
       visibility: visible;
       pointer-events: auto;
       animation-play-state: running;
+      animation: player-bullet-fire-cooldown $player-bullet-cooldown both;
 
       span {
         display: block;
@@ -72,6 +83,11 @@
 
   input:checked + label + .player-bullet {
     animation: bullet-move var(--player-bullet-speed) forwards steps(#{$columns + 1});
+    visibility: visible;
+
+    .sprite::before {
+      animation-play-state: running;
+    }
   }
 
   .player-bullet {
@@ -83,6 +99,7 @@
     transform: translate3d(0, -50%, 0);
     pointer-events: none;
     opacity: 0;
+    visibility: hidden;
     overflow: visible;
 
     .sprite {
@@ -107,6 +124,7 @@
         image-rendering: pixelated;
         transform: translate3d(-22px, -16px, 0);
         animation: player-bullet-sprite 0.3s steps(1) infinite;
+        animation-play-state: paused;
       }
     }
 

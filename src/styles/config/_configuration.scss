@@ -8,8 +8,9 @@ $rows: 5;
 $column-size: 100% / $columns;
 $row-size: 100% / $rows;
 
-$player-bullets: 9;
+$player-bullets: 8;
 $player-bullet-speed: 0.75s;
+$player-bullet-cooldown: 0.15s;
 $player-respawn-duration: 2s;
 $player-death-animation-duration: 1s;
 $player-respawn-flight-duration: $player-respawn-duration - $player-death-animation-duration;
