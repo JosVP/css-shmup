@@ -27,12 +27,6 @@
 }
 
 @for $e from 1 through length($enemy-configs) {
-  @property --enemy-#{$e}-visual-x {
-    syntax: "<percentage>";
-    inherits: false;
-    initial-value: 100%;
-  }
-
   @property --enemy-#{$e}-total-collision-value {
     syntax: "<integer>";
     inherits: true;
@@ -64,10 +58,10 @@
   initial-value: 99;
 }
 
-@property --boss-center-offset {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: -12.5%;
+@property --boss-visual-posY {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 3;
 }
 
 @property --boss-defeat-progress {

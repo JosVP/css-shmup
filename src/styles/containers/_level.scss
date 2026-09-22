@@ -53,7 +53,7 @@
   position: absolute;
   inset: 0;
 
-  &::after {
+  body:has(#debug:checked) &::after {
     $debug-counters:
       safari var(--enemy-bullet-safari-debug, -9)
       playerAlive var(--player-alive, 1)
@@ -112,6 +112,7 @@
       }
     }
 
+    display: none;
     visibility: hidden;
     position: fixed;
     top: 8px;

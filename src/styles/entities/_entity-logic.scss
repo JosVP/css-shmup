@@ -65,9 +65,12 @@
 .player {
   --player-controls-lock-state: paused;
   --player-overlay-events: none;
-  transition: all 0.25s ease;
-  left: calc((var(--player-posX) - 1) * #{$column-size});
-  top: calc((var(--player-posY) - 1) * #{$row-size});
+  left: 0;
+  top: 0;
+  translate:
+    calc((var(--player-posX) - 1) * 100%)
+    calc((var(--player-posY) - 1) * 100%);
+  transition: translate 0.25s ease;
   animation: player-controls-lock 0.01s forwards var(--player-controls-lock-state);
 
   .collision .animation {
@@ -152,9 +155,7 @@ body:has(#plane3:checked) .player {
 }
 
 body:has(.death-overlay:hover) .player {
-  transition:
-    left $player-death-animation-duration step-end,
-    top $player-death-animation-duration step-end;
+  transition: translate $player-death-animation-duration step-end;
   animation: player-respawn-controls $player-respawn-duration linear forwards;
 
   .idle,

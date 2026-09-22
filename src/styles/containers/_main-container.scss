@@ -20,27 +20,19 @@
   container-name: enemy-vs-bullet-container enemy-vs-player-container;
 
   @for $hc from 1 through $hover-columns {
-    &:has(.hover-grid .col-#{$hc}:hover) {
+    &:has(> .bullet-occupancy > .sub-container > .hover-grid > .grid-row > label > .col-#{$hc}:hover) {
       --player-posX: #{$hc} !important;
-
-      .player {
-        left: #{($hc - 1) * $column-size} !important;
-      }
     }
   }
   @for $hr from 1 through $rows {
-    &:has(.hover-grid .row-#{$hr}:hover) {
+    &:has(> .bullet-occupancy > .sub-container > .hover-grid > .grid-row > label > .row-#{$hr}:hover) {
       --player-posY: #{$hr} !important;
-
-      .player {
-        top: calc((var(--player-posY) - 1) * #{$row-size}) !important;
-      }
     }
   }
 
-  &::after {
+  body:has(#debug:checked) &::after {
     visibility: hidden;
-    display: block;
+    display: none;
     position: absolute;
     top: calc(100% + 10px);
     counter-reset:

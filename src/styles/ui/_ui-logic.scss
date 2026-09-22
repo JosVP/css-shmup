@@ -16,13 +16,14 @@
   label {
     position: absolute;
     inset: 0;
-    display: block;
+    display: none;
     width: 100%;
     margin: 0;
     visibility: hidden;
     pointer-events: none;
     user-select: none;
     cursor: pointer;
+    contain: layout paint;
   }
 
   input {
@@ -34,6 +35,7 @@
   input:checked,
   &:has(input:not(:checked)) input.player-bullet-input-1 {
     & + label {
+      display: block;
       visibility: visible;
       pointer-events: auto;
       animation-play-state: running;
@@ -45,11 +47,6 @@
         bottom: 0;
         width: var(--column-size);
         height: 100%;
-
-        &:hover {
-          background: crimson;
-          opacity: 0.3;
-        }
 
         @for $hc from 1 through $hover-columns {
           &.col-#{$hc} {
@@ -70,16 +67,6 @@
         }
       }
 
-      &:hover ~ input:first-of-type {
-        @for $hc from 1 through $hover-columns {
-          --spawn-posX: #{$hc};
-          visibility: visible;
-          border: 10px solid red;
-        }
-        @for $hr from 1 through $rows {
-          --spawn-posX: #{$hr};
-        }
-      }
     }
   }
 
@@ -89,6 +76,7 @@
 
   .player-bullet {
     position: absolute;
+    left: 0;
     container-type: inline-size;
     width: var(--column-size);
     height: var(--row-size);
@@ -129,26 +117,30 @@
   }
 }
 
-body:has(#group5-input1:checked) .hover-grid input:checked + label {
+body:has(#debug:checked) .hover-grid input:checked + label span:hover,
+body:has(#debug:checked) .hover-grid:has(input:not(:checked)) input.player-bullet-input-1 + label span:hover {
+  background: crimson;
+  opacity: 0.3;
+}
+
+body:has(#group4-input1:checked) .hover-grid input:checked + label {
   &#group1-label2 { z-index: 1; }
   &#group2-label2 { z-index: 2; }
   &#group3-label2 { z-index: 3; }
   &#group4-label2 { z-index: 4; }
-  &#group5-label2 { z-index: 5; }
 }
 
-body:has(#group5-input2:checked) .hover-grid input:checked + label {
+body:has(#group4-input2:checked) .hover-grid input:checked + label {
   &#group1-label1 { z-index: 1; }
   &#group2-label1 { z-index: 2; }
   &#group3-label1 { z-index: 3; }
   &#group4-label1 { z-index: 4; }
-  &#group5-label1 { z-index: 5; }
 }
 
 @keyframes bullet-move {
   @for $i from 0 through ($columns + 1) {
     #{($i * 100) / ($columns + 1)}% {
-      left: calc(#{$column-size * $i});
+      translate: calc(#{$i} * 100%) 0;
       opacity: 1;
     }
   }
@@ -206,6 +198,7 @@ body {
     .boss-visual::after,
     .player-bullet::after,
     .enemy-bullet::after {
+      display: block !important;
       visibility: visible !important;
     }
 
@@ -235,47 +228,10 @@ body {
     bottom: 10px;
   }
 
-  label.fps {
-    position: fixed;
-    right: 10px;
-    bottom: 10px;
-    display: block;
-    user-select: none;
-    z-index: 100000;
-
-    input {
-      margin-inline: -2px 8px;
-    }
-
-    span {
-      display: none;
-      width: 2ch;
-      text-align: right;
-      counter-reset: fps var(--fps);
-
-      &::after {
-        content: counter(fps);
-      }
-    }
-
-    &:has(input:checked) span {
-      display: inline-block;
-      animation: fps-counter 1s steps(1, end) infinite;
-    }
-  }
-
   .score span {
     color: aqua;
   }
   .player-deaths span {
     color: crimson;
-  }
-}
-
-@keyframes fps-counter {
-  @for $fps from 1 through 60 {
-    #{($fps) * 100% / 60} {
-      --fps: #{$fps};
-    }
   }
 }

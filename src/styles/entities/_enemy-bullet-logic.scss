@@ -33,7 +33,8 @@
     }
   }
 
-  &::after {
+  body:has(#debug:checked) &::after {
+    display: none;
     position: absolute;
     bottom: 110%;
     font-size: 20px;
@@ -73,7 +74,7 @@
 
     animation: $animations;
 
-    &::after {
+    body:has(#debug:checked) &::after {
       counter-reset: posX var(--enemy-bullet-#{$e}-posX) posY var(--enemy-bullet-#{$e}-startY);
       content: counter(posX) "/" counter(posY);
     }
@@ -123,14 +124,16 @@
   @keyframes enemy-bullet-#{$e}-move {
     from {
       opacity: var(--enemy-bullet-#{$e}-current-alive-at-launch, 0);
-      top: calc((var(--enemy-bullet-#{$e}-startY) * #{$row-size}) - #{$row-size / 2});
-      left: calc((var(--enemy-bullet-#{$e}-startX) * #{$column-size}) - #{$column-size / 2});
+      translate:
+        calc((var(--enemy-bullet-#{$e}-startX) - 0.5) * 100%)
+        calc((var(--enemy-bullet-#{$e}-startY) - 0.5) * 100%);
     }
 
     99.9% {
       opacity: var(--enemy-bullet-#{$e}-current-alive-at-launch, 0);
-      top: calc((var(--enemy-bullet-#{$e}-endY) * #{$row-size}) - #{$row-size / 2});
-      left: calc((var(--enemy-bullet-#{$e}-endX) * #{$column-size}) - #{$column-size / 2});
+      translate:
+        calc((var(--enemy-bullet-#{$e}-endX) - 0.5) * 100%)
+        calc((var(--enemy-bullet-#{$e}-endY) - 0.5) * 100%);
     }
 
     to {
@@ -272,13 +275,15 @@
       // Keep Safari's visual row identical to its collision row.
       @keyframes enemy-bullet-#{$e}-shot-#{$shot-id}-move-safari {
         from {
-          top: calc((#{$collision-start-y} * #{$row-size}) - #{$row-size / 2});
-          left: calc((#{$visual-start-x} * #{$column-size}) - #{$column-size / 2});
+          translate:
+            calc((#{$visual-start-x} - 0.5) * 100%)
+            calc((#{$collision-start-y} - 0.5) * 100%);
         }
 
         99.9% {
-          top: calc((#{$collision-start-y} * #{$row-size}) - #{$row-size / 2});
-          left: calc((#{$visual-end-x} * #{$column-size}) - #{$column-size / 2});
+          translate:
+            calc((#{$visual-end-x} - 0.5) * 100%)
+            calc((#{$collision-start-y} - 0.5) * 100%);
         }
       }
     }
@@ -297,7 +302,7 @@
       animation: $visual-animations;
       opacity: 0;
 
-      &::after {
+      body:has(#debug:checked) &::after {
         counter-reset: posX var(--enemy-bullet-#{$e}-posX) posY var(--enemy-bullet-#{$e}-posY);
       }
     }

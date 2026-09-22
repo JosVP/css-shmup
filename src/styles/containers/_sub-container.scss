@@ -55,6 +55,18 @@
   animation: $animations;
 }
 
+.bullet-occupancy {
+  container-name: player-bullet-occupancy-container;
+  position: absolute;
+  inset: 0;
+
+  @for $col from 1 through $columns {
+    @for $row from 1 through $rows {
+      --player-bullet-cell-#{$col}-#{$row}: 0;
+    }
+  }
+}
+
 // ============================================
 // SHOT LATCH ANIMATIONS
 // ============================================

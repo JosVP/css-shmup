@@ -95,22 +95,6 @@ $enemy-configs: (
       4: (path-type: row-5-straight, speed: 7s, delay: 42s, shots: $two-shots, enemy-type: fighter),
     )
   ),
-  6: (
-    flybys: (
-      1: (path-type: diagonal-1-to-5, speed: 7s, delay: 12s, shots: $two-shots, enemy-type: jet),
-      2: (path-type: diagonal-5-to-1, speed: 7s, delay: 23s, shots: $two-shots, enemy-type: jet),
-      3: (path-type: row-1-2-u-turn, speed: 7s, delay: 33.5s, shots: $two-shots, enemy-type: jet),
-      4: (path-type: row-1-2-u-turn, speed: 7s, delay: 47s, shots: $two-shots, enemy-type: jet),
-    )
-  ),
-  7: (
-    flybys: (
-      1: (path-type: diagonal-5-to-1, speed: 7s, delay: 12.5s, shots: $two-shots, enemy-type: jet),
-      2: (path-type: diagonal-5-to-1, speed: 7s, delay: 24s, shots: $two-shots, enemy-type: jet),
-      3: (path-type: row-5-4-u-turn, speed: 7s, delay: 33.5s, shots: $two-shots, enemy-type: jet),
-      4: (path-type: row-5-4-u-turn, speed: 7s, delay: 45s, shots: $two-shots, enemy-type: jet),
-    )
-  ),
 );
 
 $boss-config: (

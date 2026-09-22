@@ -73,31 +73,36 @@
   }
 }
 
+// First reduce the bullet pool to one occupancy flag per board cell. A moving
+// bullet now invalidates only its own compact 12x5 lookup rather than every
+// enemy/path query containing all player bullet slots.
+@for $b from 1 through $player-bullets {
+  @for $col from 1 through $columns {
+    @for $row from 1 through $rows {
+      @container enemy-vs-bullet-container
+        style(--player-bullet-#{$b}-posX: #{$col}) and
+        style(--player-bullet-#{$b}-posY: #{$row}) {
+        .bullet-occupancy {
+          --player-bullet-cell-#{$col}-#{$row}: 1;
+        }
+      }
+    }
+  }
+}
+
 @each $e, $config in $enemy-configs {
   $path-cells: get-enemy-collision-cells($config);
 
-  // Generate one query per enemy/path cell. Its OR group accepts any player
-  // bullet slot, avoiding a complete copy of the query for every bullet.
+  // Each enemy/path query reads one shared cell flag instead of every bullet.
   @each $cell in $path-cells {
     $col: map-get($cell, 'x');
     $row: map-get($cell, 'y');
-    $player-bullet-at-cell: null;
-
-    @for $b from 1 through $player-bullets {
-      $bullet-condition: unquote("(style(--player-bullet-#{$b}-posX: #{$col}) and style(--player-bullet-#{$b}-posY: #{$row}))");
-
-      @if $b == 1 {
-        $player-bullet-at-cell: $bullet-condition;
-      } @else {
-        $player-bullet-at-cell: unquote("#{$player-bullet-at-cell} or #{$bullet-condition}");
-      }
-    }
 
     // Bullet vs Enemy collision
-    @container enemy-vs-bullet-container
+    @container player-bullet-occupancy-container
       style(--enemy-#{$e}-posX: #{$col}) and
       style(--enemy-#{$e}-posY: #{$row}) and
-      (#{$player-bullet-at-cell}) {
+      style(--player-bullet-cell-#{$col}-#{$row}: 1) {
       .sub-container {
         --enemy-#{$e}-current-hit-state: running !important;
       }

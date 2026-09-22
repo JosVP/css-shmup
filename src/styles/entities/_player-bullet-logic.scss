@@ -56,16 +56,17 @@
   @keyframes bullet-move-#{$b} {
     from {
       opacity: 1;
-      left: calc((var(--player-bullet-#{$b}-startX)) * #{$column-size});
+      translate: calc(var(--player-bullet-#{$b}-startX) * 100%) 0;
     }
     to {
       opacity: 1;
-      left: calc(((var(--player-bullet-#{$b}-startX)) + #{$columns}) * #{$column-size});
+      translate: calc((var(--player-bullet-#{$b}-startX) + #{$columns}) * 100%) 0;
     }
   }
 
   .sub-container {
-    .player-bullet-#{$b}::after {
+    body:has(#debug:checked) & .player-bullet-#{$b}::after {
+      display: none;
       visibility: hidden;
       counter-reset: posX-#{$b} var(--player-bullet-#{$b}-posX) posY-#{$b} var(--player-bullet-#{$b}-posY);
       content: "#{$b}: " counter(posX-#{$b}) "/" counter(posY-#{$b});

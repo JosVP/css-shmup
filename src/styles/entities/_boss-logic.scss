@@ -127,7 +127,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
   .boss-turret-3 { top: 69.5cqh; right: 21cqh; background-image: url('https://i.imgur.com/DRtPdcM.png'); }
   .boss-turret-4 { top: 82.5cqh; right: 20cqh; background-image: url('https://i.imgur.com/PWpBZ5N.png'); }
 
-  &::after {
+  body:has(#debug:checked) &::after {
     content:
       "T1 " counter(bossHp1)
       " | T2 " counter(bossHp2)

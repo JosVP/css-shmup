@@ -74,8 +74,8 @@
         $progress: ($i - 1) * 99.9 / ($total-cells - 1);
 
         #{$progress}% {
-          --enemy-#{$e}-visual-x: #{(map-get($cell, 'x') - 1) * $column-size};
-          top: #{(map-get($cell, 'y') - 1) * $row-size};
+          left: calc((#{map-get($cell, 'x')} - 1) * #{$column-size});
+          top: calc((#{map-get($cell, 'y')} - 1) * #{$row-size});
           --enemy-rotation: 0deg;
         }
       }
@@ -89,22 +89,30 @@
     }
 
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-player-collision {
-      0% { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 0; }
-      1%, 100% { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 1; }
+      from { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 0; }
+      to { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 2; }
     }
 
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-collision-trigger {
+      from { --collision: 0; }
       to { --collision: 1; }
     }
 
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-hide {
-      to { opacity: 0; scale: 0; }
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
 
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-show {
       0% { opacity: 0; }
       1% { opacity: 1; }
       100% { opacity: 0; }
+    }
+
+    @keyframes enemy-#{$e}-flyby-#{$flyby-id}-explosion {
+      0% { transform: translate3d(0, 0, 0); }
+      93.333333%,
+      100% { transform: translate3d(-896px, 0, 0); }
     }
 
     @container enemy-vs-bullet-container
@@ -125,25 +133,24 @@
     }
   }
 
-  .enemy.enemy-#{$e} {
-    left: var(--enemy-#{$e}-visual-x);
+  .enemy-#{$e} {
     opacity: 0;
     animation: $move-animations;
 
     .idle,
     .collision {
-      animation-name: var(--enemy-#{$e}-collision-trigger-animation, entity-collision-animation);
+      animation-name: var(--enemy-#{$e}-collision-trigger-animation, entity-collision-animation) !important;
     }
 
     .idle .animation {
-      animation-name: var(--enemy-#{$e}-hide-animation, hide-idle);
+      animation-name: var(--enemy-#{$e}-hide-animation, hide-idle) !important;
     }
 
     .collision .animation {
-      animation-name: var(--enemy-#{$e}-show-animation, show-collision);
+      animation-name: var(--enemy-#{$e}-show-animation, show-collision) !important;
 
       &::before {
-        animation-name: explosion-sprite;
+        animation-name: var(--enemy-#{$e}-explosion-animation, explosion-sprite) !important;
       }
     }
 

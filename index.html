@@ -35,7 +35,7 @@
 
       .loading-screen .loading-screen-inner {
         position: relative;
-        width: 90vw;
+        width: 100%;
       }
 
       .loading-screen .preload-title {
@@ -64,9 +64,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400&family=Press+Start+2P" rel="stylesheet">
   </head>
   <body>
-    <input type="checkbox" id="go-to-start-screen" checked />
-    <input type="checkbox" id="go-to-select" checked />
-    <input type="checkbox" id="start-level" checked />
+    <input type="checkbox" id="go-to-start-screen" />
+    <input type="checkbox" id="go-to-select" />
+    <input type="checkbox" id="start-level" />
 
     <audio class="sound" src="./audio/music.mp3" preload="auto" controls></audio>
 
@@ -129,296 +129,244 @@
       Debug <input type="checkbox" id="debug" />
     </label>
 
-    <label class="fps" for="fps">
-      FPS <span></span> <input type="checkbox" id="fps" />
-    </label>
-
     <div class="background"></div>
     <div class="background-boss"></div>
 
     <div class="container">
-      <div class="sub-container">
-        <section class="hover-grid">
-          <div class="grid-row">
-            <input id="group1-input1" class="player-bullet-input-1" type="radio" name="group1" />
-            <label id="group1-label1" for="group2-input1">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-1"><div class="sprite"></div></div>
+      <div class="bullet-occupancy">
+        <div class="sub-container">
+          <section class="hover-grid">
+            <div class="grid-row">
+              <input id="group1-input1" class="player-bullet-input-1" type="radio" name="group1" />
+              <label id="group1-label1" for="group2-input1">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-1"><div class="sprite"></div></div>
 
-            <input id="group2-input1" class="player-bullet-input-2" type="radio" name="group2" />
-            <label id="group2-label1" for="group3-input1">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-2"><div class="sprite"></div></div>
+              <input id="group2-input1" class="player-bullet-input-2" type="radio" name="group2" />
+              <label id="group2-label1" for="group3-input1">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-2"><div class="sprite"></div></div>
 
-            <input id="group3-input1" class="player-bullet-input-3" type="radio" name="group3" />
-            <label id="group3-label1" for="group4-input1">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-3"><div class="sprite"></div></div>
+              <input id="group3-input1" class="player-bullet-input-3" type="radio" name="group3" />
+              <label id="group3-label1" for="group4-input1">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-3"><div class="sprite"></div></div>
 
-            <input id="group4-input1" class="player-bullet-input-4" type="radio" name="group4" />
-            <label id="group4-label1" for="group5-input1">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-4"><div class="sprite"></div></div>
+              <input id="group4-input1" class="player-bullet-input-4" type="radio" name="group4" />
+              <label id="group4-label1" for="group1-input2">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-4"><div class="sprite"></div></div>
 
-            <input id="group5-input1" class="player-bullet-input-5" type="radio" name="group5" />
-            <label id="group5-label1" for="group1-input2">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-5"><div class="sprite"></div></div>
+              <input id="group1-input2" class="player-bullet-input-5" type="radio" name="group1" />
+              <label id="group1-label2" for="group2-input2">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-5"><div class="sprite"></div></div>
 
-            <input id="group1-input2" class="player-bullet-input-6" type="radio" name="group1" />
-            <label id="group1-label2" for="group2-input2">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-6"><div class="sprite"></div></div>
+              <input id="group2-input2" class="player-bullet-input-6" type="radio" name="group2" />
+              <label id="group2-label2" for="group3-input2">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-6"><div class="sprite"></div></div>
 
-            <input id="group2-input2" class="player-bullet-input-7" type="radio" name="group2" />
-            <label id="group2-label2" for="group3-input2">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-7"><div class="sprite"></div></div>
+              <input id="group3-input2" class="player-bullet-input-7" type="radio" name="group3" />
+              <label id="group3-label2" for="group4-input2">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-7"><div class="sprite"></div></div>
 
-            <input id="group3-input2" class="player-bullet-input-8" type="radio" name="group3" />
-            <label id="group3-label2" for="group4-input2">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-8"><div class="sprite"></div></div>
+              <input id="group4-input2" class="player-bullet-input-8" type="radio" name="group4" />
+              <label id="group4-label2" for="group1-input3">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-8"><div class="sprite"></div></div>
 
-            <input id="group4-input2" class="player-bullet-input-9" type="radio" name="group4" />
-            <label id="group4-label2" for="group5-input2">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-9"><div class="sprite"></div></div>
+              <input id="group1-input3" class="player-bullet-input-9" type="radio" name="group1" />
+              <label id="group1-label3" for="group1-input1">
+                <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
+                <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
+                <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
+                <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
+                <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
+              </label>
+              <div class="player-bullet player-bullet-9"><div class="sprite"></div></div>
+            </div>
+          </section>
 
-            <input id="group5-input2" class="player-bullet-input-10" type="radio" name="group5" />
-            <label id="group5-label2" for="group1-input1">
-              <span tabindex="0" class="col-1 row-1"></span><span tabindex="0" class="col-2 row-1"></span><span tabindex="0" class="col-3 row-1"></span><span tabindex="0" class="col-4 row-1"></span><span tabindex="0" class="col-5 row-1"></span>
-              <span tabindex="0" class="col-1 row-2"></span><span tabindex="0" class="col-2 row-2"></span><span tabindex="0" class="col-3 row-2"></span><span tabindex="0" class="col-4 row-2"></span><span tabindex="0" class="col-5 row-2"></span>
-              <span tabindex="0" class="col-1 row-3"></span><span tabindex="0" class="col-2 row-3"></span><span tabindex="0" class="col-3 row-3"></span><span tabindex="0" class="col-4 row-3"></span><span tabindex="0" class="col-5 row-3"></span>
-              <span tabindex="0" class="col-1 row-4"></span><span tabindex="0" class="col-2 row-4"></span><span tabindex="0" class="col-3 row-4"></span><span tabindex="0" class="col-4 row-4"></span><span tabindex="0" class="col-5 row-4"></span>
-              <span tabindex="0" class="col-1 row-5"></span><span tabindex="0" class="col-2 row-5"></span><span tabindex="0" class="col-3 row-5"></span><span tabindex="0" class="col-4 row-5"></span><span tabindex="0" class="col-5 row-5"></span>
-            </label>
-            <div class="player-bullet player-bullet-10"><div class="sprite"></div></div>
-          </div>
-        </section>
+          <div class="spacing"></div>
 
-        <div class="spacing"></div>
-
-        <div class="level">
-          <div class="boss-hp-driver">
-          <div class="boss-bullet-state">
-          <div class="player-state">
-          <div class="entity player">
-            <div class="death-overlay"></div>
-            <div class="idle">
-              <div class="animation">
-                <div class="sprite"></div>
+          <div class="level">
+            <div class="boss-hp-driver">
+            <div class="boss-bullet-state">
+            <div class="player-state">
+            <div class="entity player">
+              <div class="death-overlay"></div>
+              <div class="idle">
+                <div class="animation">
+                  <div class="sprite"></div>
+                </div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
               </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <section class="score-hud">
-            <p class="score"><span>1P</span></p>
-            <p class="player-deaths"><span>Deaths</span></p>
-          </section>
-
-          <section class="warning-screen" aria-hidden="true">
-            <h1>WARNING</h1>
-          </section>
-
-          <section class="result-screen">
-            <div class="result-body">
-              <h1>VICTORY</h1>
-              <p class="score"><span>Score</span></p>
+            <section class="score-hud">
+              <p class="score"><span>1P</span></p>
               <p class="player-deaths"><span>Deaths</span></p>
-            </div>
-          </section>
+            </section>
 
-          <div class="entity enemy enemy-1">
-            <div class="idle">
-              <div class="animation"></div>
-            </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
+            <section class="warning-screen" aria-hidden="true">
+              <h1>WARNING</h1>
+            </section>
 
-          <div class="entity enemy enemy-2">
-            <div class="idle">
-              <div class="animation"></div>
-            </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
+            <section class="result-screen">
+              <div class="result-body">
+                <h1>VICTORY</h1>
+                <p class="score"><span>Score</span></p>
+                <p class="player-deaths"><span>Deaths</span></p>
+              </div>
+            </section>
 
-          <div class="entity enemy enemy-3">
-            <div class="idle">
-              <div class="animation"></div>
+            <div class="entity enemy enemy-1">
+              <div class="idle">
+                <div class="animation"></div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
+              </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <div class="entity enemy enemy-4">
-            <div class="idle">
-              <div class="animation"></div>
+            <div class="entity enemy enemy-2">
+              <div class="idle">
+                <div class="animation"></div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
+              </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <div class="entity enemy enemy-5">
-            <div class="idle">
-              <div class="animation"></div>
+            <div class="entity enemy enemy-3">
+              <div class="idle">
+                <div class="animation"></div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
+              </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <div class="entity enemy enemy-6">
-            <div class="idle">
-              <div class="animation"></div>
+            <div class="entity enemy enemy-4">
+              <div class="idle">
+                <div class="animation"></div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
+              </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <div class="entity enemy enemy-7">
-            <div class="idle">
-              <div class="animation"></div>
+            <div class="entity enemy enemy-5">
+              <div class="idle">
+                <div class="animation"></div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
+              </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
-          <div class="entity enemy enemy-8">
-            <div class="idle">
-              <div class="animation"></div>
-            </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <div class="entity enemy enemy-9">
-            <div class="idle">
-              <div class="animation"></div>
+            <div class="entity enemy enemy-6">
+              <div class="idle">
+                <div class="animation"></div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
+              </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <div class="entity enemy enemy-10">
-            <div class="idle">
-              <div class="animation"></div>
+            <div class="entity enemy enemy-7">
+              <div class="idle">
+                <div class="animation"></div>
+              </div>
+              <div class="collision">
+                <div class="animation"></div>
+              </div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
-            </div>
-          </div>
 
-          <div class="entity enemy enemy-11">
-            <div class="idle">
-              <div class="animation"></div>
+          <div class="boss-visual">
+              <div class="boss-body"></div>
+            <div class="boss-blade boss-blade-1"></div>
+            <div class="boss-blade boss-blade-2"></div>
+            <div class="boss-blade boss-blade-3"></div>
+            <div class="boss-blade boss-blade-4"></div>
+            <div class="boss-blade boss-blade-5"></div>
+            <div class="boss-blade boss-blade-6"></div>
+              <div class="boss-turret boss-turret-1"></div>
+              <div class="boss-turret boss-turret-2"></div>
+              <div class="boss-turret boss-turret-3"></div>
+              <div class="boss-turret boss-turret-4"></div>
+            <div class="boss-explosion">
+              <div class="sprite"></div>
+              <div class="sprite"></div>
+              <div class="sprite"></div>
+              <div class="sprite"></div>
+              <div class="sprite"></div>
+              <div class="sprite"></div>
+              <div class="sprite"></div>
+              <div class="sprite"></div>
             </div>
-            <div class="collision">
-              <div class="animation"></div>
             </div>
-          </div>
+            <div class="boss-bullet boss-bullet-1"><div class="sprite"></div></div>
+            <div class="boss-bullet boss-bullet-2"><div class="sprite"></div></div>
+            <div class="boss-bullet boss-bullet-3"><div class="sprite"></div></div>
+            <div class="boss-bullet boss-bullet-4"><div class="sprite"></div></div>
+            <div class="boss-bullet boss-bullet-5"><div class="sprite"></div></div>
+            <div class="boss-bullet boss-bullet-6"><div class="sprite"></div></div>
+            <div class="boss-bullet boss-bullet-7"><div class="sprite"></div></div>
+            <div class="boss-bullet boss-bullet-8"><div class="sprite"></div></div>
 
-         <div class="boss-visual">
-            <div class="boss-body"></div>
-          <div class="boss-blade boss-blade-1"></div>
-          <div class="boss-blade boss-blade-2"></div>
-          <div class="boss-blade boss-blade-3"></div>
-          <div class="boss-blade boss-blade-4"></div>
-          <div class="boss-blade boss-blade-5"></div>
-          <div class="boss-blade boss-blade-6"></div>
-            <div class="boss-turret boss-turret-1"></div>
-            <div class="boss-turret boss-turret-2"></div>
-            <div class="boss-turret boss-turret-3"></div>
-            <div class="boss-turret boss-turret-4"></div>
-          <div class="boss-explosion">
-            <div class="sprite"></div>
-            <div class="sprite"></div>
-            <div class="sprite"></div>
-            <div class="sprite"></div>
-            <div class="sprite"></div>
-            <div class="sprite"></div>
-            <div class="sprite"></div>
-            <div class="sprite"></div>
+            <div class="enemy-bullet enemy-bullet-1"><div class="sprite"></div></div>
+            <div class="enemy-bullet enemy-bullet-2"><div class="sprite"></div></div>
+            <div class="enemy-bullet enemy-bullet-3"><div class="sprite"></div></div>
+            <div class="enemy-bullet enemy-bullet-4"><div class="sprite"></div></div>
+            <div class="enemy-bullet enemy-bullet-5"><div class="sprite"></div></div>
           </div>
-          </div>
-          <div class="boss-bullet boss-bullet-1"><div class="sprite"></div></div>
-          <div class="boss-bullet boss-bullet-2"><div class="sprite"></div></div>
-          <div class="boss-bullet boss-bullet-3"><div class="sprite"></div></div>
-          <div class="boss-bullet boss-bullet-4"><div class="sprite"></div></div>
-          <div class="boss-bullet boss-bullet-5"><div class="sprite"></div></div>
-          <div class="boss-bullet boss-bullet-6"><div class="sprite"></div></div>
-          <div class="boss-bullet boss-bullet-7"><div class="sprite"></div></div>
-          <div class="boss-bullet boss-bullet-8"><div class="sprite"></div></div>
-
-          <div class="enemy-bullet enemy-bullet-1"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-2"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-3"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-4"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-5"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-6"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-7"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-8"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-9"><div class="sprite"></div></div>
-          <div class="enemy-bullet enemy-bullet-10"><div class="sprite"></div></div>
-         </div>
-          </div>
+            </div>
+            </div>
           </div>
         </div>
       </div>
