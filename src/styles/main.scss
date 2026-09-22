@@ -12,6 +12,8 @@
 @import 'containers/master-animation';
 @import 'containers/level';
 @import 'entities/entity-logic';
+@import 'entities/enemy-bullet-logic';
+@import 'ui/common-styling';
 @import 'ui/ui-logic';
 @import 'ui/preload-screen';
 @import 'ui/audio';
@@ -19,4 +21,3 @@
 @import 'ui/player-select';
 @import 'ui/background';
 @import 'ui/doors';
-@import 'entities/enemy-bullet-logic';
