@@ -37,6 +37,7 @@
         --enemy-#{$e}-collision-trigger-animation: enemy-#{$e}-flyby-#{$flyby-id}-collision-trigger;
         --enemy-#{$e}-hide-animation: enemy-#{$e}-flyby-#{$flyby-id}-hide;
         --enemy-#{$e}-show-animation: enemy-#{$e}-flyby-#{$flyby-id}-show;
+        --enemy-#{$e}-explosion-animation: enemy-#{$e}-flyby-#{$flyby-id}-explosion;
       }
     }
   }
@@ -155,6 +156,7 @@
   // Collision state trigger
   @container enemy-vs-bullet-subcontainer
     style(--enemy-#{$e}-total-collision-value: 1) or
+    style(--enemy-#{$e}-total-collision-value: 2) or
     style(--enemy-#{$e}-total-collision-value: 3) {
     .enemy-#{$e} .idle::before {
       display: none;
@@ -182,6 +184,7 @@
     @container enemy-bullet-launch-subcontainer
       style(--enemy-bullet-#{$e}-shot-#{$shot-id}-launch-trigger: 1) and
       (style(--enemy-#{$e}-total-collision-value: 1) or
+      style(--enemy-#{$e}-total-collision-value: 2) or
       style(--enemy-#{$e}-total-collision-value: 3)) {
       .level {
         --enemy-bullet-#{$e}-shot-#{$shot-id}-alive-when-0-state: running !important;
@@ -202,6 +205,7 @@
 
       @container enemy-bullet-launch-subcontainer
         (style(--enemy-#{$e}-total-collision-value: 1) or
+        style(--enemy-#{$e}-total-collision-value: 2) or
         style(--enemy-#{$e}-total-collision-value: 3)) and
         style(--enemy-bullet-#{$e}-current-shot: #{$current-id}) {
         .level {

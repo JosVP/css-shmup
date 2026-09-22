@@ -368,7 +368,7 @@ $boss-latch-animations: ();
       $boss-launch-animations,
       // Capture the turret state just before the movement animation samples
       // its first frame, avoiding a same-frame container-query race.
-      boss-shot-#{$shot}-launch-trigger 0.05s calc(#{$shot-delay - 0.05s} + var(--level-start-delay)) linear,
+      boss-shot-#{$shot}-launch-trigger 0.05s calc(#{$shot-delay - 0.05s} + var(--level-start-delay)) linear var(--enemy-tracking-state),
       comma
     );
     $boss-latch-animations: append(
@@ -552,6 +552,25 @@ $boss-latch-animations: ();
     }
 
     animation: $bullet-state-animations;
+  }
+
+  @for $turret from 1 through $boss-turrets {
+    $first-slot: (($turret - 1) * $boss-bullet-slots-per-turret) + 1;
+    $last-slot: $first-slot + $boss-bullet-slots-per-turret - 1;
+
+    @container boss-hp-state style(--boss-turret-#{$turret}-alive: 0) {
+      .boss-bullet-state {
+        @for $slot from $first-slot through $last-slot {
+          --boss-bullet-#{$slot}-current-alive: 0 !important;
+        }
+      }
+
+      @for $slot from $first-slot through $last-slot {
+        .boss-bullet-#{$slot} {
+          opacity: 0 !important;
+        }
+      }
+    }
   }
 }
 
