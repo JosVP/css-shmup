@@ -1,0 +1,89 @@
+// ============================================
+// BODY & UI CONTROLS
+// ============================================
+
+#go-to-start-screen,
+#go-to-select,
+#start-level {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #1a1a2a;
+  overflow: hidden;
+
+  font: 1em "Press Start 2P";
+  color: #fff3b0;
+  text-shadow: -2px 2px 0 #000;
+  line-height: 1.5;
+  text-transform: uppercase;
+
+  * {
+    cursor: crosshair;
+  }
+
+  &:has(#start-level:checked) .container {
+    --enemy-tracking-state: running;
+    --level-start-delay: 3s;
+  }
+
+  &:has(#debug:checked) {
+    .container,
+    .background,
+    .background-boss {
+      inset: 4vw 5vw;
+    }
+
+    .sub-container {
+      border: 2px solid white;
+    }
+
+    .container::after,
+    .player-state::after,
+    .enemy::after,
+    .boss-visual::after,
+    .player-bullet::after,
+    .enemy-bullet::after {
+      display: block !important;
+      visibility: visible !important;
+    }
+
+    .score-hud {
+      left: 6vw;
+      top: 5vw;
+    }
+
+    .enemy {
+      border: 2px solid white;
+    }
+  }
+
+  label.debug {
+    position: fixed;
+    left: 10px;
+    display: block;
+    user-select: none;
+    z-index: 999;
+
+    input {
+      margin-inline: -2px 8px;
+    }
+  }
+
+  label.debug {
+    bottom: 10px;
+  }
+
+  .score span {
+    color: aqua;
+  }
+  .player-deaths span {
+    color: crimson;
+  }
+}

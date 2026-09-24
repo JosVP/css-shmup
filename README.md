@@ -21,6 +21,11 @@ Notes
 - SCSS is imported in `src/main.js` so Vite handles style HMR automatically.
 - The dev server is configured to run on port 2900 in `vite.config.js`.
 
+Safari collision compatibility
+
+- Player-enemy collision animations must set `--enemy-*-flyby-*-player-collision` with explicit discrete keyframes: `0%`, then `1%, 100%`. Do not replace these with `from`/`to` keyframes: Safari may fail to retain the completed custom-property value, preventing the enemy explosion.
+- After changing collision SCSS, run `pnpm concat` and manually test player-vs-enemy collisions in Safari.
+
 GIT
 
 - /usr/bin/git -C /Users/josvanpanhuis/Projects/prive/css-shmup pull

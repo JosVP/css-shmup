@@ -74,8 +74,8 @@
         $progress: ($i - 1) * 99.9 / ($total-cells - 1);
 
         #{$progress}% {
-          left: calc((#{map-get($cell, 'x')} - 1) * #{$column-size});
-          top: calc((#{map-get($cell, 'y')} - 1) * #{$row-size});
+          --enemy-#{$e}-visual-x: #{(map-get($cell, 'x') - 1) * $column-size};
+          top: #{(map-get($cell, 'y') - 1) * $row-size};
           --enemy-rotation: 0deg;
         }
       }
@@ -89,8 +89,8 @@
     }
 
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-player-collision {
-      from { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 0; }
-      to { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 2; }
+      0% { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 0; }
+      1%, 100% { --enemy-#{$e}-flyby-#{$flyby-id}-player-collision: 2; }
     }
 
     @keyframes enemy-#{$e}-flyby-#{$flyby-id}-collision-trigger {
@@ -133,10 +133,13 @@
     }
   }
 
-  .enemy-#{$e} {
+  .enemy.enemy-#{$e} {
+    left: var(--enemy-#{$e}-visual-x);
     opacity: 0;
     animation: $move-animations;
+  }
 
+  .enemy-#{$e} {
     .idle,
     .collision {
       animation-name: var(--enemy-#{$e}-collision-trigger-animation, entity-collision-animation) !important;

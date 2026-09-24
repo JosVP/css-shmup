@@ -10,6 +10,10 @@ $boss-damage: map-get($boss-config, 'damage-per-hit');
 $boss-path-cells: get-path-cells(map-get($boss-config, 'path-type'));
 $boss-hit-count: $boss-hp / $boss-damage;
 $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
+$boss-sway-duration: 3s;
+$boss-sway-distance: 30px;
+$boss-turret-top-offsets: (17.5, 30.5, 69.5, 82.5);
+$boss-turret-right-offsets: (20, 21, 21, 20);
 
 .boss-hp-driver {
   container-name: boss-hp-state;
@@ -43,9 +47,9 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
     calc(var(--boss-center-offset) * var(--boss-defeat-progress));
   transition: --boss-defeat-progress 1.5s ease-in-out;
   animation:
-    boss-intro 3s calc(#{$boss-delay} + var(--level-start-delay) - 2.5s) ease-out forwards var(--enemy-tracking-state),
+    boss-intro 2.5s calc(#{$boss-delay} + var(--level-start-delay) - 2.5s) ease-out forwards var(--enemy-tracking-state),
     boss-move $boss-duration calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out infinite var(--enemy-tracking-state),
-    boss-move-x 3s calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out alternate infinite var(--enemy-tracking-state),
+    boss-move-x $boss-sway-duration calc(#{$boss-delay} + var(--level-start-delay)) ease-in-out alternate infinite var(--enemy-tracking-state),
     boss-defeated-shake 0.15s infinite paused;
 
   .boss-body {
@@ -209,6 +213,28 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
     $parameter * $parameter * $parameter;
 }
 
+@function boss-ease-in-out-value-at($time-progress) {
+  $lower: 0;
+  $upper: 1;
+
+  @for $iteration from 1 through 16 {
+    $parameter: ($lower + $upper) / 2;
+    $timed-progress:
+      3 * (1 - $parameter) * (1 - $parameter) * $parameter * 0.42 +
+      3 * (1 - $parameter) * $parameter * $parameter * 0.58 +
+      $parameter * $parameter * $parameter;
+
+    @if $timed-progress < $time-progress {
+      $lower: $parameter;
+    } @else {
+      $upper: $parameter;
+    }
+  }
+
+  $parameter: ($lower + $upper) / 2;
+  @return 3 * (1 - $parameter) * $parameter * $parameter + $parameter * $parameter * $parameter;
+}
+
 @keyframes boss-tracking {
   $total-cells: length($boss-path-cells);
   $segment-duration: 100 / ($total-cells - 1);
@@ -265,7 +291,7 @@ $boss-hp-duration: ($player-bullet-speed * $boss-hit-count / $columns * 0.9);
 
 @keyframes boss-move-x {
   to {
-    transform: translateX(30px);
+    transform: translateX($boss-sway-distance);
   }
 }
 
@@ -336,11 +362,23 @@ $boss-latch-animations: ();
     $path-index: floor($cycle-seconds / $path-seconds) + 1;
     $segment-start: ($path-index - 1) * $path-seconds;
     $segment-progress: ($cycle-seconds - $segment-start) / $path-seconds;
+    $visual-segment-progress: boss-ease-in-out-value-at($segment-progress);
     $from-center: map-get(nth($boss-path-cells, $path-index), 'y');
     $to-center: map-get(nth($boss-path-cells, $path-index + 1), 'y');
-    $visual-center-row: $from-center + (($to-center - $from-center) * $segment-progress);
-    $visual-shot-row: $visual-center-row + $turret - 2;
+    $visual-center-row: $from-center + (($to-center - $from-center) * $visual-segment-progress);
+    $turret-row-offset: (nth($boss-turret-top-offsets, $turret) * $boss-turrets / 100) - 1.5;
+    $visual-shot-row: $visual-center-row + $turret-row-offset;
     $shot-row: round($visual-shot-row);
+    $sway-cycle-seconds: ($shot-offset / 1s) % (2 * $boss-sway-duration / 1s);
+    $sway-progress: $sway-cycle-seconds / ($boss-sway-duration / 1s);
+
+    @if $sway-progress > 1 {
+      $sway-progress: 2 - $sway-progress;
+    }
+
+    $visual-sway-offset: $boss-sway-distance * boss-ease-in-out-value-at($sway-progress);
+    $turret-right-offset: nth($boss-turret-right-offsets, $turret) * $boss-turrets / $rows;
+    $visual-shot-x: calc(#{$boss-column * $column-size} - #{$turret-right-offset}cqh + #{$visual-sway-offset});
 
     $boss-shot-schedule: append($boss-shot-schedule, (
       id: $shot,
@@ -368,7 +406,7 @@ $boss-latch-animations: ();
       $boss-launch-animations,
       // Capture the turret state just before the movement animation samples
       // its first frame, avoiding a same-frame container-query race.
-      boss-shot-#{$shot}-launch-trigger 0.05s calc(#{$shot-delay - 0.05s} + var(--level-start-delay)) linear,
+      boss-shot-#{$shot}-launch-trigger 0.05s calc(#{$shot-delay - 0.05s} + var(--level-start-delay)) linear var(--enemy-tracking-state),
       comma
     );
     $boss-latch-animations: append(
@@ -428,7 +466,7 @@ $boss-latch-animations: ();
     @keyframes boss-shot-#{$shot}-move {
       from {
         opacity: var(--boss-bullet-#{$slot}-current-alive);
-        left: calc((#{$boss-column} - 0.5) * #{$column-size});
+        left: $visual-shot-x;
         top: calc((var(--boss-bullet-#{$slot}-visual-startY) - 0.5) * #{$row-size});
       }
 
@@ -479,14 +517,14 @@ $boss-latch-animations: ();
     @keyframes boss-shot-#{$shot}-move-safari {
       from {
         opacity: var(--boss-bullet-#{$slot}-current-alive);
-        left: calc((#{$boss-column} - 0.5) * #{$column-size});
-        top: calc((#{$shot-row} - 0.5) * #{$row-size});
+        left: $visual-shot-x;
+        top: calc((#{$visual-shot-row} - 0.5) * #{$row-size});
       }
 
       99.9% {
         opacity: var(--boss-bullet-#{$slot}-current-alive);
         left: calc(-2.5 * #{$column-size});
-        top: calc((#{$shot-row} - 0.5) * #{$row-size});
+        top: calc((#{$visual-shot-row} - 0.5) * #{$row-size});
       }
 
       to { opacity: 0; }
@@ -552,6 +590,25 @@ $boss-latch-animations: ();
     }
 
     animation: $bullet-state-animations;
+  }
+
+  @for $turret from 1 through $boss-turrets {
+    $first-slot: (($turret - 1) * $boss-bullet-slots-per-turret) + 1;
+    $last-slot: $first-slot + $boss-bullet-slots-per-turret - 1;
+
+    @container boss-hp-state style(--boss-turret-#{$turret}-alive: 0) {
+      .boss-bullet-state {
+        @for $slot from $first-slot through $last-slot {
+          --boss-bullet-#{$slot}-current-alive: 0 !important;
+        }
+      }
+
+      @for $slot from $first-slot through $last-slot {
+        .boss-bullet-#{$slot} {
+          opacity: 0 !important;
+        }
+      }
+    }
   }
 }
 
@@ -745,7 +802,7 @@ $all-boss-turrets-dead: null;
 
   .result-body {
     width: 100%;
-    max-width: 555px;
+    max-width: 565px;
     padding: 2.5rem;
     border-block: 1px solid rgba(255, 255, 255, 0.5);
     position: absolute;
@@ -770,10 +827,11 @@ $all-boss-turrets-dead: null;
 .warning-screen h1 {
   animation: warning-blink 1s step-start infinite var(--enemy-tracking-state);
   color: crimson;
+  text-shadow: -6px 6px black;
 }
 
 .result-screen h1 {
-  background: linear-gradient(to bottom, #FFD700 0%, #FDB813 100%);
+  background: linear-gradient(0deg,rgba(255, 215, 128, 1) 0%, rgba(253, 187, 45, 1) 50%, rgba(245, 237, 212, 1) 50%, rgba(253, 187, 45, 1) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -800,7 +858,7 @@ $all-boss-turrets-dead: null;
   100% {
     opacity: 1;
     transform: scale(1) translateX(0);
-    top: 21%;
+    top: 20%;
   }
 }
 
