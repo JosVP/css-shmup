@@ -107,9 +107,9 @@ $boss-config: (
   path-type: boss-flight-pattern,
   shot-count: 90,
   turret-shots: (
-    1: (delay: 0.7s, interval: 1.7s),
-    2: (delay: 0s, interval: 2s),
-    3: (delay: 1.3s, interval: 1.5s),
-    4: (delay: 0.4s, interval: 1.8s)
+    1: (delay: 0.7s, interval: 2s),
+    2: (delay: 0s, interval: 2.3s),
+    3: (delay: 1.3s, interval: 1.8s),
+    4: (delay: 0.4s, interval: 2.1s)
   )
 );

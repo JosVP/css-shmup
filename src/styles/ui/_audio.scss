@@ -19,8 +19,14 @@
   transform: scaleX(200) scaleY(50);
   transform-origin: var(--play-x) var(--play-y);
 
-  body:has(#go-to-start-screen:checked) & {
-    animation: trigger-audio 0.75s linear forwards;
+  body:has(#go-to-start-screen:checked) &.audio-intro {
+    animation: audio-play 0.75s linear forwards;
+  }
+  body:has(#go-to-select:checked) &.audio-door {
+    animation: audio-play 0.75s linear forwards;
+  }
+  body:has(#start-level:checked) &.audio-level {
+    animation: audio-play 0.75s linear forwards;
   }
 }
 
@@ -31,13 +37,12 @@
   }
 }
 
-@keyframes trigger-audio {
+@keyframes audio-play {
   0%,
   99.9% {
     opacity: 0.001;
     pointer-events: auto;
   }
-
   100% {
     opacity: 0;
     pointer-events: none;

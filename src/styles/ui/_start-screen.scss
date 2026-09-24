@@ -32,6 +32,11 @@
     overflow: hidden;
     visibility: hidden;
 
+    span {
+      color: crimson;
+      pointer-events: none;
+    }
+
     body:has(#go-to-start-screen:checked) & {
       animation: blink 1.1s steps(1) infinite, fade-for-blink 0.01s 4s ease-in-out forwards;
     }

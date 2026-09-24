@@ -39,6 +39,9 @@
   .preload-continue {
     animation: preload-fade-in 0.7s ease 2s forwards;
     font-size: 1vw;
+    display: inline-block;
+    padding: 1em;
+    margin-block: -1em;
 
     span {
       color: crimson;
