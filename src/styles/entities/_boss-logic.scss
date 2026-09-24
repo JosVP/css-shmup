@@ -804,12 +804,30 @@ $all-boss-turrets-dead: null;
     width: 100%;
     max-width: 565px;
     padding: 2.5rem;
-    border-block: 1px solid rgba(255, 255, 255, 0.5);
+    border-block: 4px solid #fdbb2d;
     position: absolute;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      height: 20px;
+      border-inline: 4px solid #fdbb2d;
+      position: absolute;
+      left: 0;
+      right: 0;
+    }
+
+    &::before {
+      top: 0;
+    }
+    &::after {
+      bottom: 0;
+    }
   }
 
   .score,
