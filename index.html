@@ -17,6 +17,7 @@
       #go-to-start-screen,
       #go-to-select,
       #start-level,
+      #show-legal,
       label.debug {
         display: none;
       }
@@ -26,7 +27,7 @@
         inset: 0;
         display: grid;
         text-align: center;
-        padding-top: 25vh;
+        padding-top: 20vh;
         z-index: 99999;
         background: #000;
         color: #fff;
@@ -44,9 +45,10 @@
       }
 
       .loading-screen .preload-loading,
-      .loading-screen .preload-audio {
+      .loading-screen .preload-audio,
+      .loading-screen .preload-fullscreen {
         font-size: 1vw;
-        margin-bottom: 2vw;
+        margin-bottom: 1vw;
       }
 
       .preloading-screen {
@@ -69,6 +71,7 @@
     <input type="checkbox" id="go-to-start-screen" />
     <input type="checkbox" id="go-to-select" />
     <input type="checkbox" id="start-level" />
+    <input type="checkbox" id="show-legal" />
 
     <audio class="sound audio-intro" src="https://res.cloudinary.com/j8yrmcxh/video/upload/v1790281817/ost-intro-sfx.mp3" preload="auto" controls></audio>
     <audio class="sound audio-door" src="https://res.cloudinary.com/j8yrmcxh/video/upload/v1790281817/sfx-door.mp3" preload="auto" controls></audio>
@@ -85,7 +88,15 @@
       <div class="loading-screen-inner">
         <div class="preload-title">CSS-ONLY<br/>SHOOT 'EM UP GAME</div>
         <div class="preload-audio"><span>🎧</span> Please turn on your audio <span>🎧</span></div>
+        <div class="preload-fullscreen">Consider going fullscreen</div>
         <label for="go-to-start-screen" class="preload-continue"><span>Double</span> click to continue</label>
+        <div class="preload-browser-checks">
+          <div class="preload-browser-checks-title">Browser checks</div>
+          <div class="preload-browser-check preload-unsupported">Required features are not supported<br/>Please use Chrome instead</div>
+          <div class="preload-browser-check preload-performance-warning">Performance is likely poor, use Chrome instead</div>
+          <div class="preload-browser-check preload-straight-bullets">Seeking enemy bullets are not supported.<br/>Consider using Chrome</div>
+          <div class="preload-browser-check preload-seeking-bullets">All required features are supported</div>
+        </div>
       </div>
     </div>
 
@@ -100,9 +111,36 @@
       <div class="plane-3"></div>
       <label for="go-to-select" class="start"><span>Double</span> click to play</label>
       <div class="footer">
-        <div class="copyright-capcom">Graphics and sound effects © Capcom Co., Ltd.</div>
-        <div class="copyright-snk">Original soundtrack © SNK Corporation.</div>
-        <div class="copyright-jos">HTML and CSS by Jos van Panhuis.</div>
+        <div class="copyright-jos">HTML and CSS by Jos van Panhuis</div>
+        <label for="show-legal" class="legal-link">View disclaimer &amp; licensing</label>
+      </div>
+
+      <div class="legal-overlay">
+        <label for="show-legal" class="legal-backdrop"></label>
+        <section class="legal-panel">
+          <label for="show-legal" class="legal-close">&times;</label>
+
+          <h2>Disclaimer</h2>
+          <div>Original graphics and sprites © Capcom Co., Ltd.</div>
+          <div>Sprites taken from <a href="https://www.spriters-resource.com/" target="_blank">Spriters Resource</a></div>
+          <br/><br/>
+
+          <h2>Audio licensing</h2>
+          <h3>“Podcast Intro Energetic With Very Bright Attack”<br/>By Alex Morgan</h3>
+          <div>From <a href="https://freemusicarchive.org/music/alex-morgan/games-animation-action-vol-3/podcast-intro-energetic-with-very-bright-attack/" target="_blank">Free Music Archive</a> - <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a></div>
+          <div>Edited: shortened to ~20 seconds</div>
+
+          <h3>“Pixel Music With Very Bright Chip Tone”<br/>By Alex Morgan</h3>
+          <div>From <a href="https://freemusicarchive.org/music/alex-morgan/games-animation-action-vol-3/pixel-music-with-very-bright-chip-tone/" target="_blank">Free Music Archive</a> - <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a></div>
+          <div>Edited: shortened to ~60 seconds</div>
+
+          <h3>“Burning Edge Short Sharp Sting”<br/>By Alex Morgan</h3>
+          <div>From <a href="https://freemusicarchive.org/music/alex-morgan/advertising-broadcast-vol-2/burning-edge-short-sharp-sting/" target="_blank">Free Music Archive</a> - <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a></div>
+          <div>Edited: shortened and modified to create a double loop</div>
+
+          <h3>Sound effects</h3>
+          <div>From <a href="https://pixabay.com/" target="_blank">Pixabay</a></div>
+        </section>
       </div>
     </div>
 
@@ -246,7 +284,7 @@
               <p class="player-deaths"><span>Deaths</span></p>
             </section>
 
-            <section class="warning-screen" aria-hidden="true">
+            <section class="warning-screen">
               <h1>WARNING</h1>
             </section>
 

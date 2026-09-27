@@ -10,6 +10,8 @@
   z-index: 9200;
   opacity: 1;
   pointer-events: auto;
+  container: preload-screen-capabilities / inline-size;
+  --style-query-support: 1;
 
   body:has(#go-to-start-screen:checked) & {
     animation: hide-preloading-screen 0.7s ease forwards;
@@ -23,29 +25,107 @@
 
 .preloading-screen {
   .preload-audio,
+  .preload-fullscreen,
   .preload-continue {
     opacity: 0;
   }
 
-  .preload-audio {
-    animation: preload-fade-in 0.7s ease 0.7s forwards;
-
-    span {
-      display: inline-block;
-      transform: translateY(-0.2vw);
-    }
+  .preload-browser-checks {
+    font-size: 1vw;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2vw;
   }
 
-  .preload-continue {
-    animation: preload-fade-in 0.7s ease 2s forwards;
-    font-size: 1vw;
-    display: inline-block;
-    padding: 1em;
-    margin-block: -1em;
+  .preload-browser-checks-title {
+    color: aqua;
+    margin-bottom: 0.5vw;
+  }
 
-    span {
-      color: crimson;
-      pointer-events: none;
+  .preload-browser-check {
+    display: none;
+  }
+
+  .preload-unsupported {
+    display: block;
+    opacity: 1;
+    color: #ff8e8e;
+  }
+
+  .preload-performance-warning {
+    color: #ffd27d;
+  }
+
+  .preload-straight-bullets {
+    color: #fff3b0;
+  }
+
+  @supports (selector(body:has(#go-to-start-screen:checked))) and
+    (container-type: inline-size) and
+    (scale: calc(1cqi / 1px)) {
+    @container preload-screen-capabilities style(--style-query-support: 1) {
+      .preload-unsupported {
+        display: none;
+      }
+
+      .preload-seeking-bullets {
+        display: block;
+      }
+
+      @supports (-webkit-appearance: none) and (hanging-punctuation: first) {
+        .preload-seeking-bullets {
+          display: none;
+        }
+
+        .preload-straight-bullets {
+          display: block;
+        }
+      }
+
+      @supports (-moz-appearance: none) {
+        .preload-seeking-bullets,
+        .preload-straight-bullets {
+          display: none;
+        }
+
+        .preload-performance-warning {
+          display: block;
+        }
+      }
+
+      .preload-audio {
+        animation: preload-fade-in 0.7s ease 0.7s forwards;
+
+        span {
+          display: inline-block;
+          transform: translateY(-0.2vw);
+        }
+      }
+
+      .preload-fullscreen {
+        animation: preload-fade-in 0.7s ease 0.7s forwards;
+        margin-bottom: 3vw;
+
+        span {
+          font-size: 1.75vw;
+          margin-top: -0.1vw;
+        }
+      }
+
+      .preload-continue {
+        animation: preload-fade-in 0.7s ease 2.1s forwards;
+        font-size: 1.3vw;
+        display: inline-block;
+        padding: 1em;
+        margin-block: -1em;
+
+        span {
+          color: crimson;
+          pointer-events: none;
+        }
+      }
     }
   }
 }

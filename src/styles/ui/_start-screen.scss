@@ -7,8 +7,8 @@
   inset: 0;
   z-index: 9000;
   display: block;
-  position: absolute;
-  inset: 0;
+  container: start-screen-capabilities / inline-size;
+  --style-query-support: 1;
   background: url('https://i.imgur.com/UC74sSh.png') bottom center / cover no-repeat;
   image-rendering: pixelated;
 
@@ -85,7 +85,8 @@
       animation: fade-in 0.8s 3.3s ease-in-out forwards;
     }
 
-    div {
+    > div,
+    .legal-link {
       background: linear-gradient(to bottom, #ffee99 0%, #c91414 100%);
       background-clip: text;
       -webkit-background-clip: text;
@@ -94,6 +95,85 @@
       text-shadow: none;
       filter: drop-shadow(-2px 2px 0 #000);
     }
+
+    .legal-link {
+      display: inline-block;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+  }
+
+  .legal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    body:has(#show-legal:checked) & {
+      animation: legal-fade-in 0.2s ease-out forwards;
+      visibility: visible;
+      pointer-events: auto;
+    }
+  }
+
+  .legal-backdrop {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    background: rgb(0 0 0 / 72%);
+  }
+
+  .legal-panel {
+    position: relative;
+    width: min(68vw, 900px);
+    max-height: 78vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+    padding: 2.5vw 3vw;
+    border: 0.25vw solid #ffee99;
+    background: #10101c;
+    box-shadow: -0.6vw 0.6vw 0 #000;
+    font-size: 0.7vw;
+    text-align: left;
+    color: #fff;
+
+    h2 {
+      margin: 0 0 1.8vw;
+      color: #ffee99;
+      font-size: 1.1vw;
+      text-align: center;
+    }
+
+    h3 {
+      margin: 1.4vw 0 0.4vw;
+      color: #ff6464;
+      font-size: 0.8vw;
+    }
+
+    a {
+      text-decoration: underline;
+      color: aqua;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .legal-close {
+    position: absolute;
+    top: 0.6vw;
+    right: 0.8vw;
+    cursor: pointer;
+    color: #ffee99;
+    font-size: 1.5vw;
+    line-height: 1;
   }
 }
 
@@ -104,6 +184,12 @@
 }
 
 @keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes legal-fade-in {
   to {
     opacity: 1;
   }
@@ -123,7 +209,9 @@
 
 @keyframes hide-start-screen {
   to {
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 }
 
